@@ -42,6 +42,9 @@
   .opt.correct{border-color:var(--good);background:#d3f2e2}
   .opt.incorrect{border-color:var(--bad);background:#fbd9d7}
   .locked .opt{cursor:default}
+  .opt.typein{grid-column:1/-1;cursor:text}
+  .opt.typein input{width:100%;height:auto;border:0;outline:none;background:transparent;font:inherit;color:inherit;padding:2px 0}
+  #homeTitle{cursor:pointer}
   .fb{margin-top:10px;font-weight:600}
   .fb.good{color:var(--good)} .fb.bad{color:var(--bad)}
   button.primary{background:var(--brand);color:#fff;border:0;border-radius:12px;padding:12px 22px;font-size:1.05rem;font-weight:700;cursor:pointer}
@@ -85,7 +88,7 @@
 <body>
 <header>
   <div class="top">
-    <h1>🎮 Atharva's Quiz Games <span style="font-weight:400;font-size:1rem">· Åk 6</span></h1>
+    <h1 id="homeTitle" role="link" tabindex="0" title="Go to the home page">🎮 Atharva's Quiz Games <span style="font-weight:400;font-size:1rem">· Åk 6</span></h1>
     <div class="player hidden" id="headerPlayer">
       <label for="playerName">👤 Player:</label>
       <input id="playerName" type="text" maxlength="30" placeholder="Type your name" autocomplete="off">
@@ -219,7 +222,7 @@
     }
     return arr;
   }
-  function fmt(n){ return n.toLocaleString('en-US'); }
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0'); }   // Swedish style: 1 234 (a comma is a decimal sign)
 
   // ---------- question banks ----------
   // Each item: [question, correct answer, wrong 1, wrong 2, wrong 3]
@@ -1432,6 +1435,316 @@
     ["Vilket tal ligger mitt emellan 1/4 och 3/4?", "1/2", "1/3", "2/3", "3/8"],
     ["Beräkna 1/2 + 1/4.", "3/4", "2/6", "2/4", "1/6"]
   ]);
+  // ---------- round 2: åk 6 level, true/false and type-in questions, new texts ----------
+  BANKS.ma_sannolikhet = [
+    ["Du kastar en vanlig tärning. Hur stor är sannolikheten att få ett jämnt tal?", "1/2", "1/3", "1/6", "2/3"],
+    ["Du kastar en vanlig tärning. Hur stor är sannolikheten att få mer än 4?", "1/3", "1/2", "2/3", "1/6"],
+    ["En påse har 4 röda, 5 gröna och 1 gul kula. Vilken färg är mest sannolik att få?", "Grön", "Röd", "Gul", "Alla är lika sannolika"],
+    ["En påse har 4 röda, 5 gröna och 1 gul kula. Hur stor är sannolikheten att få en röd kula?", "4/10", "4/6", "1/4", "6/10"],
+    ["Vilken händelse är omöjlig?", "Att få 7 på en vanlig tärning", "Att få 6 på en vanlig tärning", "Att få krona när man singlar slant", "Att det regnar i morgon"],
+    ["Vilken händelse är säker (sannolikheten är 1)?", "Att få ett tal från 1 till 6 på en vanlig tärning", "Att få en sexa", "Att få krona två gånger i rad", "Att vinna på lotto"],
+    ["Du singlar slant två gånger. Hur många olika utfall finns det?", "4", "2", "3", "6"],
+    ["Du har 3 tröjor och 2 par byxor. På hur många olika sätt kan du klä dig?", "6", "5", "3", "9"],
+    ["På hur många olika sätt kan tre personer ställa sig i en kö?", "6", "3", "9", "4"],
+    ["En glassbar har 4 smaker och 3 sorters strössel. Hur många kombinationer med en smak och ett strössel finns?", "12", "7", "4", "16"],
+    ["Fyra lag ska spela en match mot varje annat lag en gång. Hur många matcher blir det?", "6", "4", "8", "12"],
+    ["Du singlar slant 100 gånger. Hur många gånger kan du ungefär räkna med att få krona?", "Ungefär 50", "Exakt 50", "100", "2"],
+    ["Du har slagit tre sexor i rad. Hur stor är sannolikheten att nästa kast också blir en sexa?", "1/6", "Mindre än 1/6", "Större än 1/6", "0"],
+    ["Ett lyckohjul har 8 lika stora fält, och 3 av dem är blå. Hur stor är sannolikheten att hamna på blått?", "3/8", "3/5", "5/8", "1/3"],
+    ["Skriv sannolikheten 1/4 i procent.", "25 %", "14 %", "40 %", "4 %"],
+    ["Vilket är mest sannolikt?", "Att få krona när man singlar slant", "Att få en sexa på en tärning", "Att få två sexor i rad", "Att få 7 på en tärning"],
+    ["En kortlek har 52 kort, 13 av varje färg. Hur stor är sannolikheten att dra ett hjärter?", "1/4", "1/13", "1/52", "13/39"],
+    ["Hur många olika tvåsiffriga koder kan man göra av siffrorna 1, 2 och 3 om en siffra får användas flera gånger?", "9"],
+    ["Sant eller falskt? Om man kastar en tärning 6 gånger får man alltid minst en sexa.", "Falskt", "Sant"],
+    ["Sant eller falskt? Sannolikheten för en händelse är alltid ett tal mellan 0 och 1.", "Sant", "Falskt"],
+    ["En klass har 12 flickor och 13 pojkar. En elev lottas fram. Hur stor är sannolikheten att det blir en flicka?", "12/25", "12/13", "1/2", "13/25"],
+    ["Du drar en kula ur en påse med 2 blå och 6 gula kulor. Hur stor är sannolikheten att få blå? Svara i procent.", "25 % | 25"]
+  ];
+  BANKS.sv_grammatik = [
+    ["I meningen ”Hon sjunger vackert” – vilken ordklass är ordet ”vackert”?", "Adverb", "Adjektiv", "Verb", "Substantiv"],
+    ["Vilket ord är ett substantiv i meningen ”Glädjen var stor när laget vann”?", "glädjen", "stor", "vann", "när"],
+    ["Vad är objektet i meningen ”Mormor bakade en sockerkaka i går”?", "en sockerkaka", "Mormor", "bakade", "i går"],
+    ["Vilken del av meningen ”Vi åker till Göteborg på lördag” är ett tidsadverbial (säger NÄR)?", "på lördag", "till Göteborg", "Vi", "åker"],
+    ["Vad är subjektet i meningen ”I skogen bodde en gammal räv”?", "en gammal räv", "I skogen", "bodde", "gammal"],
+    ["Vad är predikatet i meningen ”Barnen har spelat fotboll hela dagen”?", "har spelat", "Barnen", "fotboll", "hela dagen"],
+    ["Vilket ord är en konjunktion?", "men", "eftersom", "under", "snabbt"],
+    ["Vilket ord är en subjunktion (inleder en bisats)?", "eftersom", "och", "men", "eller"],
+    ["Vilken mening innehåller en bisats?", "Jag stannade hemma eftersom jag var sjuk.", "Jag var sjuk och stannade hemma.", "Jag var sjuk. Jag stannade hemma.", "I dag stannade jag hemma."],
+    ["Vilket ord passar? ”Jag såg ___ på bion i går.” (flera personer)", "dem", "de", "dom", "deras"],
+    ["Vilket ord passar? ”___ kom för sent till lektionen.” (flera personer)", "De", "Dem", "Deras", "Dom"],
+    ["Vilket ord passar? ”Elin cyklade till skolan på ___ nya cykel.” (Elins egen cykel)", "sin", "hennes", "sitt", "sina"],
+    ["Vilken form är supinum av verbet ”skriva” (jag har ___)?", "skrivit", "skrev", "skriver", "skrivande"],
+    ["Vilket verb står i preteritum?", "sprang", "springer", "har sprungit", "ska springa"],
+    ["Vilken tempusform är ”hade ätit”?", "Pluskvamperfekt", "Perfekt", "Preteritum", "Futurum"],
+    ["Vilket ord passar? ”Ett ___ hus”", "stort", "stor", "stora", "storta"],
+    ["Vilket ord passar? ”De ___ äpplena”", "röda", "rött", "röd", "rödt"],
+    ["Hur kompareras adjektivet ”liten”?", "liten – mindre – minst", "liten – litenare – litenast", "liten – lillare – lillast", "liten – små – minst"],
+    ["Vilket ord är ett ordningstal?", "tredje", "tre", "tretton", "trettio"],
+    ["Vilken mening är en uppmaning?", "Stäng dörren!", "Dörren är stängd.", "Är dörren stängd?", "Dörren stängdes i går."],
+    ["Vilket ord är ett possessivt pronomen (visar vem något tillhör)?", "vår", "vi", "oss", "vilken"],
+    ["I meningen ”Katten som bor hos oss heter Sigge” – vilken del är en bisats?", "som bor hos oss", "Katten", "heter Sigge", "Katten heter"],
+    ["Vilket ord är ett adjektiv i meningen ”Det trötta laget vann ändå matchen”?", "trötta", "laget", "vann", "ändå"],
+    ["Vilken mening har rätt ordföljd?", "I morgon ska vi åka till stranden.", "I morgon vi ska åka till stranden.", "I morgon ska åka vi till stranden.", "I morgon åka vi ska till stranden."],
+    ["Vilken mening har rätt ordföljd i bisatsen?", "Jag vet att han inte kommer.", "Jag vet att han kommer inte.", "Jag vet att inte han kommer.", "Jag vet att kommer han inte."],
+    ["Vilket verb står i futurum?", "ska läsa", "läste", "har läst", "läser"],
+    ["Sant eller falskt? I meningen ”Hunden jagade katten” är ”katten” objekt.", "Sant", "Falskt"],
+    ["Sant eller falskt? ”Snabbt” är ett adjektiv i meningen ”Hon springer snabbt”.", "Falskt", "Sant"],
+    ["Sant eller falskt? En mening måste ha både subjekt och predikat.", "Sant", "Falskt"],
+    ["Skriv verbet ”gå” i preteritum (i går ___ jag).", "gick"],
+    ["Skriv pluralformen av ”ett öga”.", "ögon"],
+    ["Skriv supinum av ”sova” (jag har ___).", "sovit"],
+    ["Skriv bestämd form plural av ”en bok” (alla ___).", "böckerna"]
+  ];
+  BANKS.sv_stavning = [
+    ["Hur stavas plagget med krage och knappar?", "skjorta", "sjorta", "schorta", "skorta"],
+    ["Hur stavas det som lyser på natthimlen?", "stjärna", "sjärna", "stärna", "skjärna"],
+    ["Hur stavas huset där man ställer bilen?", "garage", "garasch", "garaasch", "garagé"],
+    ["Hur stavas ett annat ord för flicka?", "tjej", "kjej", "chej", "sjej"],
+    ["Hur stavas ordet för att älska någon?", "kärlek", "tjärlek", "sjärlek", "cherlek"],
+    ["Hur stavas ordet som saknas? ”Jag hjälper dig ___.”", "gärna", "järna", "gjärna", "gerrna"],
+    ["Hur stavas organet som pumpar blodet?", "hjärta", "järta", "gjärta", "jjärta"],
+    ["Hur stavas motsatsen till mörker?", "ljus", "jus", "gjus", "hjus"],
+    ["Hur stavas det som faller från molnen? (ng-ljud)", "regn", "rängn", "reng", "ränn"],
+    ["Hur stavas motsatsen till stressad? (ng-ljud)", "lugn", "lungn", "lunng", "lugnn"],
+    ["Hur stavas ordet som saknas? ”Hon ___ snart hem.”", "kommer", "komer", "kommmer", "kåmmer"],
+    ["Hur stavas ordet som saknas? ”Han ___ på tv i går.”", "tittade", "titade", "tittadde", "tihttade"],
+    ["Hur stavas motsatsen till bak?", "fram", "framm", "frammn", "fraam"],
+    ["Hur stavas ordet som saknas? ”Vad vill du ___ göra?”", "egentligen", "ejentligen", "egentlien", "egenkligen"],
+    ["Hur stavas det man kan få av läkaren när man är sjuk?", "medicin", "medisin", "medizin", "meddicin"],
+    ["Vilken mening är rätt skriven?", "Jag köpte en ny tandborste.", "Jag köpte en ny tand borste.", "Jag köpte en ny tand-borste.", "Jag köpte en nytand borste."],
+    ["Varför är det fel att skriva ”kyckling lever” på en meny?", "Det betyder att kycklingen lever", "Det är för långt", "Det ska skrivas med stor bokstav", "Det är engelska"],
+    ["Vilket ord ska alltid skrivas med stor bokstav?", "Göteborg", "måndag", "juli", "svensk"],
+    ["Vilken mening har rätt stora och små bokstäver?", "Vi åkte till Spanien i juli.", "Vi åkte till spanien i Juli.", "Vi åkte till Spanien i Juli.", "vi åkte till Spanien i juli."],
+    ["Var ska kommatecknet stå?", "Jag ville gå ut, men det regnade.", "Jag ville, gå ut men det regnade.", "Jag ville gå, ut men det regnade.", "Jag, ville gå ut men det regnade."],
+    ["Vilken mening har rätt skiljetecken?", "”Vad heter du?” frågade läraren.", "”Vad heter du.” frågade läraren?", "”Vad heter du” frågade läraren?", "Vad heter du? ”frågade läraren.”"],
+    ["Vilket skiljetecken används före en uppräkning, t.ex. ”Ta med: penna, sudd och linjal”?", "Kolon", "Semikolon", "Frågetecken", "Bindestreck"],
+    ["Hur skriver man genitiv av ”Anna” på svenska (Annas cykel)?", "Annas", "Anna's", "Annas'", "Anna-s"],
+    ["Vilken förkortning är rätt skriven?", "t.ex.", "tex", "t.e.x", "te.x."],
+    ["Vad betyder förkortningen ”s.k.”?", "så kallad", "samma kväll", "stora kvarter", "skriv kort"],
+    ["Sant eller falskt? Veckodagar och månader skrivs med liten bokstav på svenska.", "Sant", "Falskt"],
+    ["Sant eller falskt? ”Fotbollsmatch” ska skrivas isär: ”fotbolls match”.", "Falskt", "Sant"],
+    ["Skriv ordet rätt: ”tjöpa”", "köpa"],
+    ["Skriv ordet rätt: ”skjöldpadda”", "sköldpadda"],
+    ["Skriv ordet rätt: ”kammrat”", "kamrat"],
+    ["Skriv ordet rätt: ”ihopp”", "ihop"],
+    ["Skriv ordet rätt: ”jiraff”", "giraff"]
+  ];
+  BANKS.sv_ord = [
+    ["Vad är en liknelse?", "En jämförelse med ”som”, t.ex. ”stark som en björn”", "Ett ord som betyder samma sak", "Ett ord med motsatt betydelse", "Två ord som rimmar"],
+    ["Vilken mening innehåller en liknelse?", "Hon var snabb som vinden.", "Hon sprang snabbt.", "Vinden blåste.", "Hon vann loppet."],
+    ["Vad är en metafor?", "Ett bildligt uttryck utan ”som”, t.ex. ”han är en klippa”", "En jämförelse med ”som”", "En sorts dikt", "Ett påhittat ord"],
+    ["Vad kallas det när en sak får mänskliga egenskaper, t.ex. ”vinden viskade”?", "Besjälning (personifikation)", "Liknelse", "Rim", "Allitteration"],
+    ["Vad betyder ordet ”omedelbart”?", "genast", "senare", "aldrig", "ibland"],
+    ["Vad betyder ordet ”förbryllad”?", "förvirrad", "förbannad", "förälskad", "förväntansfull"],
+    ["Vad betyder ordet ”noggrann”?", "som gör saker ordentligt och exakt", "som slarvar", "som alltid är sen", "som är rädd"],
+    ["Vad betyder ordet ”tveka”?", "vara osäker och vänta med att bestämma sig", "springa fort", "skrika högt", "vara helt säker"],
+    ["Vad betyder ordet ”orimlig”?", "som inte är rimlig eller trolig", "som rimmar", "som är mycket rolig", "som är gammal"],
+    ["Vilket ord är en synonym till ”modig”?", "tapper", "feg", "rädd", "blyg"],
+    ["Vilket ord är en antonym (motsats) till ”generös”?", "snål", "snäll", "givmild", "rik"],
+    ["Vad betyder uttrycket ”att ha många järn i elden”?", "Att ha mycket på gång samtidigt", "Att arbeta som smed", "Att frysa", "Att vara arg"],
+    ["Vad betyder uttrycket ”att lägga näsan i blöt”?", "Att lägga sig i andras saker", "Att bada", "Att vara förkyld", "Att gråta"],
+    ["Vad betyder uttrycket ”att få kalla fötter”?", "Att ångra sig och bli rädd i sista stund", "Att frysa om fötterna", "Att springa snabbt", "Att bli frisk"],
+    ["Vad betyder uttrycket ”att slå två flugor i en smäll”?", "Att klara två saker på en gång", "Att vara elak mot djur", "Att missa två gånger", "Att bli sur"],
+    ["Vad betyder uttrycket ”det är ingen ko på isen”?", "Det är ingen fara", "Det är halt ute", "Kon har rymt", "Det är bråttom"],
+    ["Vad betyder uttrycket ”att ana ugglor i mossen”?", "Att misstänka att något är fel", "Att titta på fåglar", "Att vara mörkrädd", "Att gå vilse"],
+    ["Vad betyder ordspråket ”Den som gräver en grop åt andra faller själv däri”?", "Den som vill andra illa kan själv råka illa ut", "Man ska inte gräva i trädgården", "Gropar är farliga", "Man ska hjälpa andra att gräva"],
+    ["Vad betyder ordspråket ”Borta bra men hemma bäst”?", "Det är roligt att resa men skönast att komma hem", "Man ska aldrig resa", "Hemma är tråkigt", "Man ska flytta ofta"],
+    ["Vad kallas ord som stavas och uttalas likadant men betyder olika saker, t.ex. ”fil” (mat) och ”fil” (körfält)?", "Homonymer", "Synonymer", "Antonymer", "Låneord"],
+    ["Vad är ett låneord?", "Ett ord som svenskan har tagit från ett annat språk", "Ett ord man lånar av en kompis", "Ett mycket långt ord", "Ett gammalt ord som inte används"],
+    ["Vilket ord är ett låneord från engelskan?", "mejla", "springa", "hus", "mjölk"],
+    ["Vilket förled gör ordet ”lycklig” till sin motsats?", "o-", "be-", "för-", "upp-"],
+    ["Vad betyder ändelsen ”-lös” i ordet ”hjälplös”?", "utan", "med mycket", "lite av", "före"],
+    ["Vilket ord hör INTE ihop med de andra?", "dyster", "glad", "lycklig", "förtjust"],
+    ["Vad är ironi?", "Att säga motsatsen till vad man menar, t.ex. ”Toppen!” när något går fel", "Att tala väldigt tydligt", "Att skriva på rim", "Att berätta en saga"],
+    ["Vad kallas det när flera ord i rad börjar på samma ljud, t.ex. ”sju sjösjuka sjömän”?", "Allitteration", "Rim", "Liknelse", "Metafor"],
+    ["Sant eller falskt? ”Han är en riktig klippa” är en liknelse.", "Falskt", "Sant"],
+    ["Sant eller falskt? ”Snabb” och ”kvick” är synonymer.", "Sant", "Falskt"],
+    ["Skriv motsatsen till ”tung”.", "lätt"],
+    ["Vilket ord saknas i ordspråket? ”Lika barn leka ___”", "bäst"],
+    ["Vilket ord saknas i uttrycket? ”Att ha ett ess i ___” (ha en hemlig fördel)", "rockärmen"]
+  ];
+  BANKS.sv_texter = [
+    ["Vad kallas den del i en berättelse där spänningen är som störst?", "Klimax (höjdpunkt)", "Inledning", "Avslutning", "Miljöbeskrivning"],
+    ["I vilken ordning brukar en berättelse vara uppbyggd?", "Inledning – problem – höjdpunkt – lösning – avslutning", "Avslutning – inledning – problem – höjdpunkt", "Problem – avslutning – inledning – lösning", "Höjdpunkt – inledning – lösning – problem"],
+    ["Vad betyder det att en berättelse är skriven i jag-form?", "Huvudpersonen berättar själv", "Någon utanför berättar om ”han” eller ”hon”", "Den är skriven som en dikt", "Den har ingen huvudperson"],
+    ["Vad är en miljöbeskrivning?", "En beskrivning av var och när berättelsen utspelar sig", "En text om naturvård", "En lista över personerna", "Texten på bokens baksida"],
+    ["Vad betyder det att gestalta en känsla i en text?", "Att visa känslan genom vad personen gör och säger", "Att skriva känslan med stora bokstäver", "Att rita en bild", "Att skriva en faktatext"],
+    ["Vilken mening gestaltar att Sam är nervös?", "Sam trummade med fingrarna och svalde hårt.", "Sam var nervös.", "Sam gick till skolan.", "Sam hette egentligen Samuel."],
+    ["Vad är en tillbakablick i en berättelse?", "När berättelsen hoppar bakåt i tiden", "Bokens sista sida", "Ett tips till läsaren", "En bild på omslaget"],
+    ["Vad kännetecknar en argumenterande text?", "Tes, argument och en avslutning som upprepar åsikten", "Rim och rytm", "Dialog mellan personer", "Steg-för-steg-instruktioner"],
+    ["Vad kallas skribentens huvudåsikt i en argumenterande text?", "Tes", "Rubrik", "Källa", "Motargument"],
+    ["Vad är ett motargument?", "Ett argument för den andra sidans åsikt", "Det starkaste argumentet", "Ett felstavat argument", "En slutsats"],
+    ["Vad är en nyckelmening?", "Den mening som säger vad stycket främst handlar om", "Den sista meningen i texten", "En mening med svåra ord", "En fråga till läsaren"],
+    ["Vilken källa är oftast mest pålitlig för en faktatext om rymden?", "En webbsida från en rymdmyndighet eller ett universitet", "En kommentar i en spelchatt", "Ett okänt konto i sociala medier", "En reklamfilm"],
+    ["Vad ska man göra när man använder fakta eller bilder från någon annan i sin egen text?", "Ange källan", "Låtsas att man har gjort det själv", "Ändra lite och säga att det är eget", "Ingenting"],
+    ["Vad är en recension?", "En text där man beskriver och värderar t.ex. en bok, film eller ett spel", "En nyhetsartikel om sport", "En instruktion", "En saga"],
+    ["Vad är en novell?", "En kort berättelse", "En lång roman i flera delar", "En faktabok", "En dikt med rim"],
+    ["Vad är typiskt för en folksaga?", "Den börjar ofta med ”Det var en gång” och har magiska inslag", "Den handlar alltid om verkliga händelser", "Den innehåller tabeller och diagram", "Den saknar personer"],
+    ["Vad menas med att ”läsa mellan raderna”?", "Att förstå sådant som inte står direkt i texten", "Att läsa varannan rad", "Att läsa högt", "Att hoppa över svåra ord"],
+    ["Vad är en sammanfattning?", "En kort text med det viktigaste från en längre text", "En kopia av hela texten", "En lista med svåra ord", "Textens rubrik"],
+    ["Vilket sambandsord visar orsak?", "eftersom", "men", "sedan", "dessutom"],
+    ["Vilket sambandsord visar en motsättning?", "men", "därför", "och", "sedan"],
+    ["Vilket sambandsord passar för att visa ordningen i en instruktion?", "därefter", "eftersom", "trots att", "men"],
+    ["Vilken rubrik passar bäst för en faktatext om hur bin gör honung?", "Från blomma till honung", "Min bästa sommar", "Köp mer honung nu!", "Det var en gång ett bi"],
+    ["Vad är en cliffhanger?", "När ett kapitel slutar spännande så att man vill läsa vidare", "När berättelsen börjar med slutet", "När huvudpersonen faller", "När boken har bilder"],
+    ["Vad är syftet med en instruerande text?", "Att förklara hur man gör något", "Att övertyga läsaren", "Att underhålla med en spännande berättelse", "Att recensera en film"],
+    ["Sant eller falskt? En faktatext ska innehålla författarens egna åsikter.", "Falskt", "Sant"],
+    ["Sant eller falskt? Repliker i en berättelse skrivs ofta med talstreck eller citattecken.", "Sant", "Falskt"],
+    ["Sant eller falskt? En berättelse i tredje person använder ”han”, ”hon” eller ett namn om huvudpersonen.", "Sant", "Falskt"]
+  ];
+  BANKS.biologi = BANKS.biologi.concat([
+    ["Vad händer troligen i en sjö om alla gäddor (rovfiskar) försvinner?", "Småfiskarna blir fler, och sedan kan deras mat ta slut", "Ingenting händer", "Alla småfiskar dör direkt", "Sjön torkar ut"],
+    ["Varför finns det mindre energi högre upp i en näringskedja?", "Varje led använder det mesta av energin själv för att leva och röra sig", "Rovdjur äter mindre mat", "Växterna tar tillbaka energin", "Energin försvinner på natten"],
+    ["Varför blir en växt som står i mörker blek och svag?", "Den kan inte göra fotosyntes", "Den får för mycket vatten", "Den fryser", "Den har för många rötter"],
+    ["Hur hänger fotosyntes och cellandning ihop?", "Fotosyntesen bildar socker och syre som cellandningen använder", "De är exakt samma sak", "Cellandning sker bara i växter", "Fotosyntes sker bara på natten"],
+    ["Vad är en anpassning?", "En egenskap som hjälper en art att överleva där den lever", "Att ett djur flyttas till ett zoo", "Att man byter mat en dag", "Att ett djur somnar"],
+    ["Varför har rovdjur som vargar ofta ögonen framåt, medan harar har dem på sidan av huvudet?", "Rovdjuret behöver bedöma avstånd, bytesdjuret behöver se runt sig", "Det är bara slumpen", "Harar ser bara i mörker", "Vargar ser bara svartvitt"],
+    ["Vad kan hända om man sprutar mycket bekämpningsmedel på en åker?", "Även nyttiga insekter som bin kan dö", "Grödorna växer alltid bättre", "Inga djur påverkas", "Jorden blir mer näringsrik"],
+    ["Varför är en art som bara finns på en enda ö extra hotad?", "Hela arten kan försvinna om miljön på ön förändras", "Den kan aldrig dö ut", "Den har inga fiender", "Den kan flyga därifrån"],
+    ["Sant eller falskt? Valen är en fisk.", "Falskt", "Sant"],
+    ["Sant eller falskt? Svampar kan inte göra fotosyntes.", "Sant", "Falskt"],
+    ["Vad kallas processen där växter och djur bryts ner och blir till näring i jorden?", "förmultning | nedbrytning"]
+  ]);
+  BANKS.fysik = BANKS.fysik.concat([
+    ["En boll ligger stilla på golvet. Vilket stämmer om krafterna?", "Tyngdkraften och golvets kraft uppåt tar ut varandra", "Inga krafter verkar på bollen", "Bara tyngdkraften verkar", "Golvet drar bollen nedåt"],
+    ["Varför är det lättare att dra en pulka på snö än på asfalt?", "Friktionen är mindre på snö", "Pulkan väger mindre på snö", "Tyngdkraften är svagare på snö", "Snö är magnetisk"],
+    ["En bil kör 60 km på en timme. Hur långt kör den på 20 minuter med samma fart?", "20 km", "40 km", "30 km", "3 km"],
+    ["Varför studsar en boll lägre och lägre?", "En del av energin blir till värme och ljud vid varje studs", "Energin försvinner helt", "Bollen blir lättare", "Tyngdkraften ökar"],
+    ["Varför känns en metallbänk kallare än en träbänk fast de har samma temperatur?", "Metall leder bort värmen från handen snabbare", "Metall är alltid kallare", "Trä har värme inuti", "Metall är magnetisk"],
+    ["Vad gör linsen i ögat?", "Bryter ljuset så att en skarp bild bildas", "Stoppar allt ljus", "Gör ljuset till el", "Färgar ljuset"],
+    ["Ett eko hörs 2 sekunder efter att du ropar. Ljudet går 340 m/s. Hur långt bort är bergväggen?", "340 m", "680 m", "170 m", "2 m"],
+    ["Sant eller falskt? Utan luft faller en fjäder och en hammare lika snabbt.", "Sant", "Falskt"],
+    ["Sant eller falskt? Ljud kan färdas genom rymden där det är vakuum.", "Falskt", "Sant"],
+    ["Vad kallas kraften från vattnet som gör att saker flyter?", "lyftkraft | lyftkraften"]
+  ]);
+  BANKS.kemi = BANKS.kemi.concat([
+    ["Varför löser sig socker snabbare i varmt vatten än i kallt?", "Partiklarna rör sig snabbare i varmt vatten", "Varmt vatten är surare", "Socker smälter vid 30 °C", "Kallt vatten är redan fullt"],
+    ["Vad skiljer en kemisk förändring från en fysikalisk?", "Vid en kemisk förändring bildas nya ämnen", "Vid en fysikalisk förändring bildas nya ämnen", "Det finns ingen skillnad", "Kemiska förändringar sker bara i labbet"],
+    ["Vilket är en fysikalisk förändring?", "Smör smälter", "Ved brinner", "En spik rostar", "En kaka bakas"],
+    ["Varför rostar en cykel snabbare på vintern när vägarna är saltade?", "Salt och vatten gör att järnet reagerar snabbare med syret", "Salt är magnetiskt", "Kylan gör järn till rost", "Snö innehåller rost"],
+    ["Hur kan man skydda järn från att rosta?", "Måla det eller täcka det med zink", "Lägga det i saltvatten", "Värma det ofta", "Blöta det varje dag"],
+    ["En flaska vatten fryser till is. Vad händer med massan?", "Den är densamma", "Den blir större", "Den blir mindre", "Den försvinner"],
+    ["Varför ska man släcka brinnande olja i en kastrull med ett lock och inte med vatten?", "Locket stänger ute syret – vatten kan få den heta oljan att spruta", "Vatten gör att oljan fryser", "Locket gör oljan till vatten", "Vatten är brännbart"],
+    ["Sant eller falskt? Luft är en blandning av flera gaser.", "Sant", "Falskt"],
+    ["Sant eller falskt? När ett ljus brinner försvinner vaxet helt utan att bli något annat.", "Falskt", "Sant"],
+    ["Vilket grundämne har det kemiska tecknet Fe?", "järn"]
+  ]);
+  BANKS.no_rymden = BANKS.no_rymden.concat([
+    ["Varför ser vi olika stjärnbilder på vintern och på sommaren?", "Jorden går runt solen, så natthimlen pekar mot olika delar av rymden", "Stjärnorna flyttar sig varje månad", "Solen täcker vissa stjärnor på vintern", "Månen skymmer dem"],
+    ["Varför har månen många kratrar men jorden nästan inga?", "Jordens atmosfär bränner upp många meteorer, och väder och vatten nöter bort kratrar", "Månen är mjukare", "Jorden snurrar snabbare", "Jorden har ingen tyngdkraft"],
+    ["Varför är det midnattssol i norra Sverige på sommaren?", "Jordaxeln lutar så att norra halvklotet är vänt mot solen", "Solen är närmare Sverige på sommaren", "Månen lyser extra starkt", "Jorden slutar snurra"],
+    ["Sant eller falskt? När det är vinter i Sverige är det sommar i Australien.", "Sant", "Falskt"],
+    ["Vad heter planeten som ligger längst från solen?", "Neptunus"]
+  ]);
+  BANKS.no_kropp = BANKS.no_kropp.concat([
+    ["Varför blir man andfådd när man springer?", "Musklerna behöver mer syre och kroppen måste bli av med mer koldioxid", "Lungorna krymper", "Hjärtat stannar", "Blodet tar slut"],
+    ["Varför får man feber?", "Kroppen höjer temperaturen för att bekämpa en infektion", "Kroppen fryser", "Blodet slutar flöda", "Musklerna växer"],
+    ["Varför ska man inte ta antibiotika i onödan?", "Bakterier kan bli motståndskraftiga (resistenta)", "Antibiotika smakar illa", "Det gör virus starkare", "Det ger för mycket energi"],
+    ["Sant eller falskt? Rökning skadar lungorna och ökar risken för cancer.", "Sant", "Falskt"],
+    ["Vad heter vätskan i munnen som börjar bryta ner maten?", "saliv | saliven"]
+  ]);
+  BANKS.geografi = BANKS.geografi.concat([
+    ["Varför bor de flesta människor i Sverige i den södra delen av landet?", "Klimatet är mildare och det finns bra jordbruksmark", "Det är kallare där", "Där finns fler fjäll", "Det är förbjudet att bo i norr"],
+    ["Varför är vintrarna på Norges västkust mildare än man kan tro så långt norrut?", "Golfströmmen för med sig varmt havsvatten", "Solen lyser mer där", "Fjällen värmer luften", "Norge ligger nära ekvatorn"],
+    ["Vad betyder det att ett område har inlandsklimat?", "Stora skillnader mellan varma somrar och kalla vintrar", "Samma temperatur hela året", "Regn varje dag", "Alltid varmt"],
+    ["Varför ligger många städer vid floder och kuster?", "Där finns vatten, transportvägar och handel", "Där är det alltid varmast", "Där blir det aldrig översvämningar", "Där är marken högst"],
+    ["Vad orsakar tidvatten (ebb och flod) i haven?", "Månens dragningskraft", "Vinden", "Stora fiskstim", "Regn"],
+    ["Vilket problem kan uppstå när en stad växer mycket snabbt?", "Brist på bostäder och mer trafik", "Mer orörd skog", "Färre människor", "Mindre avfall"],
+    ["Sant eller falskt? På södra halvklotet är juli en vintermånad.", "Sant", "Falskt"],
+    ["Sant eller falskt? Ekvatorn går genom Europa.", "Falskt", "Sant"],
+    ["Vad kallas en karta som visar berg, sjöar och höjder i stället för gränser? (två ord)", "fysisk karta | en fysisk karta"]
+  ]);
+  BANKS.so_historia = BANKS.so_historia.concat([
+    ["Vilken händelse kom först?", "Vikingatiden", "Digerdöden", "Gustav Vasa blev kung", "Stormaktstiden"],
+    ["Vilken av händelserna inträffade senast?", "Kvinnor röstade för första gången i riksdagsval", "Industrialiseringen började", "Vasaskeppet sjönk", "Kalmarunionen bildades"],
+    ["Varför var Hansan så mäktig under medeltiden?", "Den kontrollerade mycket av handeln runt Östersjön", "Den hade Europas största armé", "Den ägde alla kyrkor", "Den valde Sveriges kung"],
+    ["Vad blev en följd av industrialiseringen i Sverige?", "Många flyttade från landsbygden till städerna för att arbeta i fabriker", "Alla flyttade ut på landet", "Jordbruket försvann helt", "Inga nya städer byggdes"],
+    ["Varför byggdes järnvägar i Sverige på 1800-talet?", "För att snabbt kunna frakta människor och varor", "För att hästar blev förbjudna", "För att det inte fanns några vägar alls", "För att vikingarna ville det"],
+    ["Vilken källa ger mest direkt information om livet under vikingatiden?", "Fynd från gravar och runstenar", "En film från 2020", "Ett datorspel", "En roman skriven i år"],
+    ["Vad är en förstahandskälla?", "En källa från någon som själv var med eller från den tid det gäller", "Den första boken i ett bibliotek", "Den bästa källan", "En källa på engelska"],
+    ["Varför dog så många av digerdöden?", "Sjukdomen spreds snabbt och man visste inte hur den smittade", "Den var ofarlig för barn", "Den fanns bara i Sverige", "Den smittade bara djur"],
+    ["Sant eller falskt? Vikingarna hade horn på sina hjälmar.", "Falskt", "Sant"],
+    ["Vad kallas de nordbor som reste ut på handels- och plundringsfärder på 800–1000-talet?", "vikingar | vikingarna"]
+  ]);
+  BANKS.religion = BANKS.religion.concat([
+    ["Vilken likhet har judendom, kristendom och islam?", "Alla tror på en enda gud", "Alla firar Diwali", "Alla tror på återfödelse", "Alla har Koranen som helig skrift"],
+    ["Vilken skillnad finns mellan hinduism och buddhism?", "Hinduismen har många gudar, buddhismen fokuserar inte på någon gud", "Buddhismen har fler gudar", "Hinduismen saknar heliga platser", "Det finns ingen skillnad"],
+    ["Varför är Jerusalem en viktig stad för tre religioner?", "Där finns heliga platser för judendom, kristendom och islam", "Det är världens största stad", "Där föddes Buddha", "Där står Kaba"],
+    ["Vad menas med att Sverige är ett sekulariserat land?", "Religionen har liten betydelse i samhället och politiken", "Alla måste gå i kyrkan", "Bara en religion är tillåten", "Kungen bestämmer vad man ska tro"],
+    ["Vad är ett etiskt dilemma?", "En situation där man måste välja mellan alternativ som båda har för- och nackdelar", "Ett matteproblem", "En sorts bön", "En högtid"],
+    ["Sant eller falskt? Kaba i Mecka är islams heligaste plats.", "Sant", "Falskt"],
+    ["Vad kallas byggnaden där kristna samlas till gudstjänst?", "kyrka | kyrkan | en kyrka"]
+  ]);
+  BANKS.so_samhalle = BANKS.so_samhalle.concat([
+    ["Varför är fria medier viktiga i en demokrati?", "Medborgarna får veta vad makthavarna gör och kan granska dem", "Så att regeringen kan bestämma allt", "Så att alla tycker likadant", "Så att det inte behövs några val"],
+    ["Vad skiljer en demokrati från en diktatur?", "I en demokrati kan folket välja och byta ledare genom fria val", "I en diktatur finns alltid fria val", "I en demokrati bestämmer en person allt", "Det finns ingen skillnad"],
+    ["Vilket är en rättighet i barnkonventionen?", "Rätten till utbildning", "Rätten att köra bil", "Rätten att rösta i riksdagsvalet", "Rätten att slippa all skola"],
+    ["Hur många av riksdagens 349 platser behövs för egen majoritet?", "175", "100", "349", "200"],
+    ["Vad använder kommunen pengarna från kommunalskatten till?", "Bland annat skolor, äldreomsorg och fritidsgårdar", "Försvaret", "Kungens slott", "Vägar i hela Europa"],
+    ["Vilket påstående är en åsikt och inte ett faktum?", "Fotboll är den roligaste sporten", "Sverige har 290 kommuner", "Riksdagsval hålls vart fjärde år", "Stockholm är Sveriges huvudstad"],
+    ["Sant eller falskt? I Sverige får man rösta i riksdagsvalet från 16 års ålder.", "Falskt", "Sant"],
+    ["Vad heter Sveriges lagstiftande församling?", "riksdagen | riksdag"]
+  ]);
+  BANKS.hallbar = BANKS.hallbar.concat([
+    ["Varför är det bättre för miljön att köpa en begagnad cykel än en ny?", "Ingen ny cykel behöver tillverkas, så man sparar material och energi", "Begagnade cyklar går fortare", "Nya cyklar är förbjudna", "Det är ingen skillnad"],
+    ["Vad är ett exempel på social hållbarhet i skolan?", "Att alla elever känner sig trygga och inkluderade", "Att släcka lamporna", "Att bygga en ny parkering", "Att sälja kakor med vinst"],
+    ["Sant eller falskt? En flygresa till Thailand ger mer utsläpp per person än en tågresa till Göteborg.", "Sant", "Falskt"]
+  ]);
+  BANKS.teknik_maskiner = BANKS.teknik_maskiner.concat([
+    ["Varför är det lättare att lyfta en tung sten med en lång spett än med en kort?", "Ju längre hävarm, desto mindre kraft behövs", "Långa spett väger mindre", "Stenen blir lättare", "Det är ingen skillnad"],
+    ["Varför har en skruvmejsel ett tjockt handtag?", "Det blir lättare att vrida eftersom hävarmen blir större", "Det ser snyggare ut", "Det leder ström", "Det gör skruven längre"],
+    ["En cykel har ett stort kugghjul vid pedalerna och ett litet vid bakhjulet. Vad händer?", "Bakhjulet snurrar fler varv än pedalerna – det går fort men blir tyngre att trampa", "Det blir lättare att trampa uppför", "Cykeln går baklänges", "Ingenting"],
+    ["Varför byggs broar ofta med valv eller bågar?", "Bågen leder ner tyngden mot fästena på sidorna", "Bågar är billigast", "Bågar är bara dekoration", "Bågar gör bron lätt att flytta"],
+    ["Sant eller falskt? En kil, t.ex. en yxa, gör det lättare att klyva ved.", "Sant", "Falskt"]
+  ]);
+  BANKS.teknik_el = BANKS.teknik_el.concat([
+    ["Två lampor sitter i serie med ett batteri. Du kopplar in en tredje lampa i serien. Vad händer?", "Alla lampor lyser svagare", "Alla lyser starkare", "Bara den nya lampan lyser", "Batteriet laddas"],
+    ["Varför ska man inte koppla in för många apparater i samma grenuttag?", "Strömmen kan bli för stor så att sladden blir varm – brandrisk", "Apparaterna blir långsammare", "Det blir tyst", "Det sparar el"],
+    ["Vilket är bäst för att spara el hemma?", "Byta till LED-lampor och stänga av apparater som inte används", "Ha alla lampor tända", "Ha fönstren öppna när det är kallt", "Ladda mobilen hela tiden"],
+    ["Sant eller falskt? Energin i ett batteri är lagrad i kemiska ämnen.", "Sant", "Falskt"],
+    ["Vad kallas ett material som inte leder elektricitet, t.ex. plast och gummi?", "isolator | isolatorer"]
+  ]);
+  BANKS.teknik_design = BANKS.teknik_design.concat([
+    ["Vad ritar programmet ”upprepa 4 gånger: gå 10 steg, sväng 90° höger”?", "En kvadrat", "En triangel", "En cirkel", "En rak linje"],
+    ["Vad ritar programmet ”upprepa 3 gånger: gå 10 steg, sväng 120° höger”?", "En triangel", "En kvadrat", "En femhörning", "En rak linje"],
+    ["Programmet säger: ”om temperaturen är under 20 grader → slå på värmen, annars → stäng av värmen”. Det är 25 grader. Vad händer?", "Värmen stängs av", "Värmen slås på", "Ingenting alls", "Programmet kraschar"],
+    ["Variabeln ”poäng” börjar på 0. Programmet ökar den med 5 tre gånger och minskar den med 2 en gång. Vad är poängen sedan?", "13", "15", "17", "10"],
+    ["Varför är det viktigt att testa en produkt med riktiga användare?", "De kan hitta problem som konstruktören inte tänkt på", "Det gör produkten dyrare", "Användare förstör alltid saker", "Det behövs inte"],
+    ["Vad blir 1 + 1 skrivet i det binära talsystemet?", "10"]
+  ]);
+  BANKS.engelska_ord = BANKS.engelska_ord.concat([
+    ["What does \"reliable\" mean?", "pålitlig", "rolig", "farlig", "ledsen"],
+    ["What does \"to give up\" mean?", "ge upp", "ge bort", "ta upp", "ge tillbaka"],
+    ["Which word fits? \"I'm really ___ forward to the holidays.\"", "looking", "waiting", "seeing", "watching"],
+    ["What does \"suddenly\" mean?", "plötsligt", "sakta", "sällan", "snart"],
+    ["Which word means the same as \"huge\"?", "enormous", "tiny", "narrow", "quiet"],
+    ["Choose the word that fits: \"The film was so ___ that we almost fell asleep.\"", "boring", "bored", "exciting", "excited"],
+    ["What does \"eventually\" mean?", "till slut", "eventuellt", "kanske", "aldrig"],
+    ["True or false? \"Actually\" means \"aktuellt\" in Swedish.", "False", "True"],
+    ["Write the English word for \"ålder\".", "age"],
+    ["Write the English word for \"fågel\".", "bird"],
+    ["Write the English word for \"bibliotek\".", "library"],
+    ["Write the English word for \"fjäril\".", "butterfly"]
+  ]);
+  BANKS.engelska_grammar = BANKS.engelska_grammar.concat([
+    ["Write the past tense of \"catch\".", "caught"],
+    ["Write the past tense of \"think\".", "thought"],
+    ["Write the past tense of \"bring\".", "brought"],
+    ["Write the plural of \"knife\".", "knives"],
+    ["Complete: If I ___ rich, I would buy a horse.", "were", "am", "will be", "be"],
+    ["Complete: I have lived in Sweden ___ five years.", "for", "since", "during", "from"],
+    ["Complete: This is the girl ___ won the race.", "who", "which", "what", "whose"],
+    ["Complete: I'm used to ___ up early.", "getting", "get", "got", "gets"],
+    ["True or false? \"He don't like fish\" is correct English.", "False", "True"],
+    ["True or false? \"Their\" and \"there\" mean the same thing.", "False", "True"]
+  ]);
+  READING_PASSAGES.push({"title": "Målvakten", "text": "Hedda stod i målet och studsade på stället. Det var finalen i cupen, och läktaren var full av föräldrar som ropade och viftade med flaggor. Hennes händer var kalla fast det var mitten av juni, och hon torkade dem på shortsen gång på gång.\n\nFör ett år sedan hade hon släppt in fem mål i samma final. Efter matchen hade hon gråtit i omklädningsrummet och sagt att hon aldrig mer skulle stå i mål. Men tränaren Jonas hade satt sig bredvid henne och sagt: ”En målvakt som aldrig släpper in mål finns inte. Det viktiga är vad du gör efter.”\n\nNu stod det 1–1 och det var bara två minuter kvar. Plötsligt blåste domaren i visslan och pekade på straffpunkten. Det blev tyst på läktaren. Motståndarnas bästa spelare, en lång tjej med fläta, lade bollen till rätta och tog sats.\n\nHedda tänkte på alla kvällar hon hade stannat kvar efter träningen och låtit Jonas skjuta straffar på henne. Hon visste att tjejen med flätan nästan alltid sköt till vänster. Hon väntade, väntade – och kastade sig.\n\nBollen smällde i handskarna och studsade ut mot sidlinjen. Lagkamraterna rusade fram och kramade henne så hårt att hon knappt fick luft. När slutsignalen gick en minut senare stod det fortfarande 1–1, och matchen skulle avgöras på straffar.\n\nHedda gick tillbaka till målet. Händerna var inte kalla längre.", "questions": [["Hur kände sig Hedda i början av matchen?", "Nervös", "Uttråkad", "Arg", "Trött"], ["Vilken mening visar att Hedda är nervös, utan att ordet ”nervös” används?", "Hon torkade händerna på shortsen gång på gång.", "Det var finalen i cupen.", "Läktaren var full av föräldrar.", "Det var mitten av juni."], ["Vad hände i finalen året innan?", "Hedda släppte in fem mål", "Hedda räddade en straff", "Laget vann cupen", "Hedda var skadad"], ["Vad menade Jonas med att det viktiga är ”vad du gör efter”?", "Att man ska lära sig av misstag och fortsätta", "Att man ska gå hem efter matchen", "Att man alltid måste vinna", "Att man ska byta position"], ["Berättelsen hoppar tillbaka till året innan. Vad kallas det?", "Tillbakablick", "Cliffhanger", "Miljöbeskrivning", "Sammanfattning"], ["Varför kastade sig Hedda åt vänster?", "Hon visste att spelaren brukade skjuta dit", "Hon gissade helt på måfå", "Jonas ropade till henne", "Bollen var redan där"], ["Vad visar den sista meningen, ”Händerna var inte kalla längre”?", "Att Hedda inte var nervös längre utan kände sig trygg", "Att vädret blev varmare", "Att hon hade tagit av sig handskarna", "Att matchen var slut"], ["Hur slutar berättelsen?", "Matchen ska avgöras på straffar", "Heddas lag vinner med 2–1", "Hedda blir utbytt", "Motståndarna vinner"], ["Sant eller falskt? Hedda slutade stå i mål efter förra årets final.", "Falskt", "Sant"]]},
+    {"title": "Bävern – naturens byggmästare", "text": "Bävern är Europas största gnagare. En vuxen bäver kan väga över 25 kilo och bli mer än en meter lång, om man räknar med den platta svansen. Svansen fungerar som roder när bävern simmar, och när den känner fara slår den svansen hårt mot vattenytan för att varna sin familj.\n\nBäverns framtänder slutar aldrig att växa. De är orangefärgade eftersom emaljen innehåller järn, vilket gör dem extra hårda. Med tänderna kan en bäver fälla ett ganska tjockt träd på en enda natt. Bävern äter bark, kvistar och vattenväxter, och på hösten samlar den ett förråd av grenar under vattnet inför vintern.\n\nBävrar är kända för sina dammar. Genom att bygga en damm av grenar, stenar och lera höjer bävern vattennivån i bäcken. Då hamnar ingången till boet, som kallas hydda, under vattnet, och rovdjur som räv och varg kan inte ta sig in.\n\nDammarna påverkar också andra djur. Bakom dammen bildas våtmarker där grodor, insekter och fåglar trivs. Men bäverns arbete kan också ställa till problem för människor, till exempel när skog eller vägar översvämmas.\n\nI Sverige jagades bävern så hårt för pälsens och köttets skull att den var utrotad i slutet av 1800-talet. Från 1922 flyttades bävrar hit från Norge, och i dag finns det mer än 100 000 bävrar i Sverige.", "questions": [["Vad är det här för slags text?", "Faktatext", "Novell", "Insändare", "Dikt"], ["Varför är bäverns tänder orange?", "Emaljen innehåller järn", "Bävern äter morötter", "De är smutsiga", "De är gamla"], ["Vad gör bävern med svansen när den känner fara?", "Slår den mot vattnet för att varna", "Gömmer sig bakom den", "Biter med den", "Viftar med den i luften"], ["Varför bygger bävern dammar?", "För att ingången till hyddan ska hamna under vatten", "För att fånga fisk", "För att vattnet ska bli varmare", "För att människor ska kunna gå över bäcken"], ["Vad betyder ordet ”utrotad” i texten?", "Att det inte fanns några bävrar kvar", "Att bävrarna var trötta", "Att bävrarna flyttade till Norge", "Att det fanns väldigt många"], ["Vilket stycke handlar om hur dammarna påverkar andra djur och människor?", "Det fjärde stycket", "Det första stycket", "Det andra stycket", "Det sista stycket"], ["Vilken slutsats kan man dra av texten?", "Bävern både hjälper och ställer till problem i naturen", "Bävern är bara ett skadedjur", "Bävern äter mest fisk", "Bävern finns bara i Norge"], ["Vad gör bävern på hösten?", "Samlar ett förråd av grenar under vattnet", "Flyttar söderut", "Bygger ett bo i ett träd", "Slutar äta"], ["Sant eller falskt? Det finns bävrar i Sverige i dag tack vare bävrar från Norge.", "Sant", "Falskt"]]},
+    {"title": "Brevet i byrålådan", "text": "Det var Amirs uppgift att tömma mormors gamla byrå innan den skulle hämtas av en loppis. De flesta lådorna var fulla av dukar som luktade lavendel och knappar i alla möjliga färger. Men längst in i den översta lådan låg ett gulnat kuvert med ett frimärke som Amir aldrig hade sett förut.\n\n– Får jag öppna det? frågade han.\n\nMormor tog kuvertet och vände på det flera gånger. Sedan satte hon sig långsamt ner på sängkanten.\n\n– Det här skrev jag till min bästa vän Leila när jag var tolv år, sa hon. Vi bodde i samma stad, men hennes familj flyttade till ett annat land. Jag skickade det aldrig.\n\n– Varför inte? undrade Amir.\n\nMormor log, men ögonen blev blanka.\n\n– Jag var arg på henne för att hon flyttade. Det var fånigt, för det var ju inte hennes fel. När jag ångrade mig hade jag ingen adress.\n\nAmir tänkte en stund. Sedan tog han fram sin mobil.\n\n– Vad hette hon mer än Leila? frågade han.\n\nTvå veckor senare satt mormor framför datorn med glasögonen på näsan. På skärmen syntes en gammal kvinna med samma glada skratt som på det svartvita fotot i kuvertet. Ingen av dem sa något på en lång stund. Sedan började båda prata samtidigt.\n\nByrån hämtades av loppisen samma eftermiddag, men kuvertet fick en ny plats – inramat på väggen i mormors kök.", "questions": [["Varför tömde Amir byrån?", "Den skulle hämtas av en loppis", "Han letade efter pengar", "Mormor skulle flytta", "Han ville ha byrån själv"], ["Vad hittade Amir längst in i den översta lådan?", "Ett gammalt kuvert", "En burk knappar", "Ett fotoalbum", "En mobil"], ["Vem hade mormor skrivit brevet till?", "Sin bästa vän Leila", "Sin mamma", "Amir", "Loppisen"], ["Varför skickade mormor aldrig brevet?", "Hon var arg för att vännen flyttade, och sedan hade hon ingen adress", "Hon glömde bort det", "Frimärket var fel", "Leila ville inte ha brev"], ["Vad visar det att mormors ögon ”blev blanka”?", "Att hon blev rörd och ledsen", "Att hon var trött", "Att hon behövde glasögon", "Att hon var arg"], ["Vad gjorde Amir troligen med sin mobil?", "Letade efter Leila på nätet", "Ringde loppisen", "Tog en bild på byrån", "Spelade ett spel"], ["Hur lång tid gick det innan mormor fick prata med Leila?", "Två veckor", "Två dagar", "Ett år", "En timme"], ["Vad betyder det att kuvertet fick ”en ny plats”?", "Mormor ramade in det och hängde upp det", "Det skickades till Leila", "Det slängdes", "Det följde med byrån"], ["Vilket budskap passar bäst för berättelsen?", "Det är aldrig för sent att laga en gammal vänskap", "Man ska aldrig skriva brev", "Gamla möbler ska sparas", "Man ska inte flytta"]]},
+    {"title": "Borde skoldagen börja senare?", "text": "Varje morgon går jag och mina klasskamrater till skolan med tunga ögonlock. Jag tycker att skoldagen i årskurs 6 borde börja klockan nio i stället för klockan åtta.\n\nMitt första argument är att barn behöver mycket sömn. Forskare menar att personer i vår ålder behöver ungefär nio till elva timmars sömn per natt. När vi måste gå upp tidigt får många av oss för lite sömn.\n\nMitt andra argument är att vi lär oss bättre när vi är utvilade. Under första lektionen är många trötta och har svårt att koncentrera sig. Det är synd, eftersom det ofta är då vi har matte.\n\nVissa säger att en senare start gör att skoldagen slutar senare och att det blir mindre tid för fritidsaktiviteter. Det stämmer delvis, men jag tror att vi får ut mer av både skolan och fritiden om vi inte är trötta hela tiden.\n\nDärför anser jag att skolan borde prova att börja klockan nio, åtminstone under en termin, och sedan fråga eleverna hur det har gått.\n\nTrött elev i 6B", "questions": [["Vad är det här för slags text?", "Argumenterande text (insändare)", "Faktatext", "Novell", "Instruktion"], ["Vad är skribentens tes (huvudåsikt)?", "Skoldagen borde börja klockan nio", "Elever borde sova mindre", "Matte borde ligga sist på dagen", "Fritidsaktiviteter borde förbjudas"], ["Vilket är skribentens första argument?", "Barn behöver mycket sömn", "Matte är tråkigt", "Skoldagen är för lång", "Bussarna går för tidigt"], ["Vilket stycke innehåller ett motargument?", "Det fjärde stycket, som börjar ”Vissa säger …”", "Det första stycket", "Det andra stycket", "Det sista stycket"], ["Vad är motargumentet?", "En senare start gör att skoldagen slutar senare", "Elever sover för mycket", "Lärarna vill börja tidigt", "Det kostar för mycket pengar"], ["Varför skriver skribenten om vad forskare menar?", "För att göra argumentet mer trovärdigt", "För att visa att hen själv är forskare", "För att texten ska bli längre", "För att forskare bestämmer skoltider"], ["Vad betyder uttrycket ”tunga ögonlock” i texten?", "Att man är sömnig", "Att man har ont i ögonen", "Att man har glasögon", "Att man gråter"], ["Vilket ord inleder skribentens avslutning?", "Därför", "Vissa", "Mitt", "Varje"], ["Vad föreslår skribenten i slutet?", "Att skolan provar en senare start under en termin och sedan frågar eleverna", "Att alla elever byter skola", "Att matten tas bort", "Att skolan börjar klockan sju"]]});
+  ENGLISH_READING_PASSAGES.push({"title": "The Night Train", "text": "Maya had never travelled alone before. Her mum hugged her on the platform and pushed a paper bag into her hands. \"Sandwiches, an apple and your phone charger,\" she said. \"Text me when you get to Grandpa's.\"\n\nThe night train left at exactly 9 p.m. Maya's seat was next to a window, and she watched the city lights disappear one by one until there was only darkness and her own reflection in the glass.\n\nAt midnight the train stopped suddenly in the middle of a forest. The lights flickered and went out. Some passengers groaned, and a baby started to cry. Maya's heart was pounding, but she remembered what Grandpa always said: \"When you're scared, find something useful to do.\"\n\nShe took out her phone and switched on the torch. Then she noticed an old man across the aisle who was trying to read a map in the dark. \"Would you like some light?\" she asked. He smiled gratefully. They spent the next hour talking about his travels in Norway and her plans to become a pilot.\n\nWhen the lights came back on and the train started moving again, the old man shook her hand. \"You are a very calm young lady,\" he said.\n\nAt 7 a.m. Grandpa was waiting on the platform. \"How was the trip?\" he asked.\n\nMaya grinned. \"Longer than expected,\" she said, \"but I made a new friend.\"", "questions": [["Why was this trip special for Maya?", "It was the first time she travelled alone", "It was her birthday", "She was moving to a new country", "She was going to fly a plane"], ["What was in the paper bag?", "Sandwiches, an apple and a phone charger", "A map and a torch", "Books and sweets", "A ticket and money"], ["What happened at midnight?", "The train stopped and the lights went out", "Maya fell asleep", "They arrived at Grandpa's", "The baby got off the train"], ["How did Maya feel when the lights went out?", "Scared, but she tried to stay calm", "Bored", "Angry with the driver", "Very happy"], ["What does \"gratefully\" mean in the text?", "thankfully", "angrily", "sadly", "quickly"], ["Which advice from Grandpa helped Maya?", "When you're scared, find something useful to do.", "Never talk to strangers.", "Always bring a map.", "Try to sleep on the train."], ["What did the old man think of Maya?", "That she was very calm", "That she was too young to travel alone", "That she talked too much", "That she was lost"], ["True or false? The train arrived earlier than planned.", "False", "True"]]},
+    {"title": "The Amazing Octopus", "text": "The octopus is one of the most unusual animals in the ocean. It has eight arms covered in suckers, which it uses to touch, taste and grab things. Even more surprising, an octopus has three hearts and blue blood.\n\nOctopuses are masters of disguise. Special cells in their skin allow them to change colour in less than a second, so they can blend in with rocks, sand or coral. If a predator still finds them, they can squirt a cloud of dark ink and escape while the enemy is confused.\n\nScientists consider the octopus to be very intelligent. In experiments, octopuses have learned to open jars to get the food inside, and some have even escaped from their tanks at night. Because they have no bones, they can squeeze through any gap that is bigger than their beak, the only hard part of their body.\n\nSadly, most octopuses live short lives. Many species live for only one or two years. A mother octopus guards her eggs for weeks or even months without eating, and she usually dies soon after the eggs hatch.\n\nSo next time you see an octopus in a picture or an aquarium, remember: you are looking at one of the cleverest creatures in the sea.", "questions": [["What kind of text is this?", "A fact text", "A story", "A poem", "A letter"], ["How many hearts does an octopus have?", "three", "one", "two", "eight"], ["How does an octopus hide from enemies?", "It changes colour to blend in", "It digs a hole", "It grows a shell", "It swims to the surface"], ["Why can an octopus squeeze through very small gaps?", "It has no bones", "It is very small", "It uses its ink", "It has short arms"], ["What is the only hard part of an octopus's body?", "its beak", "its suckers", "its hearts", "its eyes"], ["What does \"disguise\" mean in the text?", "hiding by looking like something else", "a kind of food", "a fast way to swim", "a dangerous fish"], ["What happens to a mother octopus?", "She guards her eggs without eating and usually dies after they hatch", "She leaves the eggs at once", "She lives for many years with her babies", "She eats the eggs"], ["True or false? Most octopuses live for more than ten years.", "False", "True"]]});
+
   // Mixed quizzes take questions from every bank in the subject (a question text is only used once).
   function mergeBanks(){
     var seen = {}, out = [];
@@ -1447,7 +1760,8 @@
   BANKS.ak6 = mergeBanks(BANKS.ak6, BANKS.geografi, BANKS.so_sverige, BANKS.so_historia, BANKS.so_samhalle, BANKS.religion, BANKS.hallbar);
   BANKS.engelska_mixed = mergeBanks(BANKS.engelska_mixed, BANKS.engelska_ord, BANKS.engelska_grammar);
   BANKS.teknik_alla = mergeBanks(BANKS.teknik_maskiner, BANKS.teknik_el, BANKS.teknik_design);
-  BANKS.ma_np = mergeBanks(BANKS.ma_brak, BANKS.ma_geometri, BANKS.ma_negativa, BANKS.ma_skala, BANKS.ma_statistik, BANKS.ma_procent, BANKS.ma_np_extra);
+  BANKS.ma_np = mergeBanks(BANKS.ma_brak, BANKS.ma_geometri, BANKS.ma_negativa, BANKS.ma_skala, BANKS.ma_statistik, BANKS.ma_procent, BANKS.ma_np_extra, BANKS.ma_sannolikhet);
+  BANKS.svenska_alla = mergeBanks(BANKS.svenska, BANKS.sv_grammatik, BANKS.sv_stavning, BANKS.sv_ord, BANKS.sv_texter);
 
   var currentReadingPassage = null;
   function readingQuestions(list){
@@ -1459,9 +1773,7 @@
       var pick = shuffle(qs.map(function(_, i){ return i; })).slice(0, 7).sort(function(a, b){ return a - b; });
       qs = pick.map(function(i){ return qs[i]; });
     }
-    return qs.map(function(item){
-      return {text:item[0], correct:item[1], options:shuffle(item.slice(1)), picked:null};
-    });
+    return qs.map(bankQuestion);
   }
 
   // Questions are dealt like a deck of cards: every question in a bank comes up once
@@ -1483,10 +1795,44 @@
     return hand;
   }
 
-  function fromBank(key){
-    return deal(key, BANKS[key].length, TOTAL).map(function(i){
-      var item = BANKS[key][i];
-      return { text: item[0], correct: item[1], options: shuffle(item.slice(1)), picked: null };
+  function fromBank(key, count){
+    return deal(key, BANKS[key].length, count || TOTAL).map(function(i){ return bankQuestion(BANKS[key][i]); });
+  }
+
+  // ---------- answer types ----------
+  // [question, correct, wrong, wrong, wrong] = four options.
+  // [question, correct, other] with Sant/Falskt or True/False = true or false, always in that order.
+  // [question, answer] = type the answer; "a | b" accepts several answers, the first is shown as correct.
+  function bankQuestion(item){
+    if (item.length === 2) return typeQ(item[0], item[1]);
+    var opts = item.slice(1);
+    if (opts.length === 2) opts = /^(sant|true)$/i.test(opts[0]) ? opts : [opts[1], opts[0]];
+    else opts = shuffle(opts);
+    return { text: item[0], correct: item[1], options: opts, picked: null };
+  }
+  function typeQ(text, answer){
+    var accept = String(answer).split('|').map(function(x){ return x.trim(); });
+    return { text: text, correct: accept[0], accept: accept, input: true, options: [], picked: null };
+  }
+  // Compares typed answers loosely: case, spaces, "3,5" or "3.5", "1 234" or "1234" and units like "kr".
+  function normAnswer(v){
+    var t = String(v == null ? '' : v).toLowerCase().replace(/[\u00a0\u202f]/g, ' ').replace(/[−–]/g, '-')
+      .replace(/\s*\/\s*/g, '/').replace(/\s+/g, ' ').replace(/[.!]+$/, '').trim();
+    var nums = [], m = t.match(/^-?\d[\d ,.]*/);
+    if (m && /^[\sa-zåäö²³%°.]*$/.test(t.slice(m[0].length))) {
+      var n = m[0].replace(/ /g, '').replace(/[.,]$/, '');
+      if (/^-?\d{1,3}(,\d{3})+$/.test(n)) nums.push(Number(n.replace(/,/g, '')));
+      if (/^-?\d+([.,]\d+)?$/.test(n)) nums.push(Number(n.replace(',', '.')));
+    }
+    return { text: t, nums: nums };
+  }
+  function answerIsRight(q){
+    if (!q.input) return q.picked === q.correct;
+    var a = normAnswer(q.picked);
+    return q.accept.some(function(ok){
+      var b = normAnswer(ok);
+      if (a.text === b.text) return true;
+      return b.nums.some(function(x){ return a.nums.some(function(y){ return Math.abs(x - y) < 1e-9; }); });
     });
   }
 
@@ -1528,37 +1874,38 @@
     }
     return { text: text, correct: fmt(correct), options: shuffle([correct].concat(wrongs).map(fmt)), picked: null };
   }
-  function genAdd(){
+  function basicAdd(){
     var k = rnd(1, 3), a, b;
     if (k === 1) { a = rnd(10, 99); b = rnd(10, 99); }
     else if (k === 2) { a = rnd(100, 500); b = rnd(10, 500); }
     else { a = rnd(100, 1000); b = rnd(100, 1000); }
     return numQ(fmt(a) + ' + ' + fmt(b) + ' = ?', a + b);
   }
-  function genSub(){
+  function basicSub(){
     var k = rnd(1, 3), a, b;
     if (k === 1) { a = rnd(20, 99); b = rnd(10, a - 1); }
     else if (k === 2) { a = rnd(100, 1000); b = rnd(10, a - 1); }
     else { a = rnd(500, 1000); b = rnd(100, a - 1); }
     return numQ(fmt(a) + ' − ' + fmt(b) + ' = ?', a - b);
   }
-  function genMul(){
+  function basicMul(){
     var k = rnd(1, 3), a, b;
     if (k === 1) { a = rnd(2, 12); b = rnd(2, 12); }
     else if (k === 2) { a = rnd(11, 25); b = rnd(2, 9); }
     else { a = rnd(20, 99); b = rnd(2, 9); }
     return numQ(a + ' × ' + b + ' = ?', a * b, [a * b + a, a * b - a, a * b + b, a * b - b]);
   }
-  function genDiv(){
+  function basicDiv(){
     var k = rnd(1, 2), b, q;
     if (k === 1) { b = rnd(2, 12); q = rnd(2, 20); }
     else { b = rnd(2, 9); q = rnd(10, 99); }
     return numQ(fmt(b * q) + ' ÷ ' + b + ' = ?', q, [q + 1, q - 1, q + 2, q - 2]);
   }
   function quizFrom(gens){
-    var list = [], seen = {}, guard = 0;
+    var list = [], seen = {}, guard = 0, order = [];
     while (list.length < TOTAL && guard++ < 500) {
-      var q = gens[rnd(0, gens.length - 1)]();
+      if (!order.length) order = shuffle(gens);   // take turns, so one quiz mixes many kinds of questions
+      var q = order.pop()();
       if (seen[q.text]) continue;
       seen[q.text] = true;
       list.push(q);
@@ -1566,20 +1913,289 @@
     return list;
   }
 
+  // ---------- Matte åk 6: generated questions with new numbers every time ----------
+  var NAMES = ['Atharva', 'Elsa', 'Noah', 'Maja', 'Omar', 'Lina', 'Hugo', 'Sara', 'Leo', 'Ebba', 'Arvid', 'Nora'];
+  function pick(arr){ return arr[rnd(0, arr.length - 1)]; }
+  // Swedish number format: 12 345,5
+  function sv(n){
+    n = Math.round(n * 1e6) / 1e6;
+    var p = String(Math.abs(n)).split('.');
+    p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return (n < 0 ? '−' : '') + p.join(',');
+  }
+  function kr(n){ return Number.isInteger(Math.round(n * 1e6) / 1e6) ? sv(n) : n.toFixed(2).replace('.', ','); }
+  // Four options: the right one and the first three different wrong ones.
+  function choiceQ(text, right, wrongs){
+    var seen = {}, opts = [right]; seen[right] = true;
+    wrongs.forEach(function(w){ w = String(w); if (opts.length < 4 && !seen[w]) { seen[w] = true; opts.push(w); } });
+    return { text: text, correct: right, options: shuffle(opts), picked: null };
+  }
+  // A number question: sometimes typed in, otherwise four choices built from typical mistakes.
+  function mathQ(text, answer, wrongs, unit, typeChance, format){
+    var f = format || sv, u = unit ? ' ' + unit : '', right = f(answer) + u;
+    if (Math.random() < (typeChance == null ? 0.3 : typeChance)) return typeQ(text, right);
+    var extra = [answer + 1, answer - 1, answer * 10, answer + 10, answer - 10, answer * 2]
+      .filter(function(w){ return w >= 0 || answer < 0; });
+    return choiceQ(text, right, (wrongs || []).concat(extra).filter(function(w){ return isFinite(w); })
+      .map(function(w){ return f(w) + u; }));
+  }
+  // Takes turns between n kinds of question so the same kind does not come back too soon.
+  var TURNS = {};
+  function turn(key, n){
+    if (!TURNS[key] || !TURNS[key].length) TURNS[key] = shuffle(Array.from({ length: n }, function(_, i){ return i; }));
+    return TURNS[key].pop();
+  }
+  function clock(min){ min = ((min % 1440) + 1440) % 1440; return ('0' + Math.floor(min / 60)).slice(-2) + ':' + ('0' + min % 60).slice(-2); }
+
+  // The four operations: Atharva's original questions mixed with bigger numbers, decimals,
+  // missing numbers and word problems.
+  function genAdd(){
+    var r = turn('add', 10) + 1, n = pick(NAMES), a, b;
+    if (r <= 3) return basicAdd();
+    if (r <= 5) { a = rnd(1000, 9999); b = rnd(100, 9999); return typeQ(sv(a) + ' + ' + sv(b) + ' = ?', sv(a + b)); }
+    if (r === 6) { a = rnd(120, 900); b = rnd(35, 400); return mathQ('Vilket tal ska stå i rutan? ☐ + ' + b + ' = ' + sv(a + b), a, [a + 2 * b, a + 10, a - 10]); }
+    if (r <= 8) {
+      a = rnd(1200, 4800); b = rnd(150, 950);
+      return [
+        function(){ return mathQ(n + ' har ' + sv(a) + ' kr på sitt sparkonto och sätter in ' + b + ' kr till. Hur mycket finns på kontot nu?', a + b, [a - b, a + b + 100], 'kr'); },
+        function(){ return mathQ('Ett tåg kör ' + sv(a) + ' km på måndagen och ' + b + ' km på tisdagen. Hur långt kör tåget sammanlagt?', a + b, [a - b, a + b - 100], 'km'); },
+        function(){ return mathQ('En konsert hade ' + sv(a) + ' besökare på fredagen och ' + b + ' fler på lördagen. Hur många besökare kom på lördagen?', a + b, [a - b, b, a + b + 10]); }
+      ][turn('addWord', 3)]();
+    }
+    return decAdd();
+  }
+  function genSub(){
+    var r = turn('sub', 10) + 1, n = pick(NAMES), a, b;
+    if (r <= 3) return basicSub();
+    if (r <= 5) { a = rnd(2000, 9999); b = rnd(100, a - 100); return typeQ(sv(a) + ' − ' + sv(b) + ' = ?', sv(a - b)); }
+    if (r === 6) { a = rnd(300, 900); b = rnd(40, a - 50); return mathQ('Vilket tal ska stå i rutan? ' + a + ' − ☐ = ' + (a - b), b, [2 * a - b, a - b, b + 10, b - 10]); }
+    if (r === 7) { a = rnd(2, 15); b = rnd(1, 12); return mathQ('På morgonen var det −' + a + ' °C. På eftermiddagen var det ' + b + ' °C. Hur många grader steg temperaturen?', a + b, [Math.abs(b - a), a, b], 'grader'); }
+    if (r === 8) { a = rnd(1200, 1900); b = a + rnd(30, 250); return mathQ('Hur många år är det mellan år ' + a + ' och år ' + b + '?', b - a, [b - a + 1, b - a - 1, b - a + 100]); }
+    if (r === 9) { a = pick([200, 500, 1000]); b = rnd(a / 5, a - 20); return mathQ(n + ' har ' + a + ' kr och köper en tröja för ' + b + ' kr. Hur mycket pengar har ' + n + ' kvar?', a - b, [a + b, a - b + 10, a - b - 10], 'kr'); }
+    return decSub();
+  }
+  function genMul(){
+    var r = turn('mul', 10) + 1, a, b, c;
+    if (r <= 3) return basicMul();
+    if (r <= 5) { a = rnd(12, 49); b = rnd(12, 39); return mathQ(a + ' × ' + b + ' = ?', a * b, [a * (b - b % 10), a * b + a, (a + 1) * b, a * b - 10], '', 0.4); }
+    if (r === 6) { b = rnd(3, 9); a = rnd(4, 12); return mathQ('Vilket tal ska stå i rutan? ☐ × ' + b + ' = ' + (a * b), a, [a * b - b, a + 1, a - 1, b]); }
+    if (r === 7) return decShift();
+    if (r === 8) { a = rnd(5, 19) * 5; b = rnd(3, 9); return mathQ('En biobiljett kostar ' + a + ' kr. Vad kostar ' + b + ' biljetter?', a * b, [a + b, a * b - a, a * (b + 1)], 'kr'); }
+    if (r === 9) { a = rnd(6, 12); b = rnd(6, 12); c = rnd(3, 6); return mathQ('En låda har ' + a + ' rader med ' + b + ' bullar i varje rad. Hur många bullar finns det i ' + c + ' sådana lådor?', a * b * c, [a * b, a * b + c, a * b * (c - 1)]); }
+    return decMul();
+  }
+  function genDiv(){
+    var r = turn('div', 10) + 1, n = pick(NAMES), a, b, q;
+    if (r <= 3) return basicDiv();
+    if (r <= 5) { b = rnd(3, 9); q = rnd(21, 199); return typeQ(sv(b * q) + ' ÷ ' + b + ' = ?', sv(q)); }
+    if (r === 6) { b = rnd(12, 25); q = rnd(6, 30); return mathQ(sv(b * q) + ' ÷ ' + b + ' = ?', q, [q + 1, q - 1, q * 10]); }
+    if (r === 7) { b = rnd(3, 9); q = rnd(3, 12); return mathQ('Vilket tal ska stå i rutan? ☐ ÷ ' + b + ' = ' + q, b * q, [q + b, b * q + b, b * q - q]); }
+    if (r === 8) {
+      b = pick([4, 5, 6]); a = b * rnd(4, 9) + rnd(1, b - 1); q = Math.floor(a / b);
+      return mathQ(a + ' elever ska åka till simhallen. I varje bil får ' + b + ' elever plats. Hur många bilar behövs?', q + 1, [q, a % b, q + 2], '', 0.25);
+    }
+    if (r === 9) { b = rnd(3, 6); q = rnd(25, 150); return mathQ(n + ' och ' + (b - 1) + ' kompisar delar ' + sv(b * q) + ' kr lika. Hur mycket får var och en?', q, [Math.round(b * q / (b - 1)), q + 10, q - 10], 'kr'); }
+    return decShift();
+  }
+
+  // Decimals
+  function decAdd(){
+    var a = rnd(10, 99) * 10 + rnd(1, 9), b = rnd(1, 9) * 100 + rnd(1, 99);       // a tenths, b hundredths
+    var right = (a * 10 + b) / 100, slip = Math.floor(a / 10) + Math.floor(b / 100) + ((a % 10) + (b % 100)) / 100;
+    return mathQ(sv(a / 10) + ' + ' + sv(b / 100) + ' = ?', right, [slip, right + 1, right - 0.1]);
+  }
+  function decSub(){
+    var a = rnd(10, 99) * 10 + rnd(1, 9), b = rnd(1, 9) * 100 + rnd(1, 99);
+    var right = (a * 10 - b) / 100, slip = Math.floor(a / 10) - Math.floor(b / 100) + Math.abs((a % 10) * 10 - b % 100) / 100;
+    return mathQ(sv(a / 10) + ' − ' + sv(b / 100) + ' = ?', right, [slip, right + 1, right - 0.1]);
+  }
+  function decMul(){
+    var t = rnd(11, 49), b = rnd(3, 9), right = t * b / 10, slip = Math.floor(t / 10) * b + (t % 10) * b / 100;
+    return mathQ(sv(t / 10) + ' × ' + b + ' = ?', right, [slip, right * 10, right + 1]);
+  }
+  function decShift(){
+    var d = pick([10, 100, 1000]);
+    if (Math.random() < 0.5) { var a = rnd(101, 999) / 100; return mathQ(sv(a) + ' × ' + sv(d) + ' = ?', a * d, [a * d / 10, a * d * 10, a * d / 100]); }
+    var x = rnd(12, 990); return mathQ(sv(x) + ' ÷ ' + sv(d) + ' = ?', x / d, [x / d * 10, x / d / 10, x * d]);
+  }
+  var DEC = [decAdd, decSub, decMul, decShift,
+    function(){   // largest / smallest
+      var x = rnd(3, 8), big = x / 10, opts = [x / 10, (x - 1) / 10 + rnd(51, 99) / 1000, (x * 10 - rnd(1, 9)) / 100, x / 100];
+      var most = Math.random() < 0.5;
+      return choiceQ('Vilket decimaltal är ' + (most ? 'störst' : 'minst') + '?', sv(most ? big : x / 100), opts.map(sv));
+    },
+    function(){   // rounding
+      var h = rnd(1001, 9999); if (h % 10 === 5) h++;
+      if (Math.random() < 0.5) {
+        var w = Math.round(h / 100);
+        return mathQ('Avrunda ' + sv(h / 100) + ' till närmaste heltal.', w, [Math.floor(h / 100) === w ? w + 1 : w - 1, Math.round(h / 10) / 10, h / 100]);
+      }
+      var t = Math.round(h / 10) / 10;
+      return mathQ('Avrunda ' + sv(h / 100) + ' till en decimal.', t, [Math.floor(h / 10) / 10 === t ? t + 0.1 : t - 0.1, Math.round(h / 100), h / 100]);
+    },
+    function(){   // money
+      var p = rnd(15, 99) / 10 + pick([0, 0.05, 0.09]), k = rnd(3, 6), item = pick(['Ett äpple', 'En bulle', 'En penna', 'Ett paket tuggummi']);
+      p = Math.round(p * 100) / 100;
+      return mathQ(item + ' kostar ' + kr(p) + ' kr. Vad kostar ' + k + ' st?', Math.round(p * k * 100) / 100, [Math.round(p * (k - 1) * 100) / 100, p + k, Math.round(p * k * 10) / 100], 'kr', 0.3, kr);
+    },
+    function(){   // halfway
+      var a = rnd(11, 98); return mathQ('Vilket tal ligger mitt emellan ' + sv(a / 10) + ' och ' + sv((a + 1) / 10) + '?', (a * 10 + 5) / 100, [(a + 0.5) / 10 + 0.5, (2 * a + 1) / 10, (a * 10 + 1) / 100]);
+    },
+    function(){   // place value
+      var d = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4), num = d[0] + '.' + d[1] + d[2] + d[3], k = rnd(1, 3);
+      var place = ['tiondels', 'hundradels', 'tusendels'][k - 1];
+      return choiceQ('Vilken siffra står på ' + place + 'platsen i talet ' + num.replace('.', ',') + '?', String(d[k]), [d[1], d[2], d[3], d[0]].map(String));
+    },
+    function(){   // percent ↔ decimal
+      var p = rnd(2, 98); if (p % 10 === 0) p++;
+      if (Math.random() < 0.5) return mathQ('Skriv ' + sv(p / 100) + ' i procent.', p, [p / 10, p * 10, p / 100], '%', 0.3);
+      return mathQ('Skriv ' + p + ' % i decimalform.', p / 100, [p / 10, p / 1000, p]);
+    }
+  ];
+
+  // Number sense: primes, divisibility, rounding, order of operations, negative numbers
+  var PRIMES = [23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
+  var ODD_COMPOSITES = [21, 27, 33, 39, 49, 51, 57, 63, 69, 77, 81, 87, 91, 93];
+  var TAL = [
+    function(){ return choiceQ('Vilket av talen är ett primtal?', String(pick(PRIMES)), shuffle(ODD_COMPOSITES).slice(0, 3).map(String)); },
+    function(){ return choiceQ('Vilket av talen är INTE ett primtal?', String(pick(ODD_COMPOSITES)), shuffle(PRIMES).slice(0, 3).map(String)); },
+    function(){
+      var d = pick([3, 4, 6, 9]), yes = d * rnd(15, 110), no = [];
+      while (no.length < 3) { var x = rnd(100, 999); if (x % d && no.indexOf(x) < 0) no.push(x); }
+      return choiceQ('Vilket tal är delbart med ' + d + '?', String(yes), no.map(String));
+    },
+    function(){
+      var x = rnd(10000, 99999), s = pick([10, 100, 1000]), r = Math.round(x / s) * s;
+      var name = { 10: 'tiotal', 100: 'hundratal', 1000: 'tusental' }[s];
+      return mathQ('Avrunda ' + sv(x) + ' till närmaste ' + name + '.', r, [Math.floor(x / s) * s === r ? r + s : r - s, Math.round(x / (s * 10)) * s * 10, x - x % (s / 10 || 1)], '', 0.35);
+    },
+    function(){
+      var digits = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 6), num = Number(digits.join('')), k = rnd(0, 5), dg = digits[k];
+      var vals = digits.map(function(_, i){ return dg * Math.pow(10, 5 - i); });
+      return mathQ('Vilket värde har siffran ' + dg + ' i talet ' + sv(num) + '?', vals[k], vals.filter(function(_, i){ return i !== k; }), '', 0);
+    },
+    function(){
+      var a = rnd(2, 12), b = rnd(2, 9), c = rnd(2, 9), t = rnd(1, 4);
+      if (t === 1) return mathQ('Beräkna ' + a + ' + ' + b + ' × ' + c, a + b * c, [(a + b) * c, a * b + c]);
+      if (t === 2) return mathQ('Beräkna (' + a + ' + ' + b + ') × ' + c, (a + b) * c, [a + b * c, a * b * c]);
+      if (t === 3) { var big = b * c + rnd(1, 20); return mathQ('Beräkna ' + big + ' − ' + (b * c) + ' ÷ ' + c, big - b, [(big - b * c) / c, big - b * c, big + b].filter(Number.isInteger)); }
+      return mathQ('Beräkna ' + a + ' × ' + b + ' − ' + c + ' × 2', a * b - c * 2, [(a * b - c) * 2, a * (b - c) * 2, a * b - c]);
+    },
+    function(){
+      var a = rnd(3, 15), b = rnd(4, 20), t = rnd(1, 4);
+      if (t === 1) return mathQ('Beräkna −' + a + ' + ' + b, b - a, [-(a + b), a + b, a - b]);
+      if (t === 2) return mathQ('Vilket tal är ' + b + ' mindre än −' + a + '?', -(a + b), [b - a, a + b, -(a + b) + 2]);
+      if (t === 3) { var xs = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]).slice(0, 4).map(function(v){ return -v; }); return choiceQ('Vilket av de negativa talen är störst?', sv(Math.max.apply(null, xs)), xs.map(sv)); }
+      return mathQ('Hur stor är skillnaden mellan −' + a + ' °C och ' + b + ' °C?', a + b, [Math.abs(b - a), b, a], 'grader');
+    },
+    function(){
+      var x = rnd(1000, 9999) * 100, s = pick([1000, 10000, 100000]);
+      return mathQ('Vilket tal är ' + sv(s) + ' mer än ' + sv(x) + '?', x + s, [x + s / 10, x + s * 10, x + 100]);
+    },
+    function(){
+      var p = pick([[4, 6, 12], [6, 8, 24], [3, 5, 15], [4, 10, 20], [6, 9, 18], [8, 12, 24], [10, 15, 30]]);
+      return mathQ('Vilket är det minsta tal som är delbart med både ' + p[0] + ' och ' + p[1] + '?', p[2], [p[0] * p[1], p[0] + p[1], p[2] * 2]);
+    }
+  ];
+
+  // Equations, expressions and patterns
+  var ALG = [
+    function(){ var x = rnd(5, 60), a = rnd(5, 40); return mathQ('Lös ekvationen: x + ' + a + ' = ' + (x + a) + '. Vad är x?', x, [x + 2 * a, x + 1, x - 1], '', 0.4); },
+    function(){ var x = rnd(20, 90), a = rnd(5, 19); return mathQ('Lös ekvationen: x − ' + a + ' = ' + (x - a) + '. Vad är x?', x, [x - 2 * a, x - a, x + 1], '', 0.4); },
+    function(){ var x = rnd(3, 15), a = rnd(3, 9); return mathQ('Lös ekvationen: ' + a + 'x = ' + (a * x) + '. Vad är x?', x, [a * x - a, a * x + a, a * a * x], '', 0.4); },
+    function(){ var y = rnd(3, 12), a = rnd(2, 9); return mathQ('Lös ekvationen: x ÷ ' + a + ' = ' + y + '. Vad är x?', a * y, [y + a, y - a > 0 ? y - a : y + 2 * a, y], '', 0.4); },
+    function(){
+      var x = rnd(2, 12), a = rnd(2, 6), b = rnd(1, 15), c = a * x + b;
+      return mathQ('Lös ekvationen: ' + a + 'x + ' + b + ' = ' + c + '. Vad är x?', x, [(c + b) % a ? c - b : (c + b) / a, c - b, x + 1], '', 0.35);
+    },
+    function(){ var a = rnd(2, 9), x = rnd(2, 9), b = rnd(1, 9); return mathQ('Vad är värdet av ' + a + 'x − ' + b + ' om x = ' + x + '?', a * x - b, [a * x + b, Number(String(a) + String(x)) - b, a + x - b]); },
+    function(){ var a = rnd(2, 9), b = rnd(1, 9), m = rnd(2, 5); return mathQ('a = ' + a + ' och b = ' + b + '. Vad är ' + m + 'a + b?', m * a + b, [m * (a + b), Number(String(m) + String(a)) + b, a + b]); },
+    function(){
+      var s = rnd(2, 20), d = rnd(3, 12), seq = [s, s + d, s + 2 * d, s + 3 * d];
+      if (Math.random() < 0.3) { var g = rnd(2, 3), q = [s, s * g, s * g * g, s * g * g * g]; return mathQ('Vilket tal kommer sedan? ' + q.join(', ') + ', …', s * Math.pow(g, 4), [q[3] + (q[3] - q[2]), q[3] + q[2], q[3] * 2 + 1]); }
+      return mathQ('Vilket tal kommer sedan? ' + seq.join(', ') + ', …', s + 4 * d, [s + 4 * d + 1, s + 5 * d, s + 3 * d + 1]);
+    },
+    function(){ var s = rnd(1, 9), d = rnd(2, 7), k = pick([10, 20, 50]); return mathQ('Talföljden börjar ' + [s, s + d, s + 2 * d, s + 3 * d].join(', ') + ', … Vilket är det ' + k + ':e talet?', s + (k - 1) * d, [s + k * d, k * d, s + (k - 2) * d], '', 0.3); },
+    function(){ var s = rnd(3, 8), d = rnd(2, 6), k = rnd(6, 15); return mathQ('Figur 1 har ' + s + ' stickor och varje ny figur har ' + d + ' stickor fler. Hur många stickor har figur ' + k + '?', s + (k - 1) * d, [s + k * d, k * d, s * k], '', 0.3); },
+    function(){ var x = rnd(3, 15), m = rnd(2, 6), a = rnd(2, 20), r = m * x + a; return mathQ('Jag tänker på ett tal. Jag multiplicerar det med ' + m + ' och lägger till ' + a + '. Då får jag ' + r + '. Vilket tal tänkte jag på?', x, [r - a, (r + a) % m ? Math.round(r / m) : (r + a) / m, x + 1], '', 0.35); },
+    function(){
+      var n = pick(NAMES), a = rnd(2, 9) * 10, w = rnd(3, 8);
+      return choiceQ(n + ' har x kr och får ' + a + ' kr i veckopeng i ' + w + ' veckor. Vilket uttryck visar hur mycket pengar ' + n + ' har då?',
+        'x + ' + w + ' · ' + a, ['(x + ' + a + ') · ' + w, 'x · ' + a + ' + ' + w, w + 'x + ' + a]);
+    },
+    function(){ var a = rnd(3, 9), p = rnd(2, 6), T = 3 * a + 2 * p; return mathQ('3 äpplen och 2 päron kostar tillsammans ' + T + ' kr. Ett päron kostar ' + p + ' kr. Vad kostar ett äpple?', a, [Math.round((T - p) / 3), Math.round(T / 5), a + 1], 'kr'); }
+  ];
+
+  // Word problems in several steps
+  var WORD = [
+    function(){ var n = pick(NAMES), k = rnd(2, 5), p = rnd(12, 45), note = k * p < 100 ? 100 : (k * p < 200 ? 200 : 500);
+      return mathQ(n + ' köper ' + k + ' tidningar för ' + p + ' kr styck och betalar med en ' + note + '-lapp. Hur mycket får ' + n + ' tillbaka?', note - k * p, [note - p, k * p, note - k * p + 10], 'kr'); },
+    function(){ var P = rnd(5, 40) * 20, r = pick([10, 20, 25, 50]), what = pick(['En jacka', 'Ett par skor', 'Ett spel', 'En ryggsäck']);
+      return mathQ(what + ' kostar ' + P + ' kr. Priset sänks med ' + r + ' %. Vad kostar det nu?', P * (100 - r) / 100, [P * r / 100, P - r, P + P * r / 100], 'kr'); },
+    function(){
+      var start = rnd(8 * 12, 19 * 12) * 5, dur = rnd(1, 3) * 60 + rnd(1, 11) * 5, end = start + dur, what = pick(['En film', 'En match', 'En tågresa', 'En konsert']);
+      var noCarry = Math.floor(start / 60) * 60 + Math.floor(dur / 60) * 60 + (start % 60 + dur % 60) % 60;
+      var right = clock(end), q = what + ' börjar kl. ' + clock(start) + ' och håller på i ' + Math.floor(dur / 60) + ' h ' + (dur % 60) + ' min. När slutar den?';
+      if (Math.random() < 0.25) return typeQ(q, right + ' | ' + right.replace(':', '.'));
+      return choiceQ(q, right, [clock(noCarry === end ? end + 10 : noCarry), clock(end - 60), clock(end + 60), clock(end - 10)]);
+    },
+    function(){ var a = rnd(6 * 12, 20 * 12) * 5, d = rnd(15, 95);
+      return mathQ('Bussen går kl. ' + clock(a) + ' och kommer fram kl. ' + clock(a + d) + '. Hur många minuter tar resan?', d, [d + 40, d - 10, d + 10], 'min'); },
+    function(){ var v = pick([40, 50, 60, 70, 80, 90, 100, 120]), t = pick([0.5, 1.5, 2, 2.5, 3]);
+      return mathQ('En bil kör med farten ' + v + ' km/h. Hur långt kommer den på ' + sv(t) + ' timmar?', v * t, [v * Math.floor(t), v + t, v * t * 2], 'km'); },
+    function(){ var v = pick([60, 80, 90, 120]), t = rnd(2, 5);
+      return mathQ('Ett tåg kör ' + v * t + ' km med farten ' + v + ' km/h. Hur många timmar tar resan?', t, [t + 1, v * t - v, t * 10], 'timmar'); },
+    function(){ var x = pick([2, 3, 5, 6, 8]), T = pick([2, 6, 8, 10, 12]), what = pick(['mjölk', 'mjöl', 'grädde']);
+      return mathQ('Ett recept för 4 personer behöver ' + x + ' dl ' + what + '. Hur mycket behövs för ' + T + ' personer?', x * T / 4, [x + (T - 4), x * T, x * 4 / T], 'dl'); },
+    function(){
+      var a = pick([3, 4]), b = pick([5, 6]), pa = rnd(4, 9) * a + pick([0, 1, 2]), per = rnd(4, 9), pb = per * b + pick([-2, 0, 3]);
+      var ua = pa / a, ub = pb / b; if (Math.abs(ua - ub) < 0.4) { pb += 4; ub = pb / b; }
+      return choiceQ('Paket A: ' + a + ' st för ' + pa + ' kr. Paket B: ' + b + ' st för ' + pb + ' kr. Vilket paket är billigast per styck?', ua < ub ? 'Paket A' : 'Paket B',
+        [ua < ub ? 'Paket B' : 'Paket A', 'De kostar lika mycket per styck', 'Det går inte att räkna ut']);
+    },
+    function(){ var n = pick(NAMES), m = pick(NAMES.filter(function(x){ return x !== n; })), y = rnd(8, 40), d = rnd(2, 10), S = 2 * y + d;
+      return mathQ(n + ' är ' + d + ' år äldre än ' + m + '. Tillsammans är de ' + S + ' år. Hur gammal är ' + n + '?', y + d, [Math.round(S / 2), y, S - d], 'år', 0.3); },
+    function(){ var m = rnd(10, 20), dv = pick([[-3, 1, 2], [-2, -2, 4], [-5, 2, 3], [-1, -4, 5], [4, -1, -3]]), xs = dv.map(function(v){ return m + v; }), n = pick(NAMES);
+      return mathQ(n + ' fick ' + xs[0] + ', ' + xs[1] + ' och ' + xs[2] + ' poäng på tre prov. Vad är medelvärdet?', m, [m * 3, m + 1, xs.slice().sort(function(a, b){ return a - b; })[1] === m ? m - 1 : xs.slice().sort(function(a, b){ return a - b; })[1]], 'poäng'); },
+    function(){ var l = rnd(6, 25), w = rnd(3, l - 1);
+      if (Math.random() < 0.5) return mathQ('En rektangulär trädgård är ' + l + ' m lång och ' + w + ' m bred. Hur många meter staket behövs runt hela trädgården?', 2 * (l + w), [l * w, l + w, 2 * l + w], 'm');
+      return mathQ('Ett rektangulärt golv är ' + l + ' m långt och ' + w + ' m brett. Hur stor är arean?', l * w, [2 * (l + w), l + w, l * w + l], 'm²'); },
+    function(){ var n = pick(NAMES), f = pick([[3, 4], [2, 3], [3, 5]]), P = f[1] * rnd(20, 60);
+      return mathQ(n + ' läser en bok på ' + P + ' sidor och har läst ' + f[0] + '/' + f[1] + ' av den. Hur många sidor är kvar?', P - P * f[0] / f[1], [P * f[0] / f[1], P / 2, P - f[0]], 'sidor'); },
+    function(){ var N = pick([20, 25, 30]), r = pick(N === 25 ? [20, 40, 60, 80] : [10, 20, 30, 40, 50, 60]);
+      return mathQ('I en klass med ' + N + ' elever cyklar ' + r + ' % till skolan. Hur många elever cyklar?', N * r / 100, [r, N - N * r / 100, N * r / 10], 'elever'); },
+    function(){ var s = pick([1000, 5000, 10000, 50000]), c = rnd(2, 9);
+      return mathQ('På en karta i skala 1:' + sv(s) + ' är avståndet mellan två hus ' + c + ' cm. Hur långt är det i verkligheten?', c * s / 100, [c * s, c * s / 1000, c * s / 10], 'm'); },
+    function(){ var n = pick(NAMES), k = rnd(2, 4), p = rnd(9, 19) * 10 - 1, m = rnd(4, 12) * 10 - 1;
+      return mathQ(n + ' köper ' + k + ' t-shirts för ' + p + ' kr styck och en keps för ' + m + ' kr. Hur mycket kostar det sammanlagt?', k * p + m, [p + m, k * (p + m), k * p], 'kr'); }
+  ];
+
+  // Half from a question bank, half generated – so the national-test mix never looks the same.
+  function mixQuiz(bankKey, gens, bankCount){
+    var list = fromBank(bankKey, bankCount), texts = list.map(function(q){ return q.text; });
+    var fresh = quizFrom(gens).filter(function(q){ return texts.indexOf(q.text) < 0; });
+    return shuffle(list.concat(fresh.slice(0, TOTAL - bankCount)));
+  }
+
   // ---------- subjects shown in the menu ----------
   var MATTE_QUIZZES = [
-    { id:'matte-add', tag:'MATTE', icon:'➕', title:'Addition',  color:'#6c4cf1', desc:'Numbers from 10 to 1,000', make: additionQuestions },
-    { id:'matte-sub', tag:'MATTE', icon:'➖', title:'Subtraction', color:'#6c4cf1', desc:'Numbers from 10 to 1,000', make: function(){ return quizFrom([genSub]); } },
-    { id:'matte-mul', tag:'MATTE', icon:'✖️', title:'Multiplication', color:'#6c4cf1', desc:'Times tables and bigger numbers', make: function(){ return quizFrom([genMul]); } },
-    { id:'matte-div', tag:'MATTE', icon:'➗', title:'Division', color:'#6c4cf1', desc:'Divide exactly, no remainders', make: function(){ return quizFrom([genDiv]); } },
+    { id:'matte-add', tag:'MATTE', icon:'➕', title:'Addition',  color:'#6c4cf1', desc:'Big numbers, decimals, missing numbers and word problems', make: function(){ return quizFrom([genAdd]); } },
+    { id:'matte-sub', tag:'MATTE', icon:'➖', title:'Subtraction', color:'#6c4cf1', desc:'Big numbers, negative numbers, decimals and word problems', make: function(){ return quizFrom([genSub]); } },
+    { id:'matte-mul', tag:'MATTE', icon:'✖️', title:'Multiplication', color:'#6c4cf1', desc:'Times tables, 2-digit × 2-digit, decimals and word problems', make: function(){ return quizFrom([genMul]); } },
+    { id:'matte-div', tag:'MATTE', icon:'➗', title:'Division', color:'#6c4cf1', desc:'Long division, ÷ 10 and 100, remainders and word problems', make: function(){ return quizFrom([genDiv]); } },
     { id:'matte-mix', tag:'MATTE', icon:'🧮', title:'Mix – all four', color:'#6c4cf1', desc:'Add, subtract, multiply and divide', make: function(){ return quizFrom([genAdd, genSub, genMul, genDiv]); } },
+    { id:'matte-problem', tag:'MATTE', icon:'🎯', title:'Problemlösning', color:'#6c4cf1', desc:'Textuppgifter i flera steg: pengar, tid, fart, recept och skala', make:function(){ return quizFrom(WORD); } },
+    { id:'matte-decimal', tag:'MATTE', icon:'🔟', title:'Decimaltal', color:'#6c4cf1', desc:'Räkna, jämföra och avrunda decimaltal – nya tal varje gång', make:function(){ return quizFrom(DEC); } },
+    { id:'matte-algebra', tag:'MATTE', icon:'🧩', title:'Ekvationer och mönster', color:'#6c4cf1', desc:'Lös x, räkna ut uttryck och hitta mönster i talföljder', make:function(){ return quizFrom(ALG); } },
+    { id:'matte-tal', tag:'MATTE', icon:'🧠', title:'Tal och räkneregler', color:'#6c4cf1', desc:'Primtal, delbarhet, avrundning, prioriteringsregler och negativa tal', make:function(){ return quizFrom(TAL); } },
+    { id:'matte-sannolikhet', tag:'MATTE', icon:'🎲', title:'Sannolikhet och kombinatorik', color:'#6c4cf1', desc:'Tärningar, kulor i påsar och hur många sätt det finns', make:function(){ return fromBank('ma_sannolikhet'); } },
     { id:'matte-procent', tag:'MATTE', icon:'💯', title:'Procent – Läxa 8 & 9', color:'#6c4cf1', desc:'Percent, fractions and decimals, like the school homework', make:function(){ return fromBank('ma_procent'); } },
     { id:'matte-brak', tag:'MATTE', icon:'🍕', title:'Bråk – fractions', color:'#6c4cf1', desc:'Täljare, nämnare and parts of a whole', make:function(){ return fromBank('ma_brak'); } },
     { id:'matte-geometri', tag:'MATTE', icon:'📐', title:'Vinklar & symmetri', color:'#6c4cf1', desc:'Angles, triangles and lines of symmetry', make:function(){ return fromBank('ma_geometri'); } },
     { id:'matte-negativa', tag:'MATTE', icon:'🌡️', title:'Negativa tal & temperatur', color:'#6c4cf1', desc:'Number line, bank accounts and degrees below zero', make:function(){ return fromBank('ma_negativa'); } },
     { id:'matte-skala', tag:'MATTE', icon:'📏', title:'Skala, area & enheter', color:'#6c4cf1', desc:'Scale drawings, area, volume, units and time', make:function(){ return fromBank('ma_skala_mer'); } },
     { id:'matte-statistik', tag:'MATTE', icon:'📊', title:'Statistik & diagram', color:'#6c4cf1', desc:'Mean, median, mode, tables and coordinates', make:function(){ return fromBank('ma_statistik'); } },
-    { id:'matte-np', tag:'MATTE', icon:'🏅', title:'Nationella provet – blandat', color:'#6c4cf1', desc:'Mixed åk 6 questions in the style of the national test', make:function(){ return fromBank('ma_np'); } }
+    { id:'matte-np', tag:'MATTE', icon:'🏅', title:'Nationella provet – blandat', color:'#6c4cf1', desc:'Mixed åk 6 questions in the style of the national test', make:function(){ return mixQuiz('ma_np', WORD.concat(ALG, DEC, TAL), 6); } }
   ];
 
   var NO_QUIZZES = [
@@ -1602,8 +2218,12 @@
   ];
 
   var SVENSKA_QUIZZES = [
-    { id:'svenska-las', tag:'SVENSKA · LÄSFÖRSTÅELSE', icon:'📚', title:'Läsförståelse', color:'#2b7bd9', desc:'15 olika texter – en slumpas varje gång, med 7 frågor', reading:true, make:function(){ return readingQuestions(READING_PASSAGES); } },
-    { id:'svenska-sprak', tag:'SVENSKA · SPRÅK', icon:'✍️', title:'Språk, stavning och grammatik', color:'#2b7bd9', desc:'Ordklasser, stavning, meningsbyggnad och ord', make:function(){ return fromBank('svenska'); } }
+    { id:'svenska-las', tag:'SVENSKA · LÄSFÖRSTÅELSE', icon:'📚', title:'Läsförståelse', color:'#2b7bd9', desc:READING_PASSAGES.length + ' olika texter – en slumpas varje gång, med 7 frågor', reading:true, make:function(){ return readingQuestions(READING_PASSAGES); } },
+    { id:'svenska-grammatik', tag:'SVENSKA · GRAMMATIK', icon:'🔤', title:'Grammatik', color:'#2b7bd9', desc:'Ordklasser, satsdelar, verbformer och ordföljd', make:function(){ return fromBank('sv_grammatik'); } },
+    { id:'svenska-stavning', tag:'SVENSKA · STAVNING', icon:'✏️', title:'Stavning och skiljetecken', color:'#2b7bd9', desc:'Sj-, tj-, j- och ng-ljud, särskrivning, stor bokstav och kommatecken', make:function(){ return fromBank('sv_stavning'); } },
+    { id:'svenska-ord', tag:'SVENSKA · ORD', icon:'💬', title:'Ord, uttryck och bildspråk', color:'#2b7bd9', desc:'Synonymer, ordspråk, liknelser och metaforer', make:function(){ return fromBank('sv_ord'); } },
+    { id:'svenska-texter', tag:'SVENSKA · TEXTER', icon:'📝', title:'Texttyper och berättande', color:'#2b7bd9', desc:'Berättelser, faktatexter, argumenterande texter och källor', make:function(){ return fromBank('sv_texter'); } },
+    { id:'svenska-sprak', tag:'SVENSKA · SPRÅK', icon:'✍️', title:'Språk, stavning och grammatik', color:'#2b7bd9', desc:'Blandade språkfrågor från alla svenska-quiz', make:function(){ return fromBank('svenska_alla'); } }
   ];
 
   var ENGLISH_QUIZZES = [
@@ -1622,10 +2242,10 @@
   ];
 
   var SUBJECTS = [
-    { id:'matte', tag:'MATTE', icon:'🔢', title:'Math quizzes', color:'#6c4cf1', desc:'The four operations, procent, bråk, geometry, statistics and national test practice', children: MATTE_QUIZZES },
+    { id:'matte', tag:'MATTE', icon:'🔢', title:'Math quizzes', color:'#6c4cf1', desc:'The four operations, problemlösning, decimaltal, ekvationer, procent, bråk, geometry, statistics, sannolikhet and national test practice', children: MATTE_QUIZZES },
     { id:'no',       tag:'NO',       icon:'🔬', title:'Naturorienterande ämnen', color:'#1c9c5b', desc:'Biologi, fysik, kemi, människokroppen, rymden och NO för åk 6', children: NO_QUIZZES },
     { id:'so',       tag:'SO',       icon:'🌍', title:'Samhällsorienterande ämnen', color:'#d9822b', desc:'Geografi, historia, samhälle, religion, hållbar utveckling och SO för åk 6', children: SO_QUIZZES },
-    { id:'svenska',  tag:'SVENSKA',  icon:'📖', title:'Svenska',   color:'#2b7bd9', desc:'Läsförståelse, ordklasser, stavning och språk', children: SVENSKA_QUIZZES },
+    { id:'svenska',  tag:'SVENSKA',  icon:'📖', title:'Svenska',   color:'#2b7bd9', desc:'Läsförståelse, grammatik, stavning, ord och uttryck, texttyper och berättande', children: SVENSKA_QUIZZES },
     { id:'engelska', tag:'ENGELSKA', icon:'🇬🇧', title:'Engelska', color:'#c93c6e', desc:'Ord, grammatik, läsförståelse och skrivande', children: ENGLISH_QUIZZES },
     { id:'teknik',   tag:'TEKNIK',   icon:'⚙️', title:'Teknik',   color:'#5f6b7a', desc:'Maskiner, elektricitet, design och programmering', children: TEKNIK_QUIZZES }
   ];
@@ -1944,6 +2564,15 @@
       box.appendChild(row);
     });
   }
+  // Clicking the title goes to the home page: the subject menu, or the welcome screen if nobody is signed in.
+  function goHome(){
+    if (profile && accounts.indexOf(profile) > -1) { enterApp(profile, false); return; }
+    $('accountsBox').classList.add('hidden');
+    window.scrollTo(0, 0);
+  }
+  $('homeTitle').addEventListener('click', goHome);
+  $('homeTitle').addEventListener('keydown', function(e){ if (e.key === 'Enter') goHome(); });
+
   $('haveAccountBtn').addEventListener('click', function(){
     loadSheetPlayers();
     renderAccounts();
@@ -2108,7 +2737,7 @@
     $('nextBtn').disabled = !answered;
     $('checkBtn').disabled = answeredCount() < TOTAL;
     $('progress').textContent = 'Question ' + (idx + 1) + ' of ' + TOTAL +
-      (answered ? '' : ' – pick an answer');
+      (answered ? '' : questions[idx] && questions[idx].input ? ' – type your answer' : ' – pick an answer');
   }
   function showQuestion(i){
     idx = i;
@@ -2134,6 +2763,27 @@
       box.appendChild(title);
       var opts = document.createElement('div');
       opts.className = 'opts';
+      if (q.input) {
+        var wrap = document.createElement('label');
+        wrap.className = 'opt typein';
+        var field = document.createElement('input');
+        field.type = 'text'; field.autocomplete = 'off'; field.spellcheck = false;
+        field.placeholder = '✍️ Type your answer here';
+        field.setAttribute('aria-label', 'Your answer');
+        field.addEventListener('input', function(){
+          if (checked) return;
+          q.picked = field.value.trim() || null;
+          wrap.classList.toggle('selected', q.picked !== null);
+          updateProgress();
+        });
+        field.addEventListener('keydown', function(e){
+          if (e.key !== 'Enter') return;
+          e.preventDefault();
+          if (q.picked !== null && idx < TOTAL - 1) showQuestion(idx + 1);
+        });
+        wrap.appendChild(field);
+        opts.appendChild(wrap);
+      }
       q.options.forEach(function(val){
         var lab = document.createElement('label');
         lab.className = 'opt';
@@ -2190,7 +2840,7 @@
     }
     var n = playerName();
     $('quizIntro').textContent = (n ? n + ', answer' : 'Answer') +
-      ' all 10 questions, then press “Check answers”. Nothing is marked until you do!';
+      ' all ' + TOTAL + ' questions, then press “Check answers”. Nothing is marked until you do!';
     render();
     window.scrollTo(0, 0);
   }
@@ -2208,15 +2858,16 @@
     var score = 0, mistakes = [];
     questions.forEach(function(q, i){
       var box = $('q' + i), fb = $('fb' + i);
-      var labels = box.querySelectorAll('.opt');
+      var labels = box.querySelectorAll('.opt'), right = answerIsRight(q);
       for (var k = 0; k < labels.length; k++) {
         var inp = labels[k].querySelector('input');
         inp.disabled = true;
-        if (inp.value === q.correct) labels[k].classList.add('correct');
+        if (q.input) labels[k].classList.add(right ? 'correct' : 'incorrect');
+        else if (inp.value === q.correct) labels[k].classList.add('correct');
         else if (inp.value === q.picked) labels[k].classList.add('incorrect');
       }
       fb.classList.remove('hidden');
-      if (q.picked === q.correct) {
+      if (right) {
         score++;
         box.classList.add('right');
         fb.className = 'fb good'; fb.textContent = '✅ Correct!';
