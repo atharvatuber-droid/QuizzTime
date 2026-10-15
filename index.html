@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!doctype html>
 <html lang="en">
 <head>
@@ -114,7 +113,7 @@
         <label for="selfGender">How would you like to describe it?</label>
         <input id="selfGender" type="text" maxlength="30" placeholder="Optional">
       </div>
-      <p class="small">Your profile and quiz scores can be saved in this browser on this device.</p>
+      <p class="small" id="saveNote">Your profile and quiz scores can be saved in this browser on this device.</p>
       <button class="primary" id="continueBtn" type="submit" style="width:100%;margin-top:8px">Continue to quizzes ➜</button>
       <button class="ghost" id="haveAccountBtn" type="button" style="width:100%;margin-top:8px">👤 I have an account</button>
     </form>
@@ -122,6 +121,18 @@
       <h3 style="margin:0 0 4px">👥 Accounts on this device</h3>
       <p class="small">Tap an account to open it. New accounts you make are added here, and the old ones stay saved.</p>
       <div id="accountsList"></div>
+      <div id="cloudLoginBox" class="hidden">
+        <h3 style="margin:18px 0 4px">☁️ Log in to an online account</h3>
+        <p class="small">Turned on online saving on another phone or computer? Log in here with the same user name and PIN.</p>
+        <form id="cloudLoginForm">
+          <label for="cloudUser">User name</label>
+          <input id="cloudUser" type="text" maxlength="30" autocomplete="username">
+          <label for="cloudPin">PIN</label>
+          <input id="cloudPin" type="password" inputmode="numeric" maxlength="8" autocomplete="current-password">
+          <button class="primary" type="submit" style="width:100%;margin-top:8px">Log in</button>
+          <p class="fb" id="cloudLoginMsg"></p>
+        </form>
+      </div>
       <h3 style="margin:18px 0 4px">🌍 All players</h3>
       <p class="small" id="onlineNote">Connecting…</p>
       <div id="onlineList"></div>
@@ -917,10 +928,531 @@
   BANKS.ma_np = [].concat(BANKS.ma_brak, BANKS.ma_geometri, BANKS.ma_negativa, BANKS.ma_skala, BANKS.ma_statistik, BANKS.ma_procent, BANKS.ma_np_extra);
   BANKS.ma_skala_mer = BANKS.ma_skala.concat(BANKS.ma_np_extra.slice(6, 17));
 
+  // ---------- more question sets: NO, SO, Teknik, Engelska, Svenska and Bråk ----------
+  BANKS.biologi = BANKS.biologi.concat([
+    ["Vilken grupp djur ger di åt sina ungar?", "Däggdjur", "Fåglar", "Reptiler", "Fiskar"],
+    ["Hur andas fiskar under vattnet?", "Med gälar", "Med lungor", "Genom fjällen", "Genom fenorna"],
+    ["Vad kallas det när ett grodyngel förvandlas till en groda?", "Metamorfos (förvandling)", "Fotosyntes", "Pollinering", "Kondensation"],
+    ["I vilken ordning utvecklas en fjäril?", "Ägg – larv – puppa – fjäril", "Larv – ägg – fjäril – puppa", "Puppa – ägg – larv – fjäril", "Ägg – puppa – fjäril – larv"],
+    ["Vilka tre kroppsdelar har en insekt?", "Huvud, mellankropp och bakkropp", "Huvud, mage och svans", "Skal, ben och vingar", "Huvud och bakkropp, bara två delar"],
+    ["Hur många ben har en insekt?", "6", "8", "4", "10"],
+    ["Hur många ben har en spindel?", "8", "6", "10", "4"],
+    ["Vilket av dessa djur är ryggradslöst?", "Daggmask", "Abborre", "Groda", "Kråka"],
+    ["Vad kallas djur vars kroppstemperatur följer omgivningens temperatur, t.ex. ormar och grodor?", "Växelvarma", "Jämnvarma", "Allätare", "Däggdjur"],
+    ["Vilket ämne gör växternas blad gröna?", "Klorofyll", "Kalcium", "Socker", "Kväve"],
+    ["Vilken del av blomman bildar pollen?", "Ståndarna", "Pistillen", "Kronbladen", "Roten"],
+    ["Vad bildas i blomman efter att den har blivit pollinerad?", "Frön", "Rötter", "Taggar", "Löv"],
+    ["Vad är en producent i en näringskedja?", "En växt som tillverkar sin egen näring", "Ett rovdjur", "En nedbrytare", "Ett djur som äter växter"],
+    ["Vad kallas djuret högst upp i en näringskedja som inget annat djur äter?", "Toppkonsument", "Producent", "Nedbrytare", "Växtätare"],
+    ["Vad är en näringsväv?", "Flera näringskedjor som hänger ihop", "En sorts spindelnät", "Ett rotsystem", "En karta över skogen"],
+    ["Vilket träd är ett barrträd?", "Gran", "Björk", "Ek", "Lönn"],
+    ["Varför fäller lövträd sina löv på hösten?", "För att spara vatten och energi under vintern", "För att löven blir för tunga", "För att djuren äter upp dem", "För att trädet ska växa snabbare"],
+    ["Är svampar växter?", "Nej, svampar är en egen grupp av organismer", "Ja, alla svampar är växter", "Ja, men bara giftiga svampar", "Nej, svampar är djur"],
+    ["Vilket djur går i vinterdvala i Sverige?", "Igelkotten", "Älgen", "Räven", "Haren"],
+    ["Vad kallas fåglar som flyger söderut på hösten?", "Flyttfåglar", "Stannfåglar", "Rovfåglar", "Sjöfåglar"],
+    ["Vem gav växter och djur vetenskapliga namn på latin och kallas ”blomsterkungen”?", "Carl von Linné", "Alfred Nobel", "Anders Celsius", "Charles Darwin"],
+    ["Hur är isbjörnen anpassad till kylan?", "Tjock päls och ett tjockt fettlager", "Stora öron som släpper ut värme", "Tunn päls och långa ben", "Den sover hela året"],
+    ["Vad bildas vid fotosyntesen förutom socker?", "Syre", "Koldioxid", "Kväve", "Salt"],
+    ["Vad är en lav?", "Ett samarbete mellan en svamp och en alg", "En sorts mossa", "En ung gran", "En insekt"],
+    ["Vilket är Sveriges största landlevande däggdjur?", "Älgen", "Brunbjörnen", "Vargen", "Rådjuret"],
+    ["Vad kallas det när ett djur har färger som gör att det smälter in i omgivningen?", "Kamouflage", "Metamorfos", "Pollinering", "Fotosyntes"],
+    ["Vilket djur är en groddjur?", "Groda", "Ödla", "Orm", "Sköldpadda"],
+    ["Vad har alla fåglar?", "Fjädrar och näbb", "Päls och morrhår", "Gälar och fenor", "Fyra ben"]
+  ]);
+  BANKS.no_kropp = [
+    ["Ungefär hur många ben har en vuxen människas skelett?", "206", "106", "306", "56"],
+    ["Vilket är kroppens största organ?", "Huden", "Levern", "Hjärnan", "Lungorna"],
+    ["Var börjar matsmältningen?", "I munnen", "I magsäcken", "I tjocktarmen", "I levern"],
+    ["Var tas det mesta av näringen från maten upp i blodet?", "I tunntarmen", "I matstrupen", "I munnen", "I urinblåsan"],
+    ["Vad gör njurarna?", "Renar blodet och bildar urin", "Pumpar blodet", "Tar upp syre", "Tuggar maten"],
+    ["Vilka blodkroppar transporterar syre?", "Röda blodkroppar", "Vita blodkroppar", "Blodplättar", "Nervceller"],
+    ["Vad gör de vita blodkropparna?", "Försvarar kroppen mot bakterier och virus", "Transporterar syre", "Får blodet att levra sig", "Bygger skelettet"],
+    ["Vad gör blodplättarna när man får ett sår?", "Hjälper blodet att levra sig", "Transporterar syre", "Smälter maten", "Styr musklerna"],
+    ["Vilka blodkärl leder blodet från hjärtat ut i kroppen?", "Artärer (pulsådror)", "Vener", "Senor", "Tarmar"],
+    ["Vilka blodkärl leder blodet tillbaka till hjärtat?", "Vener", "Artärer", "Senor", "Nerver"],
+    ["Vad styr och samordnar kroppens alla delar?", "Hjärnan och nervsystemet", "Magsäcken", "Huden", "Skelettet"],
+    ["Vad fäster musklerna vid skelettet?", "Senor", "Leder", "Naglar", "Nerver"],
+    ["Vad kallas stället där två ben möts och kan röra sig, t.ex. knät?", "En led", "En sena", "En muskel", "En nerv"],
+    ["Vilket sinne använder vi näsan till?", "Luktsinnet", "Smaksinnet", "Känseln", "Hörseln"],
+    ["Vilken del av ögat blir mindre i starkt ljus?", "Pupillen", "Ögonlocket", "Ögonbrynet", "Ögonfransen"],
+    ["Vilken gas andas vi ut mer av än vi andas in?", "Koldioxid", "Syre", "Kväve", "Helium"],
+    ["Vad hjälper antibiotika mot?", "Infektioner som orsakas av bakterier", "Förkylning som orsakas av virus", "Benbrott", "Allergier"],
+    ["Hur skyddar ett vaccin kroppen?", "Det lär immunförsvaret att känna igen en sjukdom", "Det dödar alla bakterier i kroppen", "Det gör att man aldrig blir trött", "Det byter ut blodet"],
+    ["Vilken sorts näring finns mest i pasta, bröd och potatis och ger kroppen energi?", "Kolhydrater", "Proteiner", "Vitaminer", "Mineraler"],
+    ["Vad behöver kroppen proteiner till?", "Att bygga och reparera muskler och celler", "Att se i mörker", "Att känna lukt", "Att svettas"],
+    ["Vad gör hormonerna under puberteten?", "Sätter igång förändringar i kroppen", "Gör att man slutar växa direkt", "Bryter ner maten", "Pumpar blodet"],
+    ["Varför är sömn viktigt?", "Kroppen och hjärnan återhämtar sig och växer", "Man slipper äta", "Musklerna försvinner", "Hjärtat stannar och vilar"],
+    ["Vad kallas kroppens minsta levande byggstenar?", "Celler", "Atomer", "Organ", "Muskler"],
+    ["Varför ska man tvätta händerna innan man äter?", "För att minska spridningen av bakterier och virus", "För att maten ska smaka mer", "För att huden ska bli torr", "För att få mer energi"],
+    ["Ungefär hur många gånger slår hjärtat per minut i vila hos en vuxen?", "60–80 gånger", "5–10 gånger", "200–300 gånger", "1 000 gånger"],
+    ["Vilken del av skelettet skyddar hjärnan?", "Skallen", "Revbenen", "Bäckenet", "Lårbenet"],
+    ["Vilken del av skelettet skyddar hjärtat och lungorna?", "Bröstkorgen med revbenen", "Skallen", "Bäckenet", "Lårbenet"],
+    ["Vad kallas röret som maten åker ner genom från munnen till magsäcken?", "Matstrupen", "Luftstrupen", "Tunntarmen", "Urinröret"],
+    ["Vad händer med pulsen när man springer?", "Den går upp", "Den går ner", "Den stannar", "Den är alltid lika"]
+  ];
+  BANKS.fysik = BANKS.fysik.concat([
+    ["Vad händer om man håller två nordpoler från två magneter mot varandra?", "De stöter bort varandra", "De dras ihop", "Ingenting händer", "De blir sydpoler"],
+    ["Vilket av dessa föremål dras till en magnet?", "Ett gem av järn", "En aluminiumburk", "En plastlinjal", "Ett guldmynt"],
+    ["Vilken kraft gör att cykeln stannar när man bromsar?", "Friktion", "Tyngdkraft", "Magnetism", "Lyftkraft"],
+    ["Vad är luftmotstånd?", "En kraft från luften som bromsar föremål som rör sig", "En kraft som drar mot jordens mitt", "Ljud som studsar", "Värme från solen"],
+    ["Vad säger energiprincipen?", "Energi kan inte skapas eller förstöras, bara omvandlas", "Energi tar alltid slut till sist", "Energi skapas av ingenting", "Bara solen har energi"],
+    ["Vilken energi har en stor sten högst upp på ett berg?", "Lägesenergi", "Rörelseenergi", "Ljudenergi", "Elektrisk energi"],
+    ["Vad uppstår när ett föremål vibrerar snabbt?", "Ljud", "Ljus", "Magnetism", "Elektricitet"],
+    ["Vad kallas ljud som studsar tillbaka mot en bergvägg?", "Eko", "Brus", "Ton", "Blixt"],
+    ["Ungefär hur snabbt färdas ljud i luft?", "340 meter per sekund", "3 meter per sekund", "300 000 km per sekund", "34 km per sekund"],
+    ["Varför ser vi blixten innan vi hör åskan?", "Ljuset färdas mycket snabbare än ljudet", "Ljudet startar senare", "Åskan kommer från ett annat ställe", "Öronen är långsammare än ögonen"],
+    ["Vad händer med vitt ljus som går genom ett prisma?", "Det delas upp i regnbågens färger", "Det blir svart", "Det blir till ljud", "Det försvinner"],
+    ["Varför ser ett sugrör i ett glas vatten ut att vara knäckt?", "Ljuset bryts när det går från vatten till luft", "Vattnet böjer sugröret", "Glaset är magnetiskt", "Ljuset stannar i vattnet"],
+    ["Hur bildas en skugga?", "Ett föremål stoppar ljuset som går rakt fram", "Ljuset böjer sig runt föremålet", "Mörker strålar ut från föremålet", "Föremålet suger upp ljud"],
+    ["Vilken av dessa är en egen ljuskälla?", "Solen", "Månen", "En spegel", "En reflex"],
+    ["Varför ska man ha reflex när det är mörkt ute?", "Den reflekterar ljuset från t.ex. bilars lyktor så att man syns", "Den lyser av sig själv", "Den värmer kroppen", "Den låter när en bil kommer"],
+    ["Vilket material isolerar bäst mot kyla?", "Ull", "Koppar", "Aluminium", "Järn"],
+    ["Hur kommer solens värme till jorden genom rymden?", "Genom strålning", "Genom ledning", "Genom strömmande luft", "Genom kablar"],
+    ["Varför kan en stor båt av stål flyta?", "Formen tränger undan mycket vatten så att vattnet lyfter båten", "Stål är lättare än vatten", "Båten är full av helium", "Havet är magnetiskt"],
+    ["Vad händer med en uppblåst ballong om man lägger den i frysen?", "Den krymper", "Den blir större", "Den smälter", "Den börjar lysa"],
+    ["Varför sjunker man mindre ner i snön med skidor än med bara kängor?", "Kraften fördelas på en större yta", "Skidorna är lättare än kängorna", "Snön blir hårdare av skidor", "Skidorna är varma"],
+    ["I vilken enhet mäter man energi?", "Joule", "Newton", "Meter", "Grader"],
+    ["Vad gör en cykeldynamo?", "Omvandlar rörelseenergi till elektrisk energi", "Gör el till rörelse", "Lagrar bensin", "Bromsar cykeln"],
+    ["Vad kallas en magnets två ändar?", "Nordpol och sydpol", "Plus och minus", "Topp och botten", "Höger och vänster"],
+    ["Vad betyder det att något har hög temperatur?", "Att partiklarna rör sig snabbt", "Att partiklarna står helt still", "Att det väger mycket", "Att det är stort"],
+    ["Vad händer med en gungas fart när den svänger ner mot den lägsta punkten?", "Den ökar", "Den minskar", "Den är noll", "Den är alltid lika"]
+  ]);
+  BANKS.kemi = BANKS.kemi.concat([
+    ["Vad är den kemiska formeln för vatten?", "H₂O", "CO₂", "O₂", "NaCl"],
+    ["Vilka grundämnen består vatten av?", "Väte och syre", "Kol och syre", "Kväve och väte", "Natrium och klor"],
+    ["Vilken gas finns det mest av i luften?", "Kväve", "Syre", "Koldioxid", "Helium"],
+    ["Ungefär hur stor del av luften är syre?", "21 %", "78 %", "1 %", "50 %"],
+    ["Vilket pH-värde är neutralt?", "7", "0", "14", "1"],
+    ["Vilket av dessa är surt?", "Citronsaft", "Tvållösning", "Rent vatten", "Bikarbonat i vatten"],
+    ["Vad kallas ett ämne som byter färg beroende på om något är surt eller basiskt?", "Indikator", "Katalysator", "Legering", "Bränsle"],
+    ["Vilken indikator kan man göra själv i köket?", "Rödkålssaft", "Mjölk", "Olivolja", "Sockerlösning"],
+    ["Vad händer med socker som rörs ut i varmt vatten?", "Det löser sig", "Det blir till gas", "Det blir till salt", "Det blir hårt som sten"],
+    ["Hur kan man få tillbaka saltet ur saltvatten?", "Låta vattnet avdunsta", "Filtrera bort saltet", "Frysa saltet", "Använda en magnet"],
+    ["Vad kallas det när vattenånga blir till droppar, t.ex. på en kall spegel?", "Kondensation", "Avdunstning", "Smältning", "Sublimering"],
+    ["Vilka tre saker behövs för att något ska kunna brinna?", "Bränsle, syre och värme", "Vatten, sand och luft", "Ljus, ljud och värme", "Kol, salt och vatten"],
+    ["Varför slocknar ett ljus om man sätter ett glas över det?", "Syret tar slut", "Glaset blir för kallt", "Ljuset blir för tungt", "Vaxet fryser"],
+    ["Vilken gas bildas när man blandar bikarbonat och ättika?", "Koldioxid", "Syre", "Väte", "Kväve"],
+    ["Vilket är ett tecken på att en kemisk reaktion har skett?", "En ny gas bildas eller färgen ändras", "Ett papper klipps itu", "Is smälter", "Vatten hälls i ett glas"],
+    ["Vad är brons en blandning (legering) av?", "Koppar och tenn", "Järn och kol", "Guld och silver", "Aluminium och plast"],
+    ["Vad tillverkas stål av främst?", "Järn och lite kol", "Koppar och tenn", "Sand och kalk", "Plast och gummi"],
+    ["Vilket kemiskt tecken har guld?", "Au", "Gu", "G", "Ag"],
+    ["Vilket kemiskt tecken har syre?", "O", "S", "Sy", "C"],
+    ["Vad kallas tabellen där alla grundämnen är ordnade?", "Periodiska systemet", "Multiplikationstabellen", "Ämneslistan", "Näringspyramiden"],
+    ["Varför flyter is på vatten?", "Is har lägre densitet än flytande vatten", "Is är tyngre än vatten", "Is är magnetisk", "Vattnet är varmare under"],
+    ["Vad kallas det när ett fast ämne blir gas direkt, utan att först bli flytande (som torris)?", "Sublimering", "Kondensation", "Avdunstning", "Stelning"],
+    ["Vid vilken temperatur fryser rent vatten?", "0 °C", "10 °C", "−10 °C", "100 °C"],
+    ["Vid vilken temperatur kokar vatten vid havsytan?", "100 °C", "90 °C", "80 °C", "120 °C"],
+    ["Vilket råmaterial används oftast för att tillverka plast?", "Råolja", "Sand", "Trä", "Järnmalm"],
+    ["Vad tillverkas glas främst av?", "Sand", "Olja", "Trä", "Ull"],
+    ["Vilken färg får jodlösning om den droppas på stärkelse, t.ex. potatis?", "Blåsvart", "Röd", "Gul", "Grön"],
+    ["Vilket av dessa är ett fossilt bränsle?", "Olja", "Ved", "Biogas", "Pellets"],
+    ["Vad är en lösning?", "Ett ämne som har löst sig helt i ett annat, t.ex. socker i vatten", "Sand som ligger på botten av vatten", "En fast klump", "Två ämnen som inte blandas"]
+  ]);
+  BANKS.no_rymden = [
+    ["Hur många planeter finns det i vårt solsystem?", "8", "9", "7", "12"],
+    ["Vilken är solsystemets största planet?", "Jupiter", "Saturnus", "Jorden", "Neptunus"],
+    ["Vilken planet kallas ”den röda planeten”?", "Mars", "Venus", "Jupiter", "Merkurius"],
+    ["Vilken planet är känd för sina stora, tydliga ringar?", "Saturnus", "Mars", "Merkurius", "Venus"],
+    ["Vilken planet ligger närmast solen?", "Merkurius", "Venus", "Mars", "Jorden"],
+    ["Vilken plats har jorden räknat från solen?", "Tredje", "Första", "Andra", "Fjärde"],
+    ["Vad är solen?", "En stjärna", "En planet", "En måne", "En komet"],
+    ["Hur lång tid tar det för jorden att gå ett varv runt solen?", "Ett år", "Ett dygn", "En månad", "En vecka"],
+    ["Varför blir det dag och natt?", "Jorden snurrar runt sin egen axel", "Solen går runt jorden varje dygn", "Månen skymmer solen varje natt", "Solen släcks på kvällen"],
+    ["Hur lång tid tar det för jorden att snurra ett varv runt sin axel?", "Ungefär ett dygn (24 timmar)", "En vecka", "Ett år", "En timme"],
+    ["Ungefär hur lång tid tar det för månen att gå ett varv runt jorden?", "Ungefär en månad", "Ett dygn", "Ett år", "En vecka"],
+    ["Varför lyser månen?", "Den speglar (reflekterar) solens ljus", "Den har egna lampor", "Den brinner", "Den är en stjärna"],
+    ["Vad kallas månens olika utseenden under en månad?", "Månfaser", "Årstider", "Tidszoner", "Stjärnbilder"],
+    ["Vad händer vid en solförmörkelse?", "Månen hamnar mellan solen och jorden", "Jorden hamnar mellan solen och månen", "Solen slocknar en stund", "Mars skymmer solen"],
+    ["Vad heter vår galax?", "Vintergatan", "Andromeda", "Karlavagnen", "Orion"],
+    ["Vad är ett ljusår?", "Hur långt ljuset färdas på ett år", "Hur lång tid ett år är på månen", "En mycket ljus stjärna", "Ett år utan mörker"],
+    ["Vem var den första människan som gick på månen, år 1969?", "Neil Armstrong", "Jurij Gagarin", "Christer Fuglesang", "Isaac Newton"],
+    ["Vem var Sveriges första astronaut i rymden?", "Christer Fuglesang", "Neil Armstrong", "Carl von Linné", "Jurij Gagarin"],
+    ["Vad är en satellit?", "Ett föremål som kretsar runt en planet", "En stjärna som exploderar", "Ett svart hål", "En raket som landar"],
+    ["Vad är jordens naturliga satellit?", "Månen", "Solen", "Mars", "Rymdstationen ISS"],
+    ["Vad är en komet?", "En klump av is, sten och damm som kan få en lång svans", "En liten stjärna", "En planet utan måne", "Ett moln på jorden"],
+    ["Vilken planet är varmast, på grund av sin tjocka atmosfär?", "Venus", "Merkurius", "Mars", "Jupiter"],
+    ["Vad heter stjärnan som nästan alltid står rakt i norr?", "Polstjärnan", "Solen", "Sirius", "Venus"],
+    ["Ungefär hur lång tid tar det för solljuset att nå jorden?", "Cirka 8 minuter", "1 sekund", "1 dygn", "1 år"],
+    ["Vad är ett svart hål?", "Ett ställe i rymden där tyngdkraften är så stark att inte ens ljus kommer ut", "Ett hål i jordens atmosfär", "En planet som är svart", "Ett område utan stjärnor"],
+    ["Vad kallas de stenblock som kretsar runt solen mellan Mars och Jupiter?", "Asteroider", "Kometer", "Månar", "Stjärnor"],
+    ["Varför väger man mindre på månen än på jorden?", "Månens tyngdkraft är svagare", "Det finns ingen luft där", "Man har rymddräkt", "Månen snurrar snabbare"],
+    ["Vilken av planeterna är en gasjätte?", "Jupiter", "Mars", "Jorden", "Merkurius"]
+  ];
+  BANKS.geografi = BANKS.geografi.concat([
+    ["Vilket är världens högsta berg?", "Mount Everest", "Kebnekaise", "Mont Blanc", "Kilimanjaro"],
+    ["Vilken är världens största varma öken?", "Sahara", "Gobi", "Atacama", "Kalahari"],
+    ["Vilken flod brukar räknas som världens längsta?", "Nilen", "Donau", "Mississippi", "Themsen"],
+    ["I vilken världsdel ligger Egypten?", "Afrika", "Asien", "Europa", "Sydamerika"],
+    ["I vilken världsdel ligger Brasilien?", "Sydamerika", "Afrika", "Nordamerika", "Asien"],
+    ["I vilken världsdel ligger Indien?", "Asien", "Afrika", "Europa", "Oceanien"],
+    ["Vilken världsdel är täckt av is och har ingen fast befolkning?", "Antarktis", "Europa", "Oceanien", "Nordamerika"],
+    ["Vilket är världens största land till ytan?", "Ryssland", "Kanada", "Kina", "USA"],
+    ["Ungefär hur många människor bor på jorden?", "Cirka 8 miljarder", "Cirka 8 miljoner", "Cirka 800 miljoner", "Cirka 80 miljarder"],
+    ["Vad heter den tänkta linjen från nordpolen till sydpolen som går genom Greenwich i London?", "Nollmeridianen", "Ekvatorn", "Polcirkeln", "Datumlinjen"],
+    ["Vad kallas linjerna på kartan som går parallellt med ekvatorn?", "Breddgrader (latituder)", "Längdgrader (longituder)", "Höjdkurvor", "Tidszoner"],
+    ["Vad visar höjdkurvor på en karta?", "Hur högt landet ligger", "Var vägarna går", "Hur många som bor där", "Vädret"],
+    ["Vad betyder skalan 1:100 000 på en karta?", "1 cm på kartan är 1 km i verkligheten", "1 cm på kartan är 100 km", "1 km på kartan är 1 cm", "Kartan är 100 000 år gammal"],
+    ["Vilken färg har vatten oftast på en karta?", "Blå", "Grön", "Brun", "Röd"],
+    ["Vad kallas den täta, varma skogen nära ekvatorn där det regnar nästan varje dag?", "Tropisk regnskog", "Tundra", "Barrskog", "Stäpp"],
+    ["Vad kallas det kalla, trädlösa landskapet längst i norr?", "Tundra", "Regnskog", "Savann", "Lövskog"],
+    ["Vad kallas berget där het, smält sten (magma) kommer upp ur jorden?", "Vulkan", "Glaciär", "Delta", "Fjord"],
+    ["Varför uppstår jordbävningar?", "Jordskorpans plattor rör sig mot varandra", "Månen drar i marken", "Det regnar för mycket", "Vinden blåser för hårt"],
+    ["Vad är en fjord?", "En lång, smal havsvik mellan höga berg", "En hög bergstopp", "En sjö i en öken", "En sorts skog"],
+    ["Vad kallas en stor ismassa som långsamt rör sig nedför ett berg?", "Glaciär", "Delta", "Lagun", "Oas"],
+    ["Vad kallas platsen där en flod rinner ut i havet och delar sig i många grenar?", "Delta", "Källa", "Fjord", "Kanal"],
+    ["Varför är det kallare vid polerna än vid ekvatorn?", "Solljuset träffar jorden snett och sprids över en större yta", "Polerna ligger mycket längre från solen", "Solen lyser aldrig vid polerna", "Isen skapar kyla av sig själv"],
+    ["Vad heter havet mellan Europa och Afrika?", "Medelhavet", "Röda havet", "Svarta havet", "Östersjön"],
+    ["Vilket är Afrikas högsta berg?", "Kilimanjaro", "Mount Everest", "Mont Blanc", "Kebnekaise"],
+    ["Vad är export?", "Varor som ett land säljer till andra länder", "Varor som ett land köper från andra länder", "Varor som slängs", "Varor som ingen vill ha"],
+    ["Vad är en oas?", "En plats i öknen med vatten och växter", "Ett berg av sand", "En stad vid havet", "En sorts kamel"],
+    ["Vad kallas en karta som visar ett lands gränser, städer och län?", "Politisk karta", "Fysisk karta", "Väderkarta", "Sjökort"],
+    ["Vilket väderstreck ligger mitt emellan norr och öster?", "Nordost", "Nordväst", "Sydost", "Sydväst"]
+  ]);
+  BANKS.religion = BANKS.religion.concat([
+    ["Vad kallas judendom, kristendom och islam tillsammans, eftersom alla har Abraham som stamfar?", "Abrahamitiska religioner", "Österländska religioner", "Naturreligioner", "Fornnordiska religioner"],
+    ["Vad firar kristna på julen?", "Jesus födelse", "Jesus uppståndelse", "Att Bibeln skrevs", "Mose uttåg ur Egypten"],
+    ["Vad firar kristna på påsken?", "Att Jesus uppstod från de döda", "Att Jesus föddes", "Att jorden skapades", "Att Bibeln skrevs"],
+    ["Vem startade reformationen och protestantismen på 1500-talet?", "Martin Luther", "Gustav Vasa", "Påven", "Mose"],
+    ["Vilka är kristendomens tre stora grenar?", "Katolska, ortodoxa och protestantiska", "Sunni, shia och sufi", "Mahayana, theravada och zen", "Asar, vaner och jättar"],
+    ["Vad kallas de fem viktigaste plikterna i islam?", "De fem pelarna", "De tio budorden", "Den åttafaldiga vägen", "De fyra sanningarna"],
+    ["Under vilken månad fastar muslimer från gryning till solnedgång?", "Ramadan", "Advent", "Pesach", "Diwali"],
+    ["Vilken stad vallfärdar muslimer till under hajj?", "Mecka", "Jerusalem", "Rom", "Varanasi"],
+    ["Vad heter islams profet, som enligt islam fick ta emot Koranen?", "Muhammed", "Abraham", "Buddha", "Mose"],
+    ["Vad kallas högtiden som firas när ramadan är slut?", "Id al-fitr", "Chanukka", "Holi", "Pingst"],
+    ["Vad kallas judendomens vilodag, från fredag kväll till lördag kväll?", "Sabbat", "Söndag", "Ramadan", "Advent"],
+    ["Vem tog emot de tio budorden enligt Bibeln och Toran?", "Mose", "Jesus", "Muhammed", "Buddha"],
+    ["Vilken judisk högtid firas med en ljusstake med åtta ljus plus ett?", "Chanukka", "Pesach", "Jom kippur", "Purim"],
+    ["Vad påminner den judiska högtiden pesach om?", "Uttåget ur slaveriet i Egypten", "Jesus födelse", "Skapelsen", "Buddhas upplysning"],
+    ["Vad betyder ”kosher”?", "Mat som är tillåten enligt judiska regler", "En judisk bön", "Ett judiskt tempel", "En judisk högtid"],
+    ["Vad kallas tron att själen föds på nytt i en ny kropp?", "Återfödelse (reinkarnation)", "Uppståndelse", "Pilgrimsfärd", "Meditation"],
+    ["Vad betyder karma i hinduism och buddhism?", "Att våra handlingar får följder", "En helig flod", "En gud", "Ett tempel"],
+    ["Vilken flod är helig i hinduismen?", "Ganges", "Nilen", "Jordan", "Amazonas"],
+    ["Vilken hinduisk gud har ett elefanthuvud?", "Ganesha", "Shiva", "Vishnu", "Brahma"],
+    ["Vilken hinduisk högtid kallas ”färgernas fest”?", "Holi", "Diwali", "Id al-fitr", "Chanukka"],
+    ["Vad kallas målet i buddhismen, när lidandet tar slut?", "Nirvana", "Paradiset", "Valhall", "Karma"],
+    ["Vad hette Buddha innan han blev Buddha?", "Siddharta Gautama", "Muhammed", "Krishna", "Abraham"],
+    ["Vad kallas buddhismens väg med åtta steg?", "Den åttafaldiga vägen", "De fem pelarna", "De tio budorden", "Treenigheten"],
+    ["Vilken gud var den högsta i fornnordisk religion och hade bara ett öga?", "Oden", "Tor", "Loke", "Frej"],
+    ["Vad hette Tors hammare?", "Mjölner", "Gungner", "Yggdrasil", "Sleipner"],
+    ["Vad hette världsträdet i fornnordisk mytologi?", "Yggdrasil", "Mjölner", "Valhall", "Asgård"],
+    ["Vad säger den gyllene regeln?", "Behandla andra som du själv vill bli behandlad", "Den som är starkast bestämmer", "Dela aldrig med dig", "Tänk bara på dig själv"],
+    ["Vad kallas en person som inte tror på någon gud?", "Ateist", "Präst", "Pilgrim", "Munk"],
+    ["Vilken inriktning av kristendomen har Svenska kyrkan?", "Luthersk (protestantisk)", "Katolsk", "Ortodox", "Muslimsk"],
+    ["Vad är etik?", "Funderingar om vad som är rätt och fel", "Läran om stjärnorna", "En sorts bön", "En religiös byggnad"]
+  ]);
+  BANKS.hallbar = BANKS.hallbar.concat([
+    ["Hur många globala mål finns i FN:s Agenda 2030?", "17", "10", "5", "30"],
+    ["Vilket steg är bäst för miljön enligt avfallstrappan?", "Att minska mängden avfall", "Att lägga avfallet på en soptipp", "Att bränna avfallet", "Att slänga allt i samma påse"],
+    ["Vad betyder det att källsortera?", "Att sortera avfall efter material så att det kan återvinnas", "Att slänga allt i samma påse", "Att bränna sopor hemma", "Att gräva ner skräp i skogen"],
+    ["Vad får man tillbaka när man pantar en burk eller flaska?", "Pengar", "En ny burk", "Ingenting", "En biobiljett"],
+    ["Vad kan matrester och skal bli i en kompost eller biogasanläggning?", "Ny jord eller biogas", "Plast", "Glas", "Metall"],
+    ["Vad betyder det att mat är KRAV-märkt?", "Den är ekologisk och producerad med extra hänsyn till miljö och djur", "Den är alltid billigast", "Den kommer från andra sidan jorden", "Den innehåller extra socker"],
+    ["Vad visar ett ekologiskt fotavtryck?", "Hur mycket av jordens resurser en person eller ett land använder", "Hur stora skor man har", "Hur många djur som finns i skogen", "Hur långt man har gått"],
+    ["Vilken mänsklig aktivitet släpper ut mest koldioxid?", "Att bränna fossila bränslen", "Att plantera träd", "Att cykla", "Att källsortera"],
+    ["Vad kan hända när jordens klimat blir varmare?", "Isarna smälter och havsnivån stiger", "Det blir mer is vid polerna", "Havsnivån sjunker", "Solen blir mindre"],
+    ["Varför är plast i havet ett problem?", "Djur kan äta plasten eller trassla in sig i den", "Plasten löses upp direkt", "Den gör vattnet renare", "Fiskarna behöver plast"],
+    ["Vad betyder Fairtrade-märkningen?", "Att odlare och arbetare ska få bättre villkor och lön", "Att varan är gjord av plast", "Att varan är gratis", "Att varan alltid är svensk"],
+    ["Vilken del av hållbar utveckling handlar om att alla människor ska ha det bra, t.ex. hälsa och jämställdhet?", "Social hållbarhet", "Ekologisk hållbarhet", "Ekonomisk hållbarhet", "Teknisk hållbarhet"],
+    ["Vad är ett exempel på ekologisk hållbarhet?", "Att skydda djur, natur och klimat", "Att alla ska få gå i skolan", "Att företag tjänar pengar", "Att bygga fler köpcentrum"],
+    ["Vad är bäst för miljön när en tröja får ett litet hål?", "Laga den", "Slänga den direkt", "Köpa tre nya", "Bränna den"],
+    ["Varför är det bra att släcka lampan i rum där ingen är?", "Det sparar energi", "Lampan blir starkare", "Det blir varmare", "Rummet blir renare"],
+    ["Vad kallas det när skog huggs ner och ingen ny skog planteras?", "Avskogning", "Återplantering", "Fotosyntes", "Pollinering"],
+    ["Varför är regnskogen viktig för hela jorden?", "Den tar upp koldioxid och har väldigt många arter", "Den gör öknarna större", "Den släpper ut mest koldioxid", "Den behövs inte"],
+    ["Vad handlar mål 13 i Agenda 2030 om?", "Att bekämpa klimatförändringarna", "Ingen fattigdom", "God utbildning", "Rent vatten"],
+    ["Vad handlar mål 4 i Agenda 2030 om?", "God utbildning för alla", "Ingen hunger", "Rent vatten", "Liv i havet"],
+    ["Vilket är ett exempel på ekonomisk hållbarhet?", "Att använda pengar och resurser så att de räcker länge", "Att låna så mycket som möjligt", "Att köpa saker man inte behöver", "Att slösa med material"]
+  ]);
+  BANKS.so_historia = [
+    ["Vilken är den äldsta av förhistoriens tre perioder?", "Stenåldern", "Bronsåldern", "Järnåldern", "Vikingatiden"],
+    ["Vilken tidsperiod kommer direkt efter stenåldern?", "Bronsåldern", "Järnåldern", "Vikingatiden", "Medeltiden"],
+    ["Vad började människorna med under yngre stenåldern som gjorde att de kunde bo kvar på samma plats?", "Jordbruk och boskapsskötsel", "Fabriksarbete", "Handel med mynt", "Att bygga städer av sten"],
+    ["Vad är en hällristning?", "Bilder som huggits in i berget, ofta från bronsåldern", "En målning i en kyrka", "En gammal karta", "En sorts runsten"],
+    ["Vilka tecken skrev vikingarna med?", "Runor", "Latinska bokstäver på papper", "Kinesiska tecken", "Hieroglyfer"],
+    ["Vad var en runsten?", "En sten med inristade runor, ofta till minne av någon", "En sten som användes som pengar", "En sten för att mala mjöl", "En gränssten mellan länder"],
+    ["Vilken vikingatida handelsstad låg på en ö i Mälaren?", "Birka", "Visby", "Uppsala", "Lund"],
+    ["Vilka gudar trodde vikingarna på?", "Asagudar som Oden, Tor och Frej", "En enda gud", "Grekiska gudar", "Inga gudar alls"],
+    ["Vad hette munken som kom till Birka på 800-talet för att sprida kristendomen?", "Ansgar", "Martin Luther", "Olaus Petri", "Birger jarl"],
+    ["Vilken tid kommer efter vikingatiden i Sveriges historia?", "Medeltiden", "Stenåldern", "Stormaktstiden", "Bronsåldern"],
+    ["Vem räknas traditionellt som Stockholms grundare?", "Birger jarl", "Gustav Vasa", "Karl XII", "Gustav III"],
+    ["Vilken sjukdom spred sig över Europa runt år 1350 och dödade en stor del av befolkningen?", "Digerdöden (pesten)", "Spanska sjukan", "Polio", "Mässlingen"],
+    ["Vad var Hansan?", "Ett förbund av tyska handelsstäder", "Ett svenskt kungahus", "En vikingaflotta", "En sorts kyrka"],
+    ["Vilken stad på Gotland var en viktig handelsstad under medeltiden?", "Visby", "Birka", "Kiruna", "Falun"],
+    ["Vad hette unionen där Sverige, Danmark och Norge fick samma regent år 1397?", "Kalmarunionen", "EU", "Hansan", "Nordiska rådet"],
+    ["Vilken drottning låg bakom Kalmarunionen?", "Margareta", "Kristina", "Victoria", "Silvia"],
+    ["Vad kallas händelsen år 1520 då den danske kungen Kristian II lät avrätta många svenska adelsmän?", "Stockholms blodbad", "Slaget vid Lützen", "Digerdöden", "Reformationen"],
+    ["Vilken förändring av religionen genomfördes i Sverige under Gustav Vasa?", "Sverige blev protestantiskt (lutherskt)", "Sverige blev muslimskt", "Sverige blev ortodoxt", "All religion förbjöds"],
+    ["Vad kallas perioden 1611–1718 då Sverige var en av Europas stormakter?", "Stormaktstiden", "Frihetstiden", "Vikingatiden", "Medeltiden"],
+    ["Vilken kung dog i slaget vid Lützen år 1632?", "Gustav II Adolf", "Gustav Vasa", "Karl XII", "Gustav III"],
+    ["Vad hette regalskeppet som sjönk i Stockholm på sin första resa år 1628?", "Vasa", "Kronan", "Titanic", "Göta"],
+    ["Vilken drottning blev regent som barn, abdikerade och flyttade sedan till Rom?", "Kristina", "Margareta", "Silvia", "Victoria"],
+    ["Vilken kung dog i Norge år 1718, vilket blev slutet på stormaktstiden?", "Karl XII", "Gustav II Adolf", "Oscar II", "Gustav Vasa"],
+    ["Vad kallas perioden 1719–1772 då riksdagen hade mer makt än kungen?", "Frihetstiden", "Stormaktstiden", "Medeltiden", "Vasatiden"],
+    ["Vilken kung sköts på en maskeradbal på Operan år 1792?", "Gustav III", "Karl XII", "Gustav Vasa", "Karl XIV Johan"],
+    ["Vilket land förlorade Sverige till Ryssland år 1809?", "Finland", "Norge", "Danmark", "Estland"],
+    ["Vilket land var i union med Sverige från 1814 till 1905?", "Norge", "Finland", "Danmark", "Island"],
+    ["Ungefär hur många svenskar utvandrade till Amerika mellan 1850 och 1930?", "Över en miljon", "Cirka tusen", "Cirka tiotusen", "Över tio miljoner"],
+    ["Varför utvandrade många svenskar till Amerika på 1800-talet?", "Fattigdom, missväxt och brist på arbete", "Det var krig i Sverige varje år", "Det stod i lagen att de måste", "Det var alltid varmare i Amerika"],
+    ["Vilket år röstade kvinnor för första gången i ett svenskt riksdagsval?", "1921", "1809", "1866", "1975"],
+    ["Vad var folkskolan, som infördes i Sverige år 1842?", "En skola för alla barn", "En skola bara för adelns barn", "Ett universitet", "En söndagsskola i kyrkan"],
+    ["Vilket stort krig pågick 1939–1945?", "Andra världskriget", "Första världskriget", "Trettioåriga kriget", "Kalla kriget"]
+  ];
+  BANKS.so_samhalle = [
+    ["Hur många ledamöter sitter i Sveriges riksdag?", "349", "100", "290", "21"],
+    ["Hur gammal måste man vara för att få rösta i riksdagsvalet?", "18 år", "16 år", "21 år", "15 år"],
+    ["Vem leder Sveriges regering?", "Statsministern", "Kungen", "Talmannen", "Landshövdingen"],
+    ["Vem är Sveriges statschef?", "Kungen", "Statsministern", "Talmannen", "Landshövdingen"],
+    ["Vem leder arbetet i riksdagen?", "Talmannen", "Statsministern", "Kungen", "Generalsekreteraren i FN"],
+    ["Vad gör regeringen?", "Styr landet och ser till att riksdagens beslut genomförs", "Stiftar alla lagar ensam", "Dömer i rättegångar", "Väljer kungen"],
+    ["Vad gör domstolarna?", "Dömer i rättegångar enligt lagen", "Stiftar lagar", "Tar ut skatt", "Styr skolorna"],
+    ["Ungefär hur många kommuner finns i Sverige?", "290", "21", "349", "1 000"],
+    ["Vad ansvarar kommunen bland annat för?", "Skolor och äldreomsorg", "Försvaret", "Polisen", "Riksdagsvalet"],
+    ["Vad ansvarar regionerna främst för?", "Sjukvården", "Grundskolan", "Försvaret", "Kungahuset"],
+    ["Vad kallas de viktigaste lagarna, som är svårast att ändra?", "Grundlagar", "Ordningsregler", "Skolregler", "Trafikregler"],
+    ["Vad betyder yttrandefrihet?", "Att man får säga och skriva vad man tycker", "Att man måste hålla med regeringen", "Att bara journalister får prata", "Att man får göra vad man vill"],
+    ["Vad är skatt?", "Pengar som man betalar till staten, regionen och kommunen", "Pengar man får från banken", "Pengar man vinner på lotto", "Pengar man sparar hemma"],
+    ["Vad används skattepengar till?", "Bland annat skolor, sjukvård och vägar", "Bara till kungen", "Bara till företag", "Ingenting"],
+    ["Vad är en budget?", "En plan för inkomster och utgifter", "Ett lån", "En sorts skatt", "Ett bankkort"],
+    ["Vad kallas avgiften man betalar för att få låna pengar?", "Ränta", "Moms", "Lön", "Pant"],
+    ["Vad är moms?", "En skatt på varor och tjänster man köper", "En sorts lön", "Ett sparkonto", "Pengar för pantade burkar"],
+    ["Vad är massmedier?", "Medier som når många människor, t.ex. tv, radio och tidningar", "Bara mobiltelefoner", "Ett politiskt parti", "En sorts lag"],
+    ["Vad betyder källkritik?", "Att granska om information är sann och pålitlig", "Att tro på allt man läser", "Att kritisera källor i skogen", "Att bara läsa en enda källa"],
+    ["Vilken organisation inom FN arbetar för barns rättigheter?", "Unicef", "Nato", "Fifa", "Röda korset"],
+    ["Vilket år blev barnkonventionen svensk lag?", "2020", "1920", "1990", "2010"],
+    ["Vilken union gick Sverige med i år 1995?", "Europeiska unionen (EU)", "Kalmarunionen", "Hansan", "Nordiska unionen"],
+    ["Vilken valuta används i Sverige?", "Svenska kronor", "Euro", "Dollar", "Pund"],
+    ["Vad betyder det att valet är hemligt?", "Ingen får se vad du röstar på", "Ingen får veta att det är val", "Bara kungen får rösta", "Rösterna räknas aldrig"],
+    ["Vad är ett politiskt parti?", "En grupp människor med liknande åsikter som vill påverka samhället", "En stor fest", "En domstol", "En skola"],
+    ["Vad är jämställdhet?", "Att kvinnor och män ska ha samma rättigheter och möjligheter", "Att alla ska vara lika långa", "Att alla ska ha samma jobb", "Att bara vuxna bestämmer"],
+    ["Vad är diskriminering?", "Att någon behandlas sämre på grund av t.ex. kön, ursprung eller religion", "Att någon får beröm", "Att alla behandlas lika", "Att någon byter skola"],
+    ["Vilket nummer ringer man i Sverige vid en nödsituation?", "112", "911", "999", "114 14"],
+    ["Vad betyder det att Sverige är en rättsstat?", "Lagarna gäller lika för alla, även för dem som styr", "Polisen bestämmer allt", "Kungen står över lagen", "Det finns inga lagar"],
+    ["Vad är en åsikt?", "Det någon tycker", "Något som alltid är sant", "En lag", "En vetenskaplig fakta"]
+  ];
+  BANKS.so_sverige = [
+    ["Vad heter Sveriges huvudstad?", "Stockholm", "Göteborg", "Malmö", "Uppsala"],
+    ["Vilken är Sveriges största sjö?", "Vänern", "Vättern", "Mälaren", "Siljan"],
+    ["Vilken är Sveriges näst största sjö?", "Vättern", "Vänern", "Mälaren", "Storsjön"],
+    ["Vilket hav ligger öster om Sverige?", "Östersjön", "Nordsjön", "Atlanten", "Medelhavet"],
+    ["Vad heter Sveriges högsta berg?", "Kebnekaise", "Åreskutan", "Sylarna", "Städjan"],
+    ["Vilket folk har traditionellt arbetat med renskötsel i norra Sverige?", "Samerna", "Finnarna", "Romerna", "Vikingarna"],
+    ["Vilka tre landsdelar delas Sverige ofta in i?", "Götaland, Svealand och Norrland", "Skåne, Småland och Lappland", "Uppland, Gotland och Öland", "Väst, Öst och Mitt"],
+    ["Vilken är Sveriges största ö?", "Gotland", "Öland", "Orust", "Hisingen"],
+    ["Ungefär hur många invånare har Sverige?", "Cirka 10,5 miljoner", "Cirka 1 miljon", "Cirka 50 miljoner", "Cirka 100 miljoner"],
+    ["Vilken är Sveriges näst största stad?", "Göteborg", "Malmö", "Uppsala", "Linköping"],
+    ["Vilken bro går mellan Malmö och Köpenhamn?", "Öresundsbron", "Ölandsbron", "Högakustenbron", "Tjörnbron"],
+    ["Vad heter fjällkedjan längs gränsen mellan Sverige och Norge?", "Skanderna (fjällkedjan)", "Alperna", "Pyrenéerna", "Uralbergen"],
+    ["Vilken stad i norra Sverige är känd för sin järnmalmsgruva?", "Kiruna", "Visby", "Ystad", "Karlstad"],
+    ["Vad används Sveriges stora skogar främst till?", "Virke, papper och massa", "Olja", "Guld", "Bomull"],
+    ["Varför finns det många vattenkraftverk i norra Sverige?", "Där finns stora älvar med mycket strömmande vatten", "Där regnar det aldrig", "Där är det varmast", "Där bor flest människor"],
+    ["Hur många län är Sverige indelat i?", "21", "15", "25", "30"],
+    ["Vilket landskap ligger längst söderut i Sverige?", "Skåne", "Småland", "Lappland", "Dalarna"],
+    ["Vilket är Sveriges största landskap?", "Lappland", "Skåne", "Dalarna", "Småland"],
+    ["Vad kallas det att marken i norra Sverige långsamt höjer sig efter istiden?", "Landhöjning", "Erosion", "Jordbävning", "Vulkanism"],
+    ["Vilken är Sveriges längsta flod?", "Klarälven–Göta älv", "Dalälven", "Torne älv", "Ljusnan"],
+    ["Vad är allemansrätten?", "Rätten att röra sig fritt i naturen om man visar hänsyn", "Rätten att ta allt man hittar i naturen", "Rätten att bygga hus var man vill", "Rätten att jaga utan regler"],
+    ["Vilka är Sveriges fem nationella minoriteter?", "Samer, sverigefinnar, tornedalingar, judar och romer", "Samer, danskar, norrmän, tyskar och finnar", "Samer, polacker, judar, romer och engelsmän", "Bara samer och sverigefinnar"],
+    ["Vad heter samernas område, som finns i fyra länder?", "Sápmi", "Norrbotten", "Tornedalen", "Jämtland"],
+    ["Vilka länder räknas till Norden?", "Sverige, Norge, Danmark, Finland och Island", "Sverige, Tyskland, Polen och Danmark", "Bara Sverige och Norge", "Sverige, Norge och Ryssland"],
+    ["Vad heter Norges huvudstad?", "Oslo", "Bergen", "Helsingfors", "Köpenhamn"],
+    ["Vad heter Finlands huvudstad?", "Helsingfors", "Åbo", "Tammerfors", "Reykjavik"],
+    ["Vad heter Danmarks huvudstad?", "Köpenhamn", "Århus", "Oslo", "Odense"],
+    ["Vad heter Islands huvudstad?", "Reykjavik", "Helsingfors", "Nuuk", "Tórshavn"],
+    ["Vad heter Tysklands huvudstad?", "Berlin", "München", "Wien", "Hamburg"],
+    ["Vilket land har Paris som huvudstad?", "Frankrike", "Italien", "Spanien", "Tyskland"],
+    ["Vad heter Spaniens huvudstad?", "Madrid", "Barcelona", "Lissabon", "Sevilla"],
+    ["Vad heter Italiens huvudstad?", "Rom", "Milano", "Venedig", "Neapel"],
+    ["Vad heter Polens huvudstad?", "Warszawa", "Kraków", "Prag", "Budapest"],
+    ["Vad heter Estlands huvudstad?", "Tallinn", "Riga", "Vilnius", "Helsingfors"],
+    ["Vilken är Europas längsta flod?", "Volga", "Donau", "Rhen", "Themsen"],
+    ["Vilken bergskedja finns bland annat i Schweiz, Österrike och Frankrike?", "Alperna", "Skanderna", "Himalaya", "Anderna"],
+    ["Vilket språk talas mest i Österrike?", "Tyska", "Franska", "Italienska", "Ungerska"],
+    ["Hur många världsdelar (kontinenter) brukar man räkna?", "7", "5", "6", "9"],
+    ["Vilken världsdel är störst till ytan?", "Asien", "Afrika", "Europa", "Nordamerika"]
+  ];
+  BANKS.teknik_maskiner = BANKS.teknik_maskiner.concat([
+    ["Vilken enkel maskin är en yxa?", "Kil", "Hävstång", "Hjul och axel", "Remskiva"],
+    ["Vilken enkel maskin är en rutschkana eller en ramp?", "Lutande plan", "Hävstång", "Kil", "Remskiva"],
+    ["Vad händer om ett stort kugghjul driver ett litet kugghjul?", "Det lilla snurrar snabbare", "Det lilla snurrar långsammare", "Båda står still", "Det lilla snurrar lika fort"],
+    ["Vad kallas det när man ändrar fart och kraft med kugghjul och kedja, som på en cykel?", "Utväxling", "Friktion", "Isolering", "Prototyp"],
+    ["Varför används trianglar i broar och lyftkranar?", "Triangeln är en stabil form som inte trycks ihop lätt", "Trianglar är billigast", "Trianglar ser roligast ut", "Trianglar väger ingenting"],
+    ["Vad gör en konstruktion stabil så att den inte välter?", "En bred bas och låg tyngdpunkt", "En smal bas och hög tyngdpunkt", "Att den är målad", "Att den är gjord av plast"],
+    ["Hur kan man göra ett papper starkare så att det bär mer?", "Vika det i veck eller rulla det till ett rör", "Blöta det", "Klippa hål i det", "Lägga det helt platt"],
+    ["Vad kallas betong med järnstänger inuti?", "Armerad betong", "Lättbetong", "Marmor", "Tegel"],
+    ["Vilket verktyg mäter längd mycket noggrant, t.ex. tjockleken på en skruv?", "Skjutmått", "Vattenpass", "Hammare", "Såg"],
+    ["Vad används ett vattenpass till?", "Att kontrollera att något är vågrätt eller lodrätt", "Att mäta vattnets temperatur", "Att hälla vatten", "Att väga saker"],
+    ["Vad ska man ha på sig för att skydda ögonen när man sågar eller borrar?", "Skyddsglasögon", "Solglasögon", "Simglasögon", "Ingenting"],
+    ["Vilket är ett bra sätt att foga ihop två bitar trä?", "Skruva eller limma", "Smälta ihop dem", "Svetsa", "Tejpa med vanlig tejp"],
+    ["Vem uppfann boktryckarkonsten med lösa bokstäver på 1400-talet?", "Johann Gutenberg", "Alfred Nobel", "Thomas Edison", "Leonardo da Vinci"],
+    ["Vilka gjorde den första motorflygningen år 1903?", "Bröderna Wright", "Bröderna Grimm", "Alfred Nobel", "Christopher Polhem"],
+    ["Vem förbättrade ångmaskinen så att den kunde användas i fabriker?", "James Watt", "Isaac Newton", "Albert Einstein", "Anders Celsius"],
+    ["Vilken svensk uppfann trepunktsbältet i bilen?", "Nils Bohlin", "Alfred Nobel", "Christer Fuglesang", "Carl von Linné"],
+    ["Vad uppfann Alfred Nobel?", "Dynamiten", "Telefonen", "Glödlampan", "Ångmaskinen"],
+    ["Vem brukar räknas som telefonens uppfinnare?", "Alexander Graham Bell", "Thomas Edison", "Alfred Nobel", "Isaac Newton"],
+    ["Vad är en balk?", "En bärande del i en konstruktion som ligger vågrätt", "En sorts skruv", "Ett verktyg för att såga", "En elkabel"],
+    ["Vad kallas kraften som drar ihop och kraften som trycker ihop en konstruktion?", "Dragkraft och tryckkraft", "Ljus och ljud", "Värme och kyla", "Ström och spänning"]
+  ]);
+  BANKS.teknik_el = BANKS.teknik_el.concat([
+    ["Vad händer i en seriekoppling om en av lamporna går sönder?", "Alla lamporna slocknar", "De andra lyser starkare", "Ingenting händer", "Batteriet laddas"],
+    ["Vad är fördelen med att koppla lampor parallellt?", "De andra lamporna lyser även om en går sönder", "Man behöver bara en sladd", "Man behöver inget batteri", "Lamporna lyser svagare"],
+    ["Vad är en kortslutning?", "När strömmen tar en genväg utan att gå genom lampan eller apparaten", "När en lampa lyser", "När en sladd är för lång", "När batteriet är fulladdat"],
+    ["Vad gör en säkring?", "Bryter strömmen om den blir för stark", "Ökar strömmen", "Lagrar el", "Gör elen billigare"],
+    ["Hur hög spänning finns i ett vanligt vägguttag i Sverige?", "230 volt", "1,5 volt", "12 volt", "10 000 volt"],
+    ["Hur hög spänning har ett vanligt AA-batteri?", "1,5 volt", "230 volt", "50 volt", "0,1 volt"],
+    ["I vilken enhet mäter man elektrisk spänning?", "Volt", "Ampere", "Meter", "Kilogram"],
+    ["I vilken enhet mäter man strömstyrka?", "Ampere", "Volt", "Gram", "Liter"],
+    ["Vad gör en elmotor?", "Omvandlar elektrisk energi till rörelse", "Omvandlar rörelse till el", "Lagrar el", "Gör el till ljus"],
+    ["Vad gör en generator i ett kraftverk?", "Omvandlar rörelseenergi till elektricitet", "Gör el till värme", "Lagrar el", "Mäter el"],
+    ["Vilken sorts lampa använder minst energi för samma mängd ljus?", "LED-lampa", "Glödlampa", "Stearinljus", "Halogenlampa"],
+    ["Vad mäter elmätaren i ett hus?", "Hur mycket elektrisk energi som används", "Hur varmt det är", "Hur mycket vatten som används", "Hur snabbt internet är"],
+    ["Vilka två sorters kraftverk ger mest el i Sverige?", "Vattenkraft och kärnkraft", "Kolkraft och oljekraft", "Solkraft och vågkraft", "Dieselkraft och gaskraft"],
+    ["Vad är ett tekniskt system?", "Flera delar som samverkar, t.ex. elnätet eller vattenledningarna", "En enda skruv", "En sorts växt", "En ritning"],
+    ["Vad händer med avloppsvattnet i ett reningsverk?", "Det renas innan det släpps ut i naturen", "Det blir direkt till läsk", "Det sparas för alltid i tankar", "Det fryses till is"],
+    ["Vad gör en termostat i ett element?", "Håller temperaturen jämn genom att slå på och av värmen", "Mäter vinden", "Lagrar värme", "Gör ljud"],
+    ["Vad är en rörelsesensor bra till?", "Att tända lampan när någon kommer", "Att mäta temperatur", "Att ladda batterier", "Att skriva text"],
+    ["Vad kallas ritningen som visar hur en elektrisk krets är kopplad med symboler?", "Kopplingsschema", "Karta", "Planritning", "Tidslinje"],
+    ["Vad gör en transformator i elnätet?", "Ändrar spänningen, t.ex. från högspänning till 230 volt", "Tillverkar el av vind", "Lagrar el i batterier", "Mäter hur mycket el som används"]
+  ]);
+  BANKS.teknik_design = BANKS.teknik_design.concat([
+    ["Vad kallas det när en del av ett program upprepas flera gånger?", "Loop (upprepning)", "Villkor", "Bugg", "Variabel"],
+    ["Vad gör ett villkor (om … så …) i ett program?", "Programmet gör olika saker beroende på om något är sant", "Programmet stängs av", "Programmet upprepar allt för alltid", "Programmet raderas"],
+    ["Vad kallas ett fel i ett datorprogram?", "Bugg", "Loop", "Pixel", "Sensor"],
+    ["Vad kallas det att leta upp och rätta fel i ett program?", "Felsökning (debugging)", "Kompostering", "Formatering", "Utskrift"],
+    ["Vad är en variabel i programmering?", "En plats där programmet sparar ett värde, t.ex. poäng", "Ett fel i koden", "En sorts dator", "En bild"],
+    ["Vad kallas instruktioner som utförs i ordning, en efter en?", "Sekvens", "Loop", "Bugg", "Villkor"],
+    ["Vilka siffror använder datorer i det binära talsystemet?", "0 och 1", "1 till 10", "Bara 2", "0 till 9"],
+    ["Vad är en pixel?", "En liten punkt som bilder på en skärm består av", "En sorts kabel", "Ett datorprogram", "Ett batteri"],
+    ["Vad heter det blockprogrammeringsspråk där man drar och släpper färdiga block?", "Scratch", "Excel", "Word", "Paint"],
+    ["Vilken av dessa är en enhet för output, där information kommer ut ur datorn?", "Skärm", "Tangentbord", "Mus", "Mikrofon"],
+    ["I vilken ordning arbetar man ofta när man utvecklar en teknisk lösning?", "Behov – idé och skiss – bygga – testa – förbättra", "Bygga – testa – skissa – behov", "Testa – sälja – bygga – skissa", "Förbättra – bygga – behov – testa"],
+    ["Vad är skillnaden mellan en skiss och en ritning?", "En skiss är snabb och enkel, en ritning är noggrann och har mått", "En skiss har alltid färg", "En ritning görs alltid med kol", "Det finns ingen skillnad"],
+    ["Vad kan en 3D-skrivare göra?", "Bygga ett föremål lager för lager från en digital modell", "Skriva ut på papper i färg", "Skanna dokument", "Spela upp film"],
+    ["Vad är en produkts livscykel?", "Allt från råvara och tillverkning till användning och återvinning", "Hur länge produkten står i affären", "Hur produkten ser ut", "Produktens pris"],
+    ["Vad betyder ergonomi?", "Att saker anpassas så att de passar kroppen och är bra att använda", "Att bygga starka broar", "Att spara energi", "Att programmera robotar"],
+    ["Vad är ett patent?", "Ett skydd som ger uppfinnaren ensamrätt till sin uppfinning en tid", "En sorts verktyg", "En reklamfilm", "En skiss"],
+    ["Var ska man slänga en tom konservburk?", "Bland metallförpackningar", "Bland pappersförpackningar", "Bland plastförpackningar", "Bland glas"],
+    ["Vad kallas en första enkel modell av en uppfinning, som man bygger för att testa idén?", "Prototyp", "Patent", "Reklam", "Garanti"]
+  ]);
+  BANKS.engelska_ord = BANKS.engelska_ord.concat([
+    ["What is \"kylskåp\" in English?", "fridge", "freezer", "stove", "sink"],
+    ["What is \"sked\" in English?", "spoon", "fork", "knife", "plate"],
+    ["What does \"brave\" mean in Swedish?", "modig", "rädd", "snäll", "lat"],
+    ["What does \"lazy\" mean in Swedish?", "lat", "arg", "glad", "stark"],
+    ["What is the opposite of \"expensive\"?", "cheap", "rich", "heavy", "quiet"],
+    ["What is the opposite of \"empty\"?", "full", "open", "clean", "light"],
+    ["What is \"moln\" in English?", "cloud", "clown", "crowd", "cold"],
+    ["What is \"ansikte\" in English?", "face", "fact", "foot", "voice"],
+    ["Which word means \"vänster\"?", "left", "right", "lift", "last"],
+    ["What is \"rädd\" in English?", "afraid", "angry", "proud", "bored"],
+    ["Which month comes after April?", "May", "March", "June", "August"],
+    ["What is \"grönsaker\" in English?", "vegetables", "fruit", "sweets", "meat"],
+    ["Which word is an animal?", "squirrel", "spoon", "square", "street"],
+    ["What is \"tumme\" in English?", "thumb", "toe", "tongue", "tooth"],
+    ["What does \"weather\" mean in Swedish?", "väder", "vatten", "vinter", "vind"],
+    ["What does \"enough\" mean in Swedish?", "tillräckligt", "ingenting", "alltid", "aldrig"],
+    ["What is \"flygplats\" in English?", "airport", "airplane", "harbour", "station"],
+    ["Which word means \"glömma\"?", "forget", "forgive", "follow", "find"],
+    ["What is \"ö\" in English (land with water all around it)?", "island", "ocean", "lake", "coast"],
+    ["What is the opposite of \"noisy\"?", "quiet", "loud", "busy", "funny"],
+    ["What is \"läkare\" in English?", "doctor", "driver", "dentist", "teacher"],
+    ["Which word means \"tråkig\" (about a film or a book)?", "boring", "bored", "busy", "brave"],
+    ["What is \"onsdag\" in English?", "Wednesday", "Tuesday", "Thursday", "Monday"],
+    ["What does \"often\" mean in Swedish?", "ofta", "aldrig", "sällan", "snart"]
+  ]);
+  BANKS.engelska_grammar = BANKS.engelska_grammar.concat([
+    ["Complete: She ___ never been to London.", "has", "have", "is", "was"],
+    ["Complete: Look! The children ___ in the garden.", "are playing", "plays", "play", "is playing"],
+    ["Complete: This is the ___ day of my life!", "best", "goodest", "most good", "better"],
+    ["What is the comparative of \"big\"?", "bigger", "more big", "biger", "biggest"],
+    ["Complete: ___ you like pizza?", "Do", "Does", "Are", "Is"],
+    ["Complete: She ___ like spiders.", "doesn't", "don't", "isn't", "aren't"],
+    ["Which word is a preposition?", "under", "quickly", "happy", "run"],
+    ["Complete: This is Tom. That is ___ bike.", "his", "he", "him", "he's"],
+    ["What is the past tense of \"write\"?", "wrote", "writed", "written", "writes"],
+    ["What is the past tense of \"swim\"?", "swam", "swimmed", "swum", "swims"],
+    ["What is the plural of \"mouse\"?", "mice", "mouses", "mices", "mousees"],
+    ["What is the plural of \"tooth\"?", "teeth", "tooths", "teeths", "toothes"],
+    ["Complete: We ___ to the cinema tomorrow.", "are going", "went", "goes", "have gone"],
+    ["Which sentence has the correct capital letters?", "I live in Sweden and I speak Swedish.", "i live in sweden and i speak swedish.", "I live in sweden and I speak Swedish.", "I live in Sweden and i speak swedish."],
+    ["Complete: There isn't ___ milk left.", "any", "some", "many", "a"],
+    ["Complete: How ___ apples do you want?", "many", "much", "more", "lot"],
+    ["Complete: How ___ water do you drink every day?", "much", "many", "lot", "few"],
+    ["Which word is an adverb?", "slowly", "slow", "slower", "slowness"],
+    ["Complete: I'm good ___ drawing.", "at", "in", "on", "for"],
+    ["Complete: She is interested ___ music.", "in", "on", "at", "of"],
+    ["Complete: Yesterday I ___ my grandma.", "visited", "visit", "visits", "visiting"],
+    ["Complete: The cat is sleeping. ___ is very tired.", "It", "They", "We", "Them"]
+  ]);
+  BANKS.svenska = BANKS.svenska.concat([
+    ["Vilken ordklass är orden ”på”, ”under” och ”bakom”?", "Prepositioner", "Adverb", "Pronomen", "Verb"],
+    ["Vilket ord är ett räkneord?", "sju", "sjunga", "sjö", "snäll"],
+    ["Vilket ord är en interjektion?", "aj!", "bord", "springa", "vacker"],
+    ["Vad är subjektet i meningen ”Hunden skäller på brevbäraren”?", "Hunden", "skäller", "på", "brevbäraren"],
+    ["Vad är predikatet i meningen ”Lisa äter en glass”?", "äter", "Lisa", "en", "glass"],
+    ["Vilket ord passar: ”Elefanten är ___ än hästen”?", "större", "störst", "storare", "mer stor"],
+    ["Hur kompareras ”bra”?", "bra – bättre – bäst", "bra – brare – brast", "bra – mer bra – mest bra", "bra – bättre – bättrest"],
+    ["Hur kompareras ”gammal”?", "gammal – äldre – äldst", "gammal – gammalare – gammalast", "gammal – gamlare – gamlast", "gammal – mer gammal – mest gammal"],
+    ["Vad är plural av ”en mus”?", "möss", "musar", "muser", "mussar"],
+    ["Vad är plural av ”en fot”?", "fötter", "foter", "fotar", "föter"],
+    ["Vad är plural av ”en man”?", "män", "manar", "mannar", "männer"],
+    ["Vad är bestämd form singular av ”ett hus”?", "huset", "husen", "husens", "husena"],
+    ["Vilket ord är rättstavat?", "choklad", "schoklad", "sjoklad", "tjoklad"],
+    ["Vilket av orden är rättstavat?", "tjugo", "kjugo", "shugo", "chugo"],
+    ["Vilken tempusform är ”har läst”?", "Perfekt", "Presens", "Preteritum", "Futurum"],
+    ["Vad är imperativ av verbet ”springa”?", "spring!", "springer", "sprang", "sprungit"],
+    ["Vilken mening har rätt skiljetecken för en replik?", "– Kom hit, ropade mamma.", "Kom hit ropade mamma", "– kom hit ropade, mamma.", "Kom hit, ropade mamma?"],
+    ["Vad kallas en kort berättelse där djur talar och som slutar med en sensmoral?", "Fabel", "Saga", "Dikt", "Recension"],
+    ["Vad är en sensmoral?", "Det man ska lära sig av en berättelse", "Berättelsens första mening", "Berättelsens huvudperson", "Ett sorts rim"],
+    ["Vad kallas en text där skribenten vill övertyga läsaren om sin åsikt?", "Argumenterande text", "Instruerande text", "Berättande text", "Beskrivande text"],
+    ["Vad kallas en text som förklarar steg för steg hur man gör något, t.ex. ett recept?", "Instruerande text", "Argumenterande text", "Dikt", "Saga"],
+    ["Vad är en insändare?", "En text i en tidning där en läsare säger sin åsikt", "En annons för ett hus", "En sportnyhet", "Ett brev till en vän"],
+    ["Vad betyder uttrycket ”att ha tummen mitt i handen”?", "Att vara klumpig", "Att vara stark", "Att vara snabb", "Att vara glad"],
+    ["Vad betyder uttrycket ”att ta något med en nypa salt”?", "Att inte tro helt på det", "Att salta maten", "Att bli arg", "Att laga mat"],
+    ["Vad betyder uttrycket ”att gå som katten kring het gröt”?", "Att undvika att säga det viktiga", "Att vara hungrig", "Att gå långsamt", "Att vara rädd för katter"],
+    ["Vilket ord betyder ungefär samma som ”börja”?", "starta", "sluta", "vänta", "fortsätta"],
+    ["Vad är motsatsen till ”frisk”?", "sjuk", "glad", "stark", "pigg"],
+    ["Vilket substantiv är ett ett-ord?", "äpple", "banan", "stol", "katt"],
+    ["Vad kallas en text i tidningen som berättar om något som just har hänt?", "Nyhetsartikel", "Saga", "Dikt", "Fabel"],
+    ["Vilket ord är ett adjektiv i meningen ”Den lilla hunden springer fort”?", "lilla", "hunden", "springer", "fort"]
+  ]);
+  BANKS.ma_brak = BANKS.ma_brak.concat([
+    ["Vilket bråk är lika mycket som 1/2?", "2/4", "1/4", "2/3", "3/4"],
+    ["Förkorta 6/8 så långt det går.", "3/4", "2/3", "6/4", "1/2"],
+    ["Förläng 2/3 så att nämnaren blir 12.", "8/12", "6/12", "4/12", "2/12"],
+    ["Beräkna 2/5 + 1/5.", "3/5", "3/10", "2/5", "1/5"],
+    ["Beräkna 7/8 − 3/8. Svara i enklaste form.", "1/2", "4/16", "10/8", "1/4"],
+    ["Vad är 1/3 av 21?", "7", "3", "63", "18"],
+    ["Vad är 2/3 av 30?", "20", "10", "15", "45"],
+    ["Vilket bråk är minst?", "1/8", "1/2", "1/4", "1/3"],
+    ["Vilket bråk är större än 1?", "5/4", "3/4", "4/5", "1/4"],
+    ["Skriv 0,25 i bråkform.", "1/4", "2/5", "25/10", "1/25"],
+    ["Skriv 3/10 i decimalform.", "0,3", "3,10", "0,03", "3,0"],
+    ["Skriv 9/4 i blandad form.", "2 1/4", "4 1/2", "1 4/9", "2 3/4"],
+    ["Hur många fjärdedelar går det på 3 hela?", "12", "4", "7", "3"],
+    ["En pizza delas i 8 bitar. Max äter 3 och Ella äter 2. Hur stor del av pizzan är kvar?", "3/8", "5/8", "2/8", "1/8"],
+    ["Vilket tal ligger mitt emellan 1/4 och 3/4?", "1/2", "1/3", "2/3", "3/8"],
+    ["Beräkna 1/2 + 1/4.", "3/4", "2/6", "2/4", "1/6"]
+  ]);
+  // Mixed quizzes take questions from every bank in the subject (a question text is only used once).
+  function mergeBanks(){
+    var seen = {}, out = [];
+    Array.prototype.forEach.call(arguments, function(bank){
+      bank.forEach(function(item){
+        var k = item[0].toLowerCase();
+        if (!seen[k]) { seen[k] = true; out.push(item); }
+      });
+    });
+    return out;
+  }
+  BANKS.noak6 = mergeBanks(BANKS.noak6, BANKS.biologi, BANKS.no_kropp, BANKS.fysik, BANKS.kemi, BANKS.no_rymden);
+  BANKS.ak6 = mergeBanks(BANKS.ak6, BANKS.geografi, BANKS.so_sverige, BANKS.so_historia, BANKS.so_samhalle, BANKS.religion, BANKS.hallbar);
+  BANKS.engelska_mixed = mergeBanks(BANKS.engelska_mixed, BANKS.engelska_ord, BANKS.engelska_grammar);
+  BANKS.teknik_alla = mergeBanks(BANKS.teknik_maskiner, BANKS.teknik_el, BANKS.teknik_design);
+  BANKS.ma_np = mergeBanks(BANKS.ma_brak, BANKS.ma_geometri, BANKS.ma_negativa, BANKS.ma_skala, BANKS.ma_statistik, BANKS.ma_procent, BANKS.ma_np_extra);
+
   var currentReadingPassage = null;
   function readingQuestions(list){
     list = list || READING_PASSAGES;
-    currentReadingPassage = list[rnd(0, list.length - 1)];
+    currentReadingPassage = list[deal(list === ENGLISH_READING_PASSAGES ? 'read_en' : 'read_sv', list.length, 1)[0]];
     var qs = currentReadingPassage.questions;
     // Longer texts have more than 7 questions: pick 7 at random, keep them in text order.
     if (qs.length > 7) {
@@ -932,8 +1464,28 @@
     });
   }
 
+  // Questions are dealt like a deck of cards: every question in a bank comes up once
+  // before any question comes back. The deck is remembered in this browser.
+  var DECKS = {};
+  try { DECKS = JSON.parse(localStorage.getItem('atharvaQuizDecks') || '{}') || {}; } catch(e) { DECKS = {}; }
+  function deal(key, size, count){
+    var d = DECKS[key];
+    if (!d || d.n !== size || !Array.isArray(d.left)) d = { n: size, left: [] };
+    if (d.left.length < count) {
+      var rest = [];
+      for (var i = 0; i < size; i++) if (d.left.indexOf(i) < 0) rest.push(i);
+      d.left = d.left.concat(shuffle(rest));
+    }
+    var hand = d.left.slice(0, count);
+    d.left = d.left.slice(count);
+    DECKS[key] = d;
+    try { localStorage.setItem('atharvaQuizDecks', JSON.stringify(DECKS)); } catch(e) {}
+    return hand;
+  }
+
   function fromBank(key){
-    return shuffle(BANKS[key]).slice(0, TOTAL).map(function(item){
+    return deal(key, BANKS[key].length, TOTAL).map(function(i){
+      var item = BANKS[key][i];
       return { text: item[0], correct: item[1], options: shuffle(item.slice(1)), picked: null };
     });
   }
@@ -1034,6 +1586,8 @@
     { id:'no-biologi', tag:'NO · BIOLOGI', icon:'🌱', title:'Biologi', color:'#1c9c5b', desc:'Kroppen, växter, ekosystem och biologisk mångfald', make:function(){ return fromBank('biologi'); } },
     { id:'no-fysik', tag:'NO · FYSIK', icon:'⚡', title:'Fysik', color:'#1c9c5b', desc:'Krafter, energi, ljud, ljus och elektricitet', make:function(){ return fromBank('fysik'); } },
     { id:'no-kemi', tag:'NO · KEMI', icon:'🧪', title:'Kemi', color:'#1c9c5b', desc:'Ämnen, blandningar, vatten och kemiska reaktioner', make:function(){ return fromBank('kemi'); } },
+    { id:'no-kropp', tag:'NO · KROPPEN', icon:'🫀', title:'Människokroppen', color:'#1c9c5b', desc:'Organ, blod, skelett, sinnen och hälsa', make:function(){ return fromBank('no_kropp'); } },
+    { id:'no-rymden', tag:'NO · RYMDEN', icon:'🪐', title:'Rymden', color:'#1c9c5b', desc:'Solsystemet, månen, stjärnor och rymdfärder', make:function(){ return fromBank('no_rymden'); } },
     { id:'no-ak6', tag:'NO · ÅK 6', icon:'📚', title:'NO – blandat för åk 6', color:'#1c9c5b', desc:'Blandade frågor i biologi, fysik och kemi', make:function(){ return fromBank('noak6'); } }
   ];
 
@@ -1041,7 +1595,10 @@
     { id:'so-geografi', tag:'SO · GEOGRAFI', icon:'🗺️', title:'Geografi', color:'#d9822b', desc:'Kartor, klimat, naturresurser', make:function(){ return fromBank('geografi'); } },
     { id:'so-religion', tag:'SO · RELIGION', icon:'🕊️', title:'Religion', color:'#d9822b', desc:'Världsreligioner, heliga platser och högtider', make:function(){ return fromBank('religion'); } },
     { id:'so-hallbar', tag:'SO · HÅLLBARHET', icon:'♻️', title:'Hållbar utveckling', color:'#d9822b', desc:'Miljö, samhälle och ekonomi', make:function(){ return fromBank('hallbar'); } },
-    { id:'so-ak6', tag:'SO · ÅK 6', icon:'📚', title:'SO – blandat för åk 6', color:'#d9822b', desc:'Historia, samhälle, demokrati och rättigheter', make:function(){ return fromBank('ak6'); } }
+    { id:'so-historia', tag:'SO · HISTORIA', icon:'🏰', title:'Historia', color:'#d9822b', desc:'Från stenåldern och vikingarna till 1900-talet', make:function(){ return fromBank('so_historia'); } },
+    { id:'so-samhalle', tag:'SO · SAMHÄLLE', icon:'🏛️', title:'Samhälle och demokrati', color:'#d9822b', desc:'Riksdag, kommun, lagar, pengar och rättigheter', make:function(){ return fromBank('so_samhalle'); } },
+    { id:'so-sverige', tag:'SO · SVERIGE & EUROPA', icon:'🧭', title:'Sverige, Norden och Europa', color:'#d9822b', desc:'Landskap, städer, huvudstäder och natur', make:function(){ return fromBank('so_sverige'); } },
+    { id:'so-ak6', tag:'SO · ÅK 6', icon:'📚', title:'SO – blandat för åk 6', color:'#d9822b', desc:'Blandade frågor från alla SO-ämnen', make:function(){ return fromBank('ak6'); } }
   ];
 
   var SVENSKA_QUIZZES = [
@@ -1060,13 +1617,14 @@
   var TEKNIK_QUIZZES = [
     { id:'teknik-maskiner', tag:'TEKNIK · MASKINER', icon:'⚙️', title:'Maskiner och konstruktion', color:'#5f6b7a', desc:'Enkla maskiner, verktyg och prototyper', make:function(){ return fromBank('teknik_maskiner'); } },
     { id:'teknik-el', tag:'TEKNIK · ELEKTRICITET', icon:'🔌', title:'Elektricitet och tekniska system', color:'#5f6b7a', desc:'Kretsar, energi, sensorer och säkerhet', make:function(){ return fromBank('teknik_el'); } },
-    { id:'teknik-design', tag:'TEKNIK · DESIGN', icon:'💡', title:'Design, programmering och hållbarhet', color:'#5f6b7a', desc:'Algoritmer, material och att förbättra lösningar', make:function(){ return fromBank('teknik_design'); } }
+    { id:'teknik-design', tag:'TEKNIK · DESIGN', icon:'💡', title:'Design, programmering och hållbarhet', color:'#5f6b7a', desc:'Algoritmer, material och att förbättra lösningar', make:function(){ return fromBank('teknik_design'); } },
+    { id:'teknik-mix', tag:'TEKNIK · BLANDAT', icon:'📚', title:'Teknik – blandat', color:'#5f6b7a', desc:'Blandade frågor från alla teknikområden', make:function(){ return fromBank('teknik_alla'); } }
   ];
 
   var SUBJECTS = [
     { id:'matte', tag:'MATTE', icon:'🔢', title:'Math quizzes', color:'#6c4cf1', desc:'The four operations, procent, bråk, geometry, statistics and national test practice', children: MATTE_QUIZZES },
-    { id:'no',       tag:'NO',       icon:'🔬', title:'Naturorienterande ämnen', color:'#1c9c5b', desc:'Biologi, fysik, kemi och NO för åk 6', children: NO_QUIZZES },
-    { id:'so',       tag:'SO',       icon:'🌍', title:'Samhällsorienterande ämnen', color:'#d9822b', desc:'Geografi, religion, hållbar utveckling och SO för åk 6', children: SO_QUIZZES },
+    { id:'no',       tag:'NO',       icon:'🔬', title:'Naturorienterande ämnen', color:'#1c9c5b', desc:'Biologi, fysik, kemi, människokroppen, rymden och NO för åk 6', children: NO_QUIZZES },
+    { id:'so',       tag:'SO',       icon:'🌍', title:'Samhällsorienterande ämnen', color:'#d9822b', desc:'Geografi, historia, samhälle, religion, hållbar utveckling och SO för åk 6', children: SO_QUIZZES },
     { id:'svenska',  tag:'SVENSKA',  icon:'📖', title:'Svenska',   color:'#2b7bd9', desc:'Läsförståelse, ordklasser, stavning och språk', children: SVENSKA_QUIZZES },
     { id:'engelska', tag:'ENGELSKA', icon:'🇬🇧', title:'Engelska', color:'#c93c6e', desc:'Ord, grammatik, läsförståelse och skrivande', children: ENGLISH_QUIZZES },
     { id:'teknik',   tag:'TEKNIK',   icon:'⚙️', title:'Teknik',   color:'#5f6b7a', desc:'Maskiner, elektricitet, design och programmering', children: TEKNIK_QUIZZES }
@@ -1088,11 +1646,18 @@
   var onlineDb = null, onlineUid = null, onlineReadOnly = false, onlinePlayers = [], syncing = false, syncAgain = false;
   function setOnlineNote(){
     var n = $('onlineNote');
+    if (!onlineDb && SHEET_URL) {
+      n.textContent = sheetError ? 'Could not reach the online score sheet right now. Your scores are still saved on this device.'
+        : !sheetPlayers ? 'Connecting…'
+        : 'Players who turned on online saving in 👤 My Profile. Only the user name, level and XP are shown.';
+      return;
+    }
     if (!onlineDb) n.textContent = 'The shared player list works on the Claude page when you are signed in to Claude. On this copy only this device is shown.';
     else if (onlineReadOnly) n.textContent = 'You can see the other players, but you cannot add yourself yet. Ask the owner to give you Contributor access.';
     else n.textContent = 'Everyone who opens this page can see these usernames, levels and XP. Please do not use your full name.';
   }
   function syncOnline(){
+    syncSheet();
     if (!onlineDb || !onlineUid || onlineReadOnly) return;
     if (syncing) { syncAgain = true; return; }
     syncing = true;
@@ -1108,6 +1673,12 @@
   }
   function onlineRows(){
     var rows = [];
+    if (!onlineDb && sheetPlayers) {
+      return sheetPlayers.map(function(p){
+        return { name: p.name, xp: Number(p.xp) || 0, quizzes: Number(p.quizzes) || 0, best: Number(p.best) || 0,
+                 mine: accounts.some(function(a){ return a.cloud && a.cloud.user === p.key; }) };
+      });
+    }
     onlinePlayers.forEach(function(d){
       (d.accounts || []).forEach(function(a){
         rows.push({ name: a.name, xp: Number(a.xp) || 0, quizzes: Number(a.quizzes) || 0, best: Number(a.best) || 0, mine: d.uid === onlineUid });
@@ -1118,7 +1689,7 @@
   function onlineTableHTML(){
     var rows = onlineRows();
     var h = '<h3>🌍 All players</h3>';
-    if (!onlineDb) return h + '<p class="small">Sign in to Claude and open the shared page to see other players.</p>';
+    if (!onlineDb && !sheetPlayers) return h + '<p class="small">' + (SHEET_URL ? 'Connecting to the online score sheet…' : 'Sign in to Claude and open the shared page to see other players.') + '</p>';
     if (!rows.length) return h + '<p>No players yet.</p>';
     h += '<table class="data-table"><thead><tr><th>#</th><th>Player</th><th>Level</th><th>XP</th><th>Quizzes</th></tr></thead><tbody>';
     rows.slice(0, 30).forEach(function(r, i){
@@ -1162,6 +1733,147 @@
       }).catch(function(){ setOnlineNote(); });
     } catch(e) { setOnlineNote(); }
   })();
+  // ---------- online saving in Atharva's Google Sheet (optional, per account) ----------
+  // The web-app link from Apps Script (see QuizzTime_AppsScript.gs). Empty = everything stays on this device only.
+  var SHEET_URL = '';
+  var sheetPlayers = null, sheetError = false, sheetBusy = false, sheetAgain = false;
+  function sheetCall(data){
+    // Sent as plain text so the browser can call Google Apps Script directly.
+    return fetch(SHEET_URL, { method: 'POST', body: JSON.stringify(data) }).then(function(r){ return r.json(); });
+  }
+  function accountHistory(acc){
+    return getAllHistory().filter(function(x){ return x.accountId === acc.id; }).map(function(x){
+      return { date: x.date, subject: x.subject, quiz: x.quiz, score: x.score, total: x.total };
+    });
+  }
+  // Adds the results the Sheet knows about (from every device) to this device. Nothing local is removed.
+  function useCloudHistory(acc, list){
+    if (!Array.isArray(list)) return;
+    try {
+      var all = getAllHistory(), have = {};
+      function key(x){ return String(x.date || '') + '|' + String(x.quiz || '').slice(0, 60); }
+      all.forEach(function(x){ if (x.accountId === acc.id) have[key(x)] = true; });
+      list.forEach(function(x){
+        if (have[key(x)]) return;
+        have[key(x)] = true;
+        all.push({ accountId: acc.id, name: acc.name, quiz: x.quiz, subject: x.subject, score: Number(x.score) || 0, total: Number(x.total) || 10, date: x.date });
+      });
+      all.sort(function(a, b){ return String(a.date) < String(b.date) ? -1 : String(a.date) > String(b.date) ? 1 : 0; });
+      localStorage.setItem('atharvaQuizHistory', JSON.stringify(all.slice(-500)));
+    } catch(e) {}
+  }
+  function syncSheet(){
+    if (!SHEET_URL) return;
+    if (sheetBusy) { sheetAgain = true; return; }
+    var linked = accounts.filter(function(a){ return a.cloud && a.cloud.token; });
+    if (!linked.length) return;
+    sheetBusy = true;
+    var chain = Promise.resolve();
+    linked.forEach(function(acc){
+      chain = chain.then(function(){
+        return sheetCall({ action: 'save', user: acc.cloud.user, token: acc.cloud.token, name: acc.name, history: accountHistory(acc),
+                           profile: { gender: acc.gender || '', selfGender: acc.selfGender || '' } })
+          .then(function(res){
+            if (res && res.ok) useCloudHistory(acc, res.history);
+            else if (res && (res.error === 'token' || res.error === 'unknown')) acc.cloud = null;   // the row was removed from the Sheet
+          }, function(){ /* offline: it is sent again after the next quiz */ });
+      });
+    });
+    chain.then(function(){
+      try { localStorage.setItem('atharvaQuizAccounts', JSON.stringify(accounts)); } catch(e) {}
+      sheetBusy = false;
+      loadSheetPlayers();
+      if (sheetAgain) { sheetAgain = false; syncSheet(); }
+    });
+  }
+  function loadSheetPlayers(){
+    if (!SHEET_URL || onlineDb) return;
+    sheetCall({ action: 'players' }).then(function(res){
+      sheetError = !(res && res.ok);
+      if (res && res.ok) sheetPlayers = res.players || [];
+    }, function(){ sheetError = true; }).then(function(){
+      renderOnlineList();
+      if (!$('dashboardPanel').classList.contains('hidden') && $('panelTitle').textContent.indexOf('Leaderboard') > -1) showDashboard('leaderboardPanel');
+    });
+  }
+  function cloudErrorText(err){
+    if (err === 'taken') return 'This user name is already used online. If it is yours, type the PIN you chose before. Otherwise change your user name first.';
+    if (err === 'locked') return 'Too many wrong PINs. Wait 15 minutes and try again.';
+    if (err === 'pin') return 'Wrong user name or PIN.';
+    if (err === 'unknown') return 'There is no online account with that user name.';
+    return 'Could not reach the online score sheet. Check the internet and try again.';
+  }
+  // "Save online" box in My Profile. Optional: a player can skip it and keep everything on this device.
+  function renderCloudBox(){
+    if (!SHEET_URL || !profile) return;
+    var acc = profile, box = document.createElement('div');
+    if (acc.cloud && acc.cloud.token) {
+      box.innerHTML = '<h3>☁️ Online saving is on</h3><p>Your scores are saved in the online score sheet as <strong>' + escapeHTML(acc.cloud.user) +
+        '</strong>. On another phone or computer, choose “👤 I have an account” and log in with this user name and your PIN.</p>' +
+        '<button class="ghost" type="button" id="cloudOff">Stop saving online on this device</button>';
+      $('panelContent').appendChild(box);
+      $('cloudOff').addEventListener('click', function(){ acc.cloud = null; saveAccounts(); showDashboard('profilePanel'); });
+      return;
+    }
+    box.innerHTML = '<h3>☁️ Save online (optional)</h3><p>Turn this on to keep your XP and scores when you play on another phone or computer. You can skip it – everything still works on this device.</p>' +
+      '<label for="cloudNewPin" style="display:block;font-weight:700;margin:10px 0 6px">Choose a PIN (4–8 digits)</label>' +
+      '<input id="cloudNewPin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password" style="width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit">' +
+      '<p class="small">Your online user name will be <strong>' + escapeHTML(acc.name) + '</strong>. Remember the PIN – you need it on other devices.</p>' +
+      '<button class="primary" type="button" id="cloudOn">☁️ Turn on online saving</button><p class="fb" id="cloudMsg"></p>';
+    $('panelContent').appendChild(box);
+    $('cloudOn').addEventListener('click', function(){
+      var pin = $('cloudNewPin').value.trim(), msg = $('cloudMsg');
+      if (!/^\d{4,8}$/.test(pin)) { msg.className = 'fb bad'; msg.textContent = 'The PIN must be 4 to 8 digits.'; return; }
+      msg.className = 'fb'; msg.textContent = 'Connecting…'; $('cloudOn').disabled = true;
+      sheetCall({ action: 'register', name: acc.name, pin: pin, history: accountHistory(acc),
+                  profile: { gender: acc.gender || '', selfGender: acc.selfGender || '' } })
+        .then(function(res){
+          // Already online from another device? The same user name and PIN connect to it.
+          if (!res || res.error !== 'taken') return res;
+          return sheetCall({ action: 'login', user: acc.name, pin: pin }).then(function(r){
+            if (r && r.error === 'pin') r.error = 'taken';
+            return r;
+          });
+        })
+        .then(function(res){
+          if (res && res.ok) {
+            acc.cloud = { user: res.user, token: res.token };
+            useCloudHistory(acc, res.history);
+            saveAccounts();
+            showDashboard('profilePanel');
+          } else {
+            $('cloudOn').disabled = false; msg.className = 'fb bad'; msg.textContent = cloudErrorText(res && res.error);
+          }
+        }, function(){ $('cloudOn').disabled = false; msg.className = 'fb bad'; msg.textContent = cloudErrorText(); });
+    });
+  }
+  if (SHEET_URL) {
+    $('cloudLoginBox').classList.remove('hidden');
+    $('saveNote').textContent += ' You can also turn on online saving in 👤 My Profile – it is optional.';
+    setTimeout(function(){ setOnlineNote(); loadSheetPlayers(); syncSheet(); }, 0);
+  }
+  $('cloudLoginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var user = $('cloudUser').value.trim(), pin = $('cloudPin').value.trim(), msg = $('cloudLoginMsg');
+    if (!user || !pin) { msg.className = 'fb bad'; msg.textContent = 'Type your user name and PIN.'; return; }
+    msg.className = 'fb'; msg.textContent = 'Logging in…';
+    sheetCall({ action: 'login', user: user, pin: pin }).then(function(res){
+      if (!res || !res.ok) { msg.className = 'fb bad'; msg.textContent = cloudErrorText(res && res.error); return; }
+      var acc = accounts.filter(function(a){ return a.cloud && a.cloud.user === res.user; })[0];
+      if (!acc) {
+        var p = res.profile || {};
+        acc = { id:'acc-' + Date.now() + '-' + rnd(100, 999), name: res.name, gender: p.gender || '', selfGender: p.selfGender || '' };
+        accounts.push(acc);
+      }
+      acc.cloud = { user: res.user, token: res.token };
+      useCloudHistory(acc, res.history);
+      saveAccounts();
+      $('cloudUser').value = ''; $('cloudPin').value = ''; msg.textContent = '';
+      $('accountsBox').classList.add('hidden');
+      enterApp(acc, false);
+    }, function(){ msg.className = 'fb bad'; msg.textContent = cloudErrorText(); });
+  });
+
   (function loadAccounts(){
     try {
       var list = JSON.parse(localStorage.getItem('atharvaQuizAccounts') || 'null');
@@ -1232,6 +1944,7 @@
     });
   }
   $('haveAccountBtn').addEventListener('click', function(){
+    loadSheetPlayers();
     renderAccounts();
     $('accountsBox').classList.remove('hidden');
     $('accountsBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1323,6 +2036,7 @@
     }
     $('panelTitle').textContent=title; $('panelSub').textContent=sub; $('panelContent').innerHTML=html;
     if(panel==='profilePanel'){
+      renderCloudBox();
       $('deleteProfileBtn').addEventListener('click',function(){$('deleteProfileBtn').classList.add('hidden');$('deleteConfirm').classList.remove('hidden');});
       $('deleteNo').addEventListener('click',function(){$('deleteConfirm').classList.add('hidden');$('deleteProfileBtn').classList.remove('hidden');});
       $('deleteYes').addEventListener('click',deleteProfile);
@@ -1650,5 +2364,3 @@
 </script>
 </body>
 </html>
-
-</body></html>
