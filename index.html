@@ -1735,10 +1735,11 @@
   })();
   // ---------- online saving in Atharva's Google Sheet (optional, per account) ----------
   // The web-app link from Apps Script (see QuizzTime_AppsScript.gs). Empty = everything stays on this device only.
-  var SHEET_URL = '';
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbz1AviL_IC9AyRFmXzgeqYkXVyr4DqeqBqB7no8VAHMMsE00AAOEL72MJLR5jdsI52beg/exec';
   var sheetPlayers = null, sheetError = false, sheetBusy = false, sheetAgain = false;
   function sheetCall(data){
     // Sent as plain text so the browser can call Google Apps Script directly.
+    if (!window.fetch) return Promise.reject(new Error('offline'));
     return fetch(SHEET_URL, { method: 'POST', body: JSON.stringify(data) }).then(function(r){ return r.json(); });
   }
   function accountHistory(acc){
