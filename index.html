@@ -1,0 +1,1654 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atharva's Quiz Games</title>
+<style>
+  :root{
+    --bg:#f4f1ff; --card:#ffffff; --ink:#26224a; --muted:#6b6896;
+    --brand:#6c4cf1; --brand-dark:#5338d1; --good:#1c9c5b; --good-bg:#e5f7ee;
+    --bad:#d6403a; --bad-bg:#fdeceb; --line:#dcd7f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.4}
+  header{background:linear-gradient(135deg,#6c4cf1,#8f6bff);color:#fff;padding:16px 20px}
+  .top{max-width:760px;margin:0 auto;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+  h1{margin:0;font-size:1.4rem}
+  .player{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);padding:8px 12px;border-radius:12px}
+  .player label{font-size:.9rem}
+  .player input{border:0;border-radius:8px;padding:8px 10px;font-size:1rem;width:170px;max-width:42vw}
+  main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+  .card{background:var(--card);border-radius:16px;padding:20px;box-shadow:0 2px 10px rgba(60,40,140,.08);margin-bottom:16px}
+  h2{margin:0 0 6px}
+  .sub{color:var(--muted);margin:0 0 14px}
+  .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .menu-item{border:2px solid var(--line);border-radius:14px;padding:16px;background:#fff;text-align:left;cursor:pointer;font:inherit;color:inherit}
+  .menu-item:hover{border-color:var(--c,var(--brand));transform:translateY(-1px)}
+  .menu-item .tag{display:inline-block;background:var(--c,var(--brand));color:#fff;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:99px;margin-bottom:6px}
+  .menu-item strong{display:block;font-size:1.1rem}
+  .menu-item span.d{color:var(--muted);font-size:.9rem}
+  .q{border:2px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+  .q.right{border-color:var(--good);background:var(--good-bg)}
+  .q.wrong{border-color:var(--bad);background:var(--bad-bg)}
+  .q-title{font-size:1.2rem;font-weight:700;margin-bottom:10px}
+  #readingPassage{border-left:5px solid #2b7bd9;background:var(--card, #fff)}
+  .q-title small{display:block;color:var(--muted);font-weight:600;font-size:.85rem;margin-bottom:2px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .opt{display:flex;align-items:center;gap:8px;border:2px solid var(--line);border-radius:12px;padding:12px;background:#fff;cursor:pointer;font-size:1.05rem}
+  .opt:hover{border-color:var(--brand)}
+  .opt input{accent-color:var(--brand);width:18px;height:18px;flex:none}
+  .opt.selected{border-color:var(--brand);background:#efeaff}
+  .opt.correct{border-color:var(--good);background:#d3f2e2}
+  .opt.incorrect{border-color:var(--bad);background:#fbd9d7}
+  .locked .opt{cursor:default}
+  .fb{margin-top:10px;font-weight:600}
+  .fb.good{color:var(--good)} .fb.bad{color:var(--bad)}
+  button.primary{background:var(--brand);color:#fff;border:0;border-radius:12px;padding:12px 22px;font-size:1.05rem;font-weight:700;cursor:pointer}
+  button.primary:hover{background:var(--brand-dark)}
+  button.primary:disabled{opacity:.5;cursor:not-allowed}
+  button.ghost{background:#fff;color:var(--brand);border:2px solid var(--brand);border-radius:12px;padding:10px 18px;font-size:1rem;font-weight:700;cursor:pointer}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .hint{color:var(--muted);font-size:.95rem}
+  .score{font-size:2.2rem;font-weight:800;margin:4px 0}
+  .review li{margin-bottom:8px}
+  .pad-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+  .sw{width:32px;height:32px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--line);cursor:pointer;padding:0}
+  .sw.active{box-shadow:0 0 0 3px var(--brand)}
+  .tbtn{border:2px solid var(--line);background:#fff;border-radius:10px;padding:6px 10px;font:inherit;font-size:.9rem;cursor:pointer;color:inherit}
+  .tbtn.active{border-color:var(--brand);background:#efeaff}
+  #padCanvas{display:block;width:100%;height:300px;background:#fff;border:2px dashed var(--line);border-radius:12px;touch-action:none;cursor:crosshair}
+  .hidden{display:none}
+  .welcome{max-width:650px;margin:32px auto}
+  .welcome h2{font-size:1.8rem}
+  .welcome label{display:block;font-weight:700;margin:14px 0 6px}
+  .welcome input,.welcome select{width:100%;padding:12px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
+  .welcome .small{font-size:.9rem;color:var(--muted)}
+  .dash-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0}
+  .stat{background:#f3efff;border:1px solid var(--line);border-radius:12px;padding:14px}
+  .stat strong{display:block;font-size:1.5rem}
+  .data-table{width:100%;border-collapse:collapse;margin-top:12px}
+  .data-table th,.data-table td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+  .bar{height:12px;background:#e6e0ff;border-radius:99px;overflow:hidden;margin:8px 0}
+  .bar span{display:block;height:100%;background:var(--brand);width:0%}
+  @media (max-width:520px){.opts{grid-template-columns:1fr}}
+.profile-avatar-wrap{display:flex;align-items:center;gap:14px;margin:10px 0 18px}.profile-avatar{width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid var(--line)}.leader-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;vertical-align:middle}
+  .acct{display:flex;align-items:center;gap:12px;border:2px solid var(--line);border-radius:12px;padding:10px;margin:8px 0;background:#fff}
+  .acct img{width:48px;height:48px;border-radius:50%;object-fit:cover;flex:none}
+  .acct .grow{flex:1;min-width:0}
+  .acct.now{border-color:var(--brand);background:#efeaff}
+  button.danger{background:#d6403a;color:#fff;border:0;border-radius:12px;padding:12px 22px;font-size:1.05rem;font-weight:700;cursor:pointer}
+  button.danger:hover{background:#b8322d}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1>🎮 Atharva's Quiz Games <span style="font-weight:400;font-size:1rem">· Åk 6</span></h1>
+    <div class="player hidden" id="headerPlayer">
+      <label for="playerName">👤 Player:</label>
+      <input id="playerName" type="text" maxlength="30" placeholder="Type your name" autocomplete="off">
+      <button type="button" id="switchAccountBtn" class="tbtn">👥 Accounts</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="welcome" class="card welcome">
+    <h2>👋 Hi, welcome to Atharva’s Quiz Games!</h2>
+    <p class="sub">Here you can learn and practise different subjects. Create your player profile to get started.</p>
+    <form id="profileForm">
+      <label for="welcomeName">What is your user name?</label>
+      <input id="welcomeName" type="text" maxlength="30" placeholder="Enter your name" autocomplete="nickname" required>
+      <label for="welcomeGender">Gender (optional)</label>
+      <select id="welcomeGender">
+        <option value="">Prefer not to say</option>
+        <option value="Girl">Girl</option>
+        <option value="Boy">Boy</option>
+        <option value="Non-binary">Non-binary</option>
+        <option value="Self-describe">I’d like to describe it myself</option>
+      </select>
+      <div id="selfGenderWrap" class="hidden">
+        <label for="selfGender">How would you like to describe it?</label>
+        <input id="selfGender" type="text" maxlength="30" placeholder="Optional">
+      </div>
+      <p class="small">Your profile and quiz scores can be saved in this browser on this device.</p>
+      <button class="primary" id="continueBtn" type="submit" style="width:100%;margin-top:8px">Continue to quizzes ➜</button>
+      <button class="ghost" id="haveAccountBtn" type="button" style="width:100%;margin-top:8px">👤 I have an account</button>
+    </form>
+    <div id="accountsBox" class="hidden" style="margin-top:18px">
+      <h3 style="margin:0 0 4px">👥 Accounts on this device</h3>
+      <p class="small">Tap an account to open it. New accounts you make are added here, and the old ones stay saved.</p>
+      <div id="accountsList"></div>
+      <h3 style="margin:18px 0 4px">🌍 All players</h3>
+      <p class="small" id="onlineNote">Connecting…</p>
+      <div id="onlineList"></div>
+    </div>
+  </section>
+
+  <div id="appContent" class="hidden">
+  <section id="menu" class="card">
+    <h2 id="greeting">Choose a quiz</h2>
+    <p class="sub" id="menuSub">Pick a subject to start. 10 questions, no timer – take your time!</p>
+    <button class="ghost hidden" id="subjectsBtn" type="button" style="margin-bottom:14px">⬅ All subjects</button>
+    <div class="dash-nav" aria-label="Player dashboard">
+      <button class="ghost" type="button" data-panel="leaderboardPanel">🏆 Leaderboard</button>
+      <button class="ghost" type="button" data-panel="xpPanel">⭐ XP & Levels</button>
+      <button class="ghost" type="button" data-panel="profilePanel">👤 My Profile</button>
+      <button class="ghost" type="button" data-panel="progressPanel">📊 My Progress</button>
+    </div>
+    <div class="menu-grid" id="menuGrid"></div>
+  </section>
+
+  <section id="dashboardPanel" class="card hidden">
+    <div class="actions" style="justify-content:space-between"><h2 id="panelTitle">My dashboard</h2><button class="ghost" type="button" id="dashboardBack">⬅ Back to quizzes</button></div>
+    <p class="sub" id="panelSub"></p>
+    <div id="panelContent"></div>
+  </section>
+
+  <section id="quiz" class="hidden">
+    <div class="card">
+      <h2 id="quizTitle"></h2>
+      <p class="sub" id="quizIntro"></p>
+    </div>
+    <div id="readingPassage" class="card hidden" style="margin-bottom:14px"><h3 id="readingTitle" style="margin-top:0"></h3><p id="readingText" style="white-space:pre-line;line-height:1.75;margin-bottom:0"></p></div>
+    <form id="quizForm" onsubmit="return false"></form>
+    <div class="card hidden" id="padCard">
+      <h3 style="margin:0 0 10px">✏️ Sketch pad</h3>
+      <div class="pad-tools">
+        <button type="button" class="sw active" data-color="#26224a" style="background:#26224a" aria-label="Black pen"></button>
+        <button type="button" class="sw" data-color="#d6403a" style="background:#d6403a" aria-label="Red pen"></button>
+        <button type="button" class="sw" data-color="#2b7bd9" style="background:#2b7bd9" aria-label="Blue pen"></button>
+        <button type="button" class="sw" data-color="#1c9c5b" style="background:#1c9c5b" aria-label="Green pen"></button>
+        <button type="button" class="tbtn active" data-size="3">Thin</button>
+        <button type="button" class="tbtn" data-size="6">Medium</button>
+        <button type="button" class="tbtn" data-size="12">Thick</button>
+        <button type="button" class="tbtn" id="padErase">🧽 Eraser</button>
+        <button type="button" class="tbtn" id="padClear">🗑 Clear</button>
+      </div>
+      <canvas id="padCanvas"></canvas>
+    </div>
+    <div class="card actions">
+      <button class="ghost hidden" id="backBtn" type="button">⬅ Back</button>
+      <button class="primary" id="nextBtn" type="button" disabled>Next ➡</button>
+      <button class="primary hidden" id="checkBtn" type="button" disabled>✅ Check answers</button>
+      <button class="ghost hidden" id="againBtn" type="button">🔄 New quiz</button>
+      <button class="ghost" id="padBtn" type="button">✏️ Sketch pad</button>
+      <button class="ghost" id="menuBtn" type="button">⬅ Menu</button>
+      <span class="hint" id="progress"></span>
+    </div>
+    <div class="card hidden" id="result">
+      <div class="hint" id="resultName"></div>
+      <div class="score" id="resultScore"></div>
+      <p id="resultMsg"></p>
+      <div id="reviewBox" class="hidden">
+        <h3>Correct answers for your mistakes</h3>
+        <ul class="review" id="reviewList"></ul>
+      </div>
+    </div>
+  </section>
+  </div>
+</main>
+
+<script>
+(function(){
+  var TOTAL = 10;
+  var $ = function(id){ return document.getElementById(id); };
+  var nameInput = $('playerName');
+  var current = null, questions = [], checked = false;
+
+  // ---------- helpers ----------
+  function rnd(a, b){ return Math.floor(Math.random() * (b - a + 1)) + a; }
+  function shuffle(arr){
+    arr = arr.slice();
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = rnd(0, i), t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+  function fmt(n){ return n.toLocaleString('en-US'); }
+
+  // ---------- question banks ----------
+  // Each item: [question, correct answer, wrong 1, wrong 2, wrong 3]
+  var BANKS = {};
+
+  BANKS.no = [
+    ["Vad kallas processen där växter omvandlar ljus, vatten och koldioxid till socker och syre?", "Fotosyntes", "Förbränning", "Avdunstning", "Matsmältning"],
+    ["Vilken gas andas vi in som kroppen behöver?", "Syre", "Koldioxid", "Kväve", "Helium"],
+    ["Vad kallas djur som bara äter växter?", "Växtätare", "Rovdjur", "Allätare", "Nedbrytare"],
+    ["Vilket organ pumpar runt blodet i kroppen?", "Hjärtat", "Lungorna", "Levern", "Magsäcken"],
+    ["Vid vilken temperatur kokar vatten (vid havsnivå)?", "100 °C", "90 °C", "80 °C", "120 °C"],
+    ["Vad kallas det när vatten blir till is?", "Frysning", "Förångning", "Kondensation", "Smältning"],
+    ["Vilken planet ligger närmast solen?", "Merkurius", "Venus", "Mars", "Jorden"],
+    ["Vilken kraft drar föremål mot jordens mitt?", "Tyngdkraften", "Magnetism", "Friktion", "Elektricitet"],
+    ["Vilken del av växten tar upp vatten ur jorden?", "Roten", "Bladet", "Blomman", "Stammen"],
+    ["Vad står oftast först i en näringskedja?", "Växter", "Rovdjur", "Svampar", "Människor"],
+    ["Vad bildas när solljus bryts i regndroppar?", "Regnbåge", "Åska", "Dimma", "Blixt"],
+    ["Genom vilket av dessa kan ljud INTE färdas?", "Tomrum (vakuum)", "Luft", "Vatten", "Metall"],
+    ["Vilket material leder elektricitet bra?", "Koppar", "Gummi", "Plast", "Trä"],
+    ["Hur många ben har en insekt?", "6", "8", "4", "10"],
+    ["I vilken enhet mäter man kraft?", "Newton", "Meter", "Gram", "Sekund"],
+    ["Vad kallas tiden i livet då kroppen förändras från barn till vuxen?", "Puberteten", "Metamorfosen", "Växtperioden", "Fotosyntesen"],
+    ["Vilken energiform har en cyklist som rullar fram?", "Rörelseenergi", "Lägesenergi", "Kärnenergi", "Ljusenergi"],
+    ["Vilken energikälla är förnybar?", "Vindkraft", "Kol", "Olja", "Naturgas"],
+    ["Vad kallas månens olika utseenden under en månad?", "Månfaser", "Årstider", "Solförmörkelser", "Tidvatten"],
+    ["Vad orsakar årstiderna på jorden?", "Att jordaxeln lutar när jorden går runt solen", "Att jorden är närmare solen på sommaren", "Att månen flyttar sig", "Att solen blir starkare och svagare"]
+  ];
+
+
+  BANKS.biologi = [
+    ["Vilken process gör att växter använder solljus för att bilda socker?", "Fotosyntes", "Förbränning", "Kondensation", "Nedbrytning"],
+    ["Vilken del av växten tar främst upp vatten från marken?", "Rötterna", "Blommorna", "Bladen", "Frukten"],
+    ["Vad kallas ett djur som äter både växter och djur?", "Allätare", "Växtätare", "Rovdjur", "Nedbrytare"],
+    ["Vilken uppgift har lungorna?", "Att ta upp syre från luften", "Att pumpa runt blodet", "Att bryta ner maten", "Att rena blodet från alla ämnen"],
+    ["Vad visar en näringskedja?", "Vem som äter vem i naturen", "Hur vatten rinner i en flod", "Hur väder förändras", "Hur berg bildas"],
+    ["Vilka organismer hjälper till att bryta ner döda växter och djur?", "Svampar och bakterier", "Bara växtätare", "Bara fåglar", "Fjärilar och bin"],
+    ["Vad kallas den plats där en art lever?", "Livsmiljö", "Kretslopp", "Näringsämne", "Klimatzon"],
+    ["Vilket organ pumpar blod genom kroppen?", "Hjärtat", "Hjärnan", "Magsäcken", "Njurarna"],
+    ["Vad är biologisk mångfald?", "Variationen av olika arter och livsmiljöer", "Antalet bilar i ett område", "Hur varmt det är på sommaren", "Mängden salt i havet"],
+    ["Varför är pollinerande insekter viktiga för många växter?", "De hjälper växter att bilda frön och frukter", "De gör att växter inte behöver vatten", "De gör jorden till sten", "De hindrar allt fröbildande"]
+  ];
+
+  BANKS.fysik = [
+    ["Vilken enhet används för att mäta kraft?", "Newton", "Meter", "Liter", "Gram"],
+    ["Vad får en kompassnål att ställa in sig mot norr?", "Jordens magnetfält", "Ljudvågor", "Solens värme", "Lufttrycket"],
+    ["Vilken energikälla är förnybar?", "Vindkraft", "Kol", "Olja", "Naturgas"],
+    ["Vad behöver ljud för att kunna färdas?", "Ett material, till exempel luft eller vatten", "Alltid vakuum", "Bara solljus", "Bara elektricitet"],
+    ["Vad händer med de flesta material när de värms upp?", "De utvidgar sig", "De försvinner", "De blir alltid magnetiska", "De får ingen förändring alls"],
+    ["Vilken kraft gör att föremål faller mot marken?", "Tyngdkraft", "Friktion", "Magnetism", "Luftmotstånd"],
+    ["Vad kallas energi som ett föremål har på grund av sin rörelse?", "Rörelseenergi", "Lägesenergi", "Kemisk energi", "Ljudenergi"],
+    ["Vilket material leder elektricitet bra?", "Koppar", "Gummi", "Plast", "Torrt trä"],
+    ["Vad händer med ljuset när det studsar mot en spegel?", "Det reflekteras", "Det fryser", "Det förvandlas till ljud", "Det försvinner alltid"],
+    ["Varför har vi årstider på jorden?", "Jordaxeln lutar när jorden kretsar runt solen", "Månen täcker solen varje årstid", "Solen slocknar på vintern", "Jorden slutar rotera på vintern"]
+  ];
+
+  BANKS.kemi = [
+    ["Vilka tre former kan vatten vanligtvis finnas i?", "Fast, flytande och gas", "Metall, sten och trä", "Syra, salt och sand", "Ljus, ljud och värme"],
+    ["Vad kallas det när flytande vatten blir till vattenånga?", "Avdunstning", "Frysning", "Smältning", "Kondensation"],
+    ["Vilket av följande är ett grundämne?", "Syre", "Vatten", "Koksalt", "Socker"],
+    ["Vad är en blandning?", "Två eller flera ämnen som finns tillsammans", "Ett ämne som alltid består av en sorts atom", "Bara rent vatten", "Ett ämne utan partiklar"],
+    ["Vad händer när is smälter?", "Den övergår från fast form till flytande form", "Den blir till syre", "Den övergår direkt till sten", "Den blir alltid varmare än kokande vatten"],
+    ["Vilken gas behöver människor för cellernas förbränning?", "Syre", "Helium", "Vätgas", "Neon"],
+    ["Vad är pH-skalan till för?", "Att beskriva hur surt eller basiskt något är", "Att mäta längd", "Att mäta ljudstyrka", "Att räkna atomer i ett rum"],
+    ["Vilket ämne bildas när järn rostar tillsammans med syre och vatten?", "Rost", "Socker", "Koksalt", "Koldioxid"],
+    ["Vad kallas ett ämne som består av bara en sorts atomer?", "Grundämne", "Lösning", "Blandning", "Legering"],
+    ["Vilken metod kan användas för att skilja sand från vatten?", "Filtrering", "Magnetisering", "Frysning av sanden", "Ljudisolering"]
+  ];
+
+  BANKS.noak6 = [
+    ["Vad är en atom?", "En mycket liten byggsten som ämnen består av", "En sorts cell som bara finns i växter", "En energikälla i vinden", "En del av en näringskedja"],
+    ["Vad kallas det när vatten cirkulerar mellan hav, luft och land?", "Vattnets kretslopp", "Kretsloppet för järn", "Näringskedjan", "Fotosyntesen"],
+    ["Vilken gas tar växter upp vid fotosyntesen?", "Koldioxid", "Helium", "Vätgas", "Neon"],
+    ["Vad mäter man temperatur med?", "Termometer", "Våg", "Kompass", "Stoppur"],
+    ["Vilket av dessa är ett exempel på en kemisk reaktion?", "Järn rostar", "Is smälter", "Vatten fryser", "Papper klipps i bitar"],
+    ["Vad händer i en enkel elektrisk krets när strömbrytaren öppnas?", "Strömmen bryts", "Batteriet blir större", "Lampan får mer ström", "Ledningarna blir till magneter"],
+    ["Vad är ett ekosystem?", "Levande organismer och deras miljö som samspelar", "Bara alla djur i en djurpark", "En karta över jordens berg", "Ett ämne i ett laboratorium"],
+    ["Vad kallas en förändring där ett ämne blir ett annat ämne?", "Kemisk reaktion", "Smältning", "Avdunstning", "Ljudreflektion"],
+    ["Vilken energiform kommer direkt från solen och kan få solceller att producera el?", "Ljusenergi", "Ljudenergi", "Rörelseenergi från månen", "Kärnenergi från jorden"],
+    ["Vilket är ett sätt att minska människans klimatpåverkan?", "Använda energi effektivare och välja förnybar energi", "Slösa mer elektricitet", "Bränna mer kol", "Kasta allt avfall i naturen"]
+  ];
+
+
+  BANKS.geografi = [
+    ["Vad visar en karta?", "Platser och områden", "Bara väder", "Bara historia", "Bara befolkning"],
+    ["Vad kallas jordens modell?", "Globus", "Kompass", "Termometer", "Kikare"],
+    ["Vilken världsdel ligger Sverige i?", "Europa", "Asien", "Afrika", "Sydamerika"],
+    ["Vad är ekvatorn?", "En tänkt linje runt jordens mitt", "En flod i Europa", "Ett berg i Sverige", "En sorts karta"],
+    ["Vad visar en kartas teckenförklaring?", "Vad symbolerna betyder", "Hur gammal kartan är", "Vem som bor där", "Vädret i morgon"],
+    ["Vilket väderstreck ligger oftast överst på en vanlig karta?", "Norr", "Söder", "Öster", "Väster"],
+    ["Vad är en naturresurs?", "Något från naturen som människor använder", "En sorts stad", "En karta över vägar", "Ett politiskt parti"],
+    ["Vad kallas människor som flyttar från landsbygd till stad?", "Urbanisering", "Nederbörd", "Erosion", "Industrialisering"],
+    ["Vilken är världens största ocean?", "Stilla havet", "Atlanten", "Indiska oceanen", "Norra ishavet"],
+    ["Vad beskriver klimat?", "Vädret under lång tid", "Vädret just denna minut", "Bara vindstyrkan", "Bara temperaturen en dag"]
+  ];
+
+  BANKS.religion = [
+    ["Vilka räknas ofta som de fem världsreligionerna?", "Kristendom, islam, judendom, hinduism och buddhism", "Kristendom, demokrati, islam, historia och hinduism", "Judendom, geografi, buddhism, fysik och islam", "Hinduism, kemi, islam, buddhism och politik"],
+    ["Vad heter kristendomens heliga skrift?", "Bibeln", "Koranen", "Toran", "Vedaskrifterna"],
+    ["Vad heter islams heliga bok?", "Koranen", "Bibeln", "Toran", "Tripitaka"],
+    ["Vad heter judendomens heliga skrift?", "Toran", "Koranen", "Bibeln", "Tripitaka"],
+    ["Vilken religion förknippas med högtiden Diwali?", "Hinduism", "Kristendom", "Judendom", "Islam"],
+    ["Vad kallas buddhismens grundare?", "Buddha", "Jesus", "Muhammed", "Mose"],
+    ["Vad är en moské?", "En plats där muslimer samlas för bön", "En judisk helig skrift", "En kristen högtid", "En buddhistisk symbol"],
+    ["Vad är en synagoga?", "En judisk gudstjänstlokal", "En kyrka", "En moské", "Ett hinduiskt tempel"],
+    ["Vad betyder religionsfrihet?", "Att människor får välja och utöva religion eller avstå", "Att alla måste ha samma religion", "Att religion bara får finnas hemma", "Att staten väljer religion åt alla"],
+    ["Vad är en högtid?", "En särskild dag eller period som firas", "En typ av karta", "En lag i riksdagen", "En naturresurs"]
+  ];
+
+  BANKS.hallbar = [
+    ["Vad betyder hållbar utveckling?", "Att möta dagens behov utan att förstöra framtida generationers möjligheter", "Att använda alla resurser så snabbt som möjligt", "Att bara bygga fler vägar", "Att sluta samarbeta mellan länder"],
+    ["Vilka brukar vara de tre delarna av hållbar utveckling?", "Ekologisk, social och ekonomisk", "Lokal, digital och historisk", "Varm, kall och tempererad", "Politisk, geografisk och språklig"],
+    ["Vilket är ett exempel på återbruk?", "Använda en sak igen i stället för att slänga den", "Köpa nytt varje dag", "Slänga allt i restavfall", "Låta lampor vara tända i tomma rum"],
+    ["Vilken energikälla är förnybar?", "Vindkraft", "Kol", "Olja", "Naturgas"],
+    ["Varför är biologisk mångfald viktig?", "Den hjälper ekosystem att fungera och bli mer tåliga", "Den gör att alla arter blir likadana", "Den stoppar allt väder", "Den gör naturresurser obegränsade"],
+    ["Vad kan minska matsvinn?", "Planera inköp och ta vara på rester", "Köpa mer mat än man behöver", "Slänga mat efter varje måltid", "Förvara all mat utan hänsyn till datum"],
+    ["Vad är en växthusgas?", "En gas som håller kvar värme i atmosfären", "En gas som bara finns i växthus", "En gas som stoppar allt solljus", "En gas som gör vatten till salt"],
+    ["Vilket transportsätt ger oftast lägre utsläpp per person på korta resor?", "Gå eller cykla", "Åka ensam i bil", "Flyga", "Köra motorcykel ensam"],
+    ["Vad innebär rättvis handel i stora drag?", "Att försöka ge producenter rimliga villkor och ersättning", "Att alltid välja den billigaste varan", "Att stoppa all handel", "Att bara köpa lokala saker"],
+    ["Vilket av FN:s globala mål handlar om rent vatten och sanitet?", "Mål 6", "Mål 2", "Mål 10", "Mål 16"]
+  ];
+
+  BANKS.ak6 = [
+    ["Vad heter Sveriges lagstiftande församling?", "Riksdagen", "Regeringen", "Högsta domstolen", "Polisen"],
+    ["Hur ofta hålls val till Sveriges riksdag?", "Vart fjärde år", "Varje år", "Vartannat år", "Vart sjätte år"],
+    ["Vad innebär demokrati?", "Folket kan påverka genom val och andra demokratiska rättigheter", "En person bestämmer allt", "Ingen får uttrycka åsikter", "Lagar gäller bara ibland"],
+    ["Vad handlar barnkonventionen om?", "Barns rättigheter", "Regler för handel mellan vuxna", "Hur man ritar kartor", "Regler för sport"],
+    ["Ungefär när var vikingatiden i Norden?", "800–1050 e.Kr.", "100–400 f.Kr.", "1500–1700", "1900-talet"],
+    ["Vilken kung blev kung i Sverige år 1523?", "Gustav Vasa", "Karl XII", "Oscar II", "Gustav III"],
+    ["Vad kallas perioden då fabriker och maskiner förändrade samhället?", "Industrialiseringen", "Vikingatiden", "Medeltiden", "Istiden"],
+    ["Vad är en kommun?", "Ett lokalt område med egen politisk styrning", "En världsdel", "En domstol i hela Europa", "En religion"],
+    ["Vad är FN:s huvudsyfte?", "Att främja fred och samarbete mellan länder", "Att bestämma alla länders lagar", "Att styra alla skolor", "Att ordna alla val"],
+    ["Vad betyder mänskliga rättigheter?", "Grundläggande rättigheter som alla människor har", "Rättigheter som bara vissa människor har", "Regler som bara gäller barn", "Lagar som bara gäller i Sverige"]
+  ];
+
+  BANKS.so = [
+    ["Vad heter Sveriges huvudstad?", "Stockholm", "Göteborg", "Malmö", "Uppsala"],
+    ["Vilken är Sveriges största sjö?", "Vänern", "Vättern", "Mälaren", "Siljan"],
+    ["Vilket hav ligger öster om Sverige?", "Östersjön", "Nordsjön", "Atlanten", "Medelhavet"],
+    ["Vad heter Sveriges högsta berg?", "Kebnekaise", "Åreskutan", "Sylarna", "Städjan"],
+    ["Vilket folk har traditionellt arbetat som renskötare i norra Sverige?", "Samerna", "Finnarna", "Romerna", "Vikingarna"],
+    ["Ungefär när var vikingatiden?", "800–1050 e.Kr.", "100–400 f.Kr.", "1500–1700", "1900-talet"],
+    ["Vilken kung blev Sveriges kung 1523?", "Gustav Vasa", "Karl XII", "Gustav II Adolf", "Oscar II"],
+    ["Hur ofta är det val till riksdagen?", "Vart fjärde år", "Varje år", "Vart tionde år", "Vart andra år"],
+    ["Vad heter Sveriges lagstiftande församling?", "Riksdagen", "Regeringen", "Kommunfullmäktige", "Högsta domstolen"],
+    ["Vem är Sveriges statschef?", "Kungen", "Statsministern", "Talmannen", "Landshövdingen"],
+    ["Vad är Norges huvudstad?", "Oslo", "Bergen", "Helsingfors", "Köpenhamn"],
+    ["Vad är Finlands huvudstad?", "Helsingfors", "Åbo", "Tammerfors", "Reykjavik"],
+    ["Hur många kontinenter brukar man räkna?", "7", "5", "6", "9"],
+    ["Vilken kontinent är störst till ytan?", "Asien", "Afrika", "Europa", "Nordamerika"],
+    ["Vad är FN:s huvuduppgift?", "Att arbeta för fred och samarbete mellan länder", "Att sälja varor", "Att arrangera OS", "Att bestämma Sveriges lagar"],
+    ["Vad handlar barnkonventionen om?", "Att alla barn har rättigheter", "Att barn måste arbeta", "Att bara pojkar får gå i skolan", "Att barn bestämmer lagarna"],
+    ["Vad kallas ett styrelseskick där folket väljer ledare genom val?", "Demokrati", "Diktatur", "Anarki", "Envälde"],
+    ["Vad heter judendomens heliga skrift?", "Toran", "Koranen", "Bibeln", "Vedaskrifterna"],
+    ["Vad heter islams heliga bok?", "Koranen", "Bibeln", "Toran", "Tripitaka"],
+    ["Vilken religion grundades av Buddha?", "Buddhism", "Hinduism", "Islam", "Kristendom"],
+    ["Vilket land har Paris som huvudstad?", "Frankrike", "Italien", "Spanien", "Tyskland"],
+    ["Hur många län är Sverige indelat i?", "21", "15", "25", "30"],
+    ["Vad kallas perioden på 1800-talet då fabriker och maskiner tog över i Sverige?", "Industrialiseringen", "Vikingatiden", "Istiden", "Stormaktstiden"]
+  ];
+
+  BANKS.svenska = [
+    ["Vilket ord är ett substantiv?", "bord", "springa", "snabb", "snabbt"],
+    ["Vilket ord är ett verb?", "springer", "hund", "grön", "under"],
+    ["Vilket ord är ett adjektiv?", "stor", "bil", "ätit", "och"],
+    ["Vilket ord betyder ungefär samma som \"glad\"?", "lycklig", "ledsen", "arg", "trött"],
+    ["Vad är motsatsen till \"stark\"?", "svag", "snabb", "stor", "hård"],
+    ["Vilket ord är rättstavat?", "kyckling", "chyckling", "tjyckling", "kyckkling"],
+    ["Vilken ordklass är ordet \"och\"?", "Konjunktion", "Substantiv", "Verb", "Adjektiv"],
+    ["Vilket ord rimmar på \"katt\"?", "hatt", "fisk", "bok", "mus"],
+    ["Vilket skiljetecken sätter man sist i en fråga?", "Frågetecken", "Punkt", "Kommatecken", "Utropstecken"],
+    ["Vilken tid är meningen \"Jag åt frukost igår\"?", "Dåtid", "Nutid", "Framtid", "Imperativ"],
+    ["Vad är plural av \"en bok\"?", "böcker", "boker", "bokar", "bokor"],
+    ["Vilket ord är ett sammansatt ord?", "skolväska", "och", "snabbt", "springer"],
+    ["Vad är plural av \"en flicka\"?", "flickor", "flickar", "flickan", "flickors"],
+    ["Vilken mening är rätt skriven?", "Jag har inte gjort läxan.", "Jag har inte gjorde läxan.", "Jag har inte göra läxan.", "Jag inte har gjort läxan."],
+    ["Vad kallas den som skriver en bok?", "Författare", "Illustratör", "Förläggare", "Bibliotekarie"],
+    ["Vad ska en mening börja med?", "Stor bokstav", "Liten bokstav", "Siffra", "Kommatecken"],
+    ["Vad är motsatsen till \"tidig\"?", "sen", "snabb", "ung", "kort"],
+    ["Vilket ord betyder ungefär samma som \"snabb\"?", "rask", "långsam", "trött", "stor"],
+    ["Vilket ord är ett adverb?", "snabbt", "snabb", "snabba", "snabbhet"],
+    ["Vilket ord är ett pronomen?", "hon", "bord", "gå", "stor"]
+  ];
+
+  BANKS.engelska = [
+    ["What is \"hund\" in English?", "dog", "cat", "horse", "cow"],
+    ["Which word means \"tack\"?", "thanks", "sorry", "please", "hello"],
+    ["Choose the correct word: She ___ a student.", "is", "are", "am", "be"],
+    ["What is the opposite of \"big\"?", "small", "tall", "old", "fast"],
+    ["What is the past tense of \"go\"?", "went", "goed", "gone", "going"],
+    ["What is the plural of \"child\"?", "children", "childs", "childes", "childrens"],
+    ["What is \"vecka\" in English?", "week", "weak", "wick", "month"],
+    ["Which word is a colour?", "blue", "chair", "run", "happy"],
+    ["Choose the correct word: I ___ breakfast every morning.", "eat", "eats", "eating", "ate"],
+    ["What is \"tisdag\" in English?", "Tuesday", "Thursday", "Wednesday", "Monday"],
+    ["Which one is a fruit?", "apple", "carrot", "potato", "bread"],
+    ["Choose the correct word: There ___ two books on the table.", "are", "is", "am", "be"],
+    ["What is \"skola\" in English?", "school", "shoe", "ship", "shop"],
+    ["What does \"beautiful\" mean in Swedish?", "vacker", "stor", "liten", "gammal"],
+    ["Which word means \"igår\"?", "yesterday", "tomorrow", "today", "tonight"],
+    ["Choose the correct word: He ___ football every Saturday.", "plays", "play", "playing", "played"],
+    ["Which number is \"fifteen\"?", "15", "50", "5", "14"],
+    ["What is \"fönster\" in English?", "window", "door", "wall", "floor"],
+    ["Choose the correct word: ___ old are you?", "How", "What", "Who", "Where"],
+    ["What is the past tense of \"buy\"?", "bought", "buyed", "boughten", "buying"],
+    ["Which sentence is correct?", "I have two brothers.", "I has two brothers.", "I haves two brothers.", "I am two brothers."]
+  ];
+
+  BANKS.teknik = [
+    ["Vilken enkel maskin är en sax?", "Hävstång", "Lutande plan", "Skruv", "Hjul"],
+    ["Vilken enkel maskin är en rutschkana?", "Lutande plan", "Hävstång", "Kil", "Remskiva"],
+    ["Vad gör en strömbrytare?", "Bryter eller sluter en elektrisk krets", "Skapar el", "Lagrar el", "Mäter el"],
+    ["Vilket material leder elektricitet bäst?", "Metall", "Plast", "Gummi", "Trä"],
+    ["Vad kallas en serie instruktioner för att lösa ett problem?", "Algoritm", "Virus", "Skärm", "Kabel"],
+    ["Vad betyder det att programmera?", "Att skriva instruktioner som en dator följer", "Att reparera en dator", "Att köpa ett spel", "Att ladda en mobil"],
+    ["Vilken form är starkast i konstruktioner som broar?", "Triangeln", "Kvadraten", "Cirkeln", "Rektangeln"],
+    ["Vad gör ett batteri?", "Lagrar energi som kan ge elektrisk ström", "Är en slags magnet", "Är en kabel", "Är ett lysrör"],
+    ["Vad måste en elektrisk krets vara för att lampan ska lysa?", "Sluten", "Öppen", "Avbruten", "Avstängd"],
+    ["Vad används kugghjul till?", "Att överföra rörelse", "Att skapa ljud", "Att lysa", "Att kyla"],
+    ["Vilket av dessa sorterar man som metallförpackning?", "Konservburk", "Mjölkkartong", "Plastflaska", "Tidning"],
+    ["Vad uppfann Alfred Nobel?", "Dynamit", "Telefonen", "Glödlampan", "Ångmaskinen"],
+    ["Vem brukar tillskrivas uppfinningen av telefonen?", "Alexander Graham Bell", "Thomas Edison", "Alfred Nobel", "Isaac Newton"],
+    ["Vad kallas den första testversionen av en produkt?", "Prototyp", "Reklam", "Förpackning", "Garanti"],
+    ["Vilken energikälla använder solceller?", "Solljus", "Vind", "Vatten", "Kol"],
+    ["Vad gör en generator?", "Omvandlar rörelseenergi till elektricitet", "Gör el till värme", "Tar bort el", "Mäter el"],
+    ["Vad används en hävstång till?", "Att förstärka kraften, t.ex. lyfta tunga saker", "Att ge ljus", "Att lagra el", "Att mäta tid"],
+    ["Vilket av dessa är ett lutande plan?", "En ramp", "En cykel", "En lampa", "En sax"],
+    ["I vilken enhet mäter man elektrisk spänning?", "Volt", "Ampere", "Meter", "Kilo"],
+    ["I vilken enhet mäter man strömstyrka?", "Ampere", "Volt", "Gram", "Liter"]
+  ];
+
+  // Läsförståelse: a new random text is selected every time the category is opened.
+  var READING_PASSAGES = [
+    {title:'Den försvunna nyckeln', text:'När Mira kom hem från skolan märkte hon att nyckeln till cykelförrådet var borta. Hon tömde ryggsäcken på hallgolvet och letade mellan böcker, pennor och gympakläder. Nyckeln fanns inte där. Mira försökte minnas när hon hade använt den senast. På morgonen hade hon låst cykeln och sedan stoppat nyckeln i jackfickan. Hon tog fram jackan och kände i fickan, men den var tom. Då ringde hennes kompis Sam och berättade att han hade hittat en nyckel vid skolans cykelställ. Mira cyklade tillbaka med sin mamma. Nyckeln låg i Sams hand, och Mira tackade honom glatt.', questions:[
+      ['Vad upptäckte Mira när hon kom hem?','Att nyckeln var borta','Att cykeln var trasig','Att hon glömt sin ryggsäck','Att Sam hade ringt läraren'],
+      ['Var letade Mira först?','I ryggsäcken','I kylskåpet','Under cykeln','I klassrummet'],
+      ['När hade hon senast använt nyckeln?','På morgonen när hon låste cykeln','På kvällen dagen innan','Efter skolan','På helgen'],
+      ['Var brukade hon ha nyckeln?','I jackfickan','I pennfodralet','I skorna','I cykelkorgen'],
+      ['Vem ringde Mira?','Sam','Hennes lärare','Hennes granne','Hennes pappa'],
+      ['Var hittades nyckeln?','Vid skolans cykelställ','I matsalen','På biblioteket','Utanför Miras hus'],
+      ['Hur kände sig Mira när hon fick tillbaka nyckeln?','Glad och tacksam','Arg och besviken','Rädd och orolig','Trött och uttråkad'] ]},
+    {title:'En dag vid sjön', text:'På lördagen åkte familjen till en liten sjö nära skogen. Vädret var varmt, men några moln syntes långt borta. Pappa bredde ut en filt medan Noor och hennes lillebror letade efter platta stenar vid vattenkanten. De kastade stenarna så att de studsade över ytan. Efter en stund såg Noor en fågel som dök ner i vattnet och kom upp med en liten fisk. Mamma påminde barnen om att inte lämna något skräp efter sig. Innan de åkte hem samlade de ihop allt papper och alla förpackningar. Noor tyckte att utflykten varit fin, särskilt eftersom de hade hjälpt till att hålla platsen ren.', questions:[
+      ['Vilken dag åkte familjen till sjön?','Lördag','Måndag','Onsdag','Söndag kväll'],
+      ['Var låg sjön?','Nära skogen','Mitt i staden','Bakom skolan','Vid havet'],
+      ['Vad letade Noor och hennes bror efter?','Platta stenar','Snäckor','Svampar','Fjädrar'],
+      ['Vad gjorde fågeln?','Dök och fångade en fisk','Byggde ett bo','Flög in i skogen','Simmade till stranden'],
+      ['Vad påminde mamma barnen om?','Att inte lämna skräp','Att inte bada','Att mata fåglarna','Att samla stenar i en påse'],
+      ['Vad gjorde familjen innan de åkte hem?','Samlade ihop skräpet','Tände en brasa','Byggde en brygga','Plockade blommor'],
+      ['Varför tyckte Noor att utflykten var extra fin?','De hjälpte till att hålla platsen ren','De fick köpa glass','De hittade en skatt','Det började snöa'] ]},
+    {title:'Bibliotekets hemliga hörn', text:'Leo brukade gå till biblioteket efter skolan på tisdagar. En dag upptäckte han en smal dörr bakom en hög bokhylla. Dörren stod lite på glänt, och genom springan kunde han se ett litet rum med en fåtölj och en lampa. Bibliotekarien berättade att rummet tidigare hade varit en läsplats för barn, men att det sällan användes numera. Leo frågade om han fick göra i ordning det. Under flera veckor hjälpte han till att sortera böcker, lägga dit kuddar och sätta upp teckningar. När rummet öppnade kom många barn dit för att läsa i lugn och ro. Leo var stolt över att ha gjort biblioteket lite mysigare.', questions:[
+      ['När brukade Leo gå till biblioteket?','På tisdagar efter skolan','Varje morgon','På söndagskvällar','På fredagar före skolan'],
+      ['Vad upptäckte han bakom bokhyllan?','En smal dörr','Ett fönster','En trappa','En låda med leksaker'],
+      ['Vad fanns i det lilla rummet?','En fåtölj och en lampa','Ett skrivbord och en dator','En säng och ett skåp','En soffa och en tv'],
+      ['Vad hade rummet varit tidigare?','En läsplats för barn','Ett personalrum','Ett förråd för mat','Ett klassrum'],
+      ['Hur hjälpte Leo till?','Han sorterade böcker och gjorde rummet fint','Han målade hela biblioteket','Han byggde en ny bokhylla','Han lånade hem alla böcker'],
+      ['Vad hände när rummet öppnade?','Många barn kom dit för att läsa','Biblioteket stängde','Alla böcker försvann','Rummet blev ett café'],
+      ['Hur kände sig Leo?','Stolt','Besviken','Förvirrad','Rädd'] ]},
+    {title:'Robotklubben', text:'Skolan startade en robotklubb där eleverna fick bygga små robotar. Amina ville vara med eftersom hon gillade att lösa problem. Den första roboten skulle följa en svart linje på golvet. Gruppen monterade sensorer under roboten, men den svängde åt fel håll varje gång linjen böjde sig. I stället för att ge upp testade eleverna olika inställningar och skrev om en del av programmet. Till slut följde roboten hela banan utan att stanna. Läraren förklarade att misstag är en viktig del av lärandet. Amina gick hem och berättade att hon hade lärt sig mer av försöken än av att bara läsa instruktionerna.', questions:[
+      ['Varför ville Amina vara med i robotklubben?','Hon gillade att lösa problem','Hon ville slippa lektioner','Hon behövde låna en dator','Hon ville vinna en tävling direkt'],
+      ['Vad skulle roboten följa?','En svart linje','En röd boll','En ljudsignal','En blå lampa'],
+      ['Var monterade gruppen sensorerna?','Under roboten','På väggen','På robotens tak','På golvet bredvid banan'],
+      ['Vad gick fel i början?','Roboten svängde åt fel håll','Roboten blev för stor','Linjen försvann','Batteriet var för tungt'],
+      ['Vad gjorde eleverna när det inte fungerade?','Testade inställningar och ändrade programmet','Slutade direkt','Köpte en ny robot','Bad någon annan göra allt'],
+      ['Vad sa läraren om misstag?','De är en viktig del av lärandet','De betyder att man inte kan lära sig','De ska alltid undvikas','De spelar ingen roll alls'],
+      ['Vad lärde sig Amina?','Att hon lärde sig mycket genom att försöka','Att instruktioner aldrig behövs','Att robotar inte kan följa linjer','Att programmering är omöjligt'] ]},
+    {title:'Växthuset på taket', text:'På taket till ett högt hus i staden fanns ett litet växthus. Där odlade grannarna tomater, sallad och örter tillsammans. Varje familj hade en egen odlingslåda, men alla hjälptes åt att vattna när det var varmt. En sommar blev det ovanligt torrt och vattnet behövde användas försiktigt. Barnen föreslog att de skulle samla regnvatten i tunnor när det kom en skur. De satte också små skyltar på plantorna så att alla visste vad som växte var. När tomaterna blev mogna ordnade grannarna en gemensam middag. De upptäckte att odlingen inte bara gav mat, utan också gjorde att människor som knappt kände varandra började prata och samarbeta.', questions:[
+      ['Var låg växthuset?','På taket till ett hus','I en källare','Vid en strand','I skolans matsal'],
+      ['Vad odlade grannarna?','Tomater, sallad och örter','Äpplen och päron','Vete och ris','Bara blommor'],
+      ['Hur hjälptes familjerna åt?','De vattnade när det var varmt','De köpte nya lådor varje vecka','De flyttade plantorna varje dag','De stängde växthuset på sommaren'],
+      ['Varför behövde vattnet användas försiktigt?','Sommaren var ovanligt torr','Växthuset var för kallt','Det regnade hela tiden','Tunnorna var för stora'],
+      ['Vad föreslog barnen?','Att samla regnvatten i tunnor','Att sluta odla','Att bara köpa grönsaker','Att ta bort skyltarna'],
+      ['Vad gjorde grannarna när tomaterna var mogna?','Ordna en gemensam middag','Sålde hela huset','Byggde ett nytt tak','Slängde tomaterna'],
+      ['Vad gav odlingen förutom mat?','Gemenskap och samarbete','Mer trafik','Färre samtal','Mindre dagsljus'] ]},
+    {title:'Tåget som väntade', text:'När Elias kom till stationen visade tavlan att tåget var försenat med tjugo minuter. Först suckade han, eftersom han skulle träffa sin kusin och redan var lite sen. Han satte sig på en bänk och såg en äldre man försöka lyfta en tung resväska upp på hyllan. Elias frågade om han kunde hjälpa till och lyfte väskan på plats. Mannen tackade och berättade att han skulle besöka sitt barnbarn. Medan de pratade ropade högtalaren ut att tåget snart skulle komma. Elias upptäckte att väntan inte känts lika lång som han trott. Han skickade ett meddelande till sin kusin och gick sedan mot perrongen.', questions:[
+      ['Hur länge var tåget försenat?','Tjugo minuter','Fem minuter','En timme','Två timmar'],
+      ['Vem skulle Elias träffa?','Sin kusin','Sin lärare','En läkare','Sin granne'],
+      ['Vad försökte den äldre mannen göra?','Lyfta en tung resväska','Hitta sin hund','Läsa en karta','Köpa en biljett åt Elias'],
+      ['Hur hjälpte Elias mannen?','Han lyfte väskan på hyllan','Han bar mannen till tåget','Han köpte en ny väska','Han ringde polisen'],
+      ['Vem skulle mannen besöka?','Sitt barnbarn','Sin chef','En gammal lärare','Sin kusin'],
+      ['Vad meddelade högtalaren?','Att tåget snart skulle komma','Att stationen skulle stänga','Att alla tåg var inställda','Att Elias hade tappat sin biljett'],
+      ['Varför kändes väntan kortare?','Elias pratade med mannen och hjälpte honom','Han somnade på bänken','Han gick hem igen','Tåget kom direkt'] ]},
+    {title:'Skolans bytesdag', text:'Klass 6B bestämde sig för att ordna en bytesdag. I stället för att köpa nya saker kunde eleverna ta med böcker, spel och kläder som de inte längre använde. För varje sak behövde de kontrollera att den var hel och ren. På dagen ställdes borden upp i skolans aula och eleverna fick byta till sig något annat. Några tog med sig saker hem, medan andra valde att skänka det som blev över till en lokal hjälporganisation. Läraren pratade om hur återanvändning kan minska avfall och spara resurser. Efteråt tyckte klassen att det hade varit roligt att ge gamla saker en ny chans.', questions:[
+      ['Vad ordnade klass 6B?','En bytesdag','En idrottstävling','En konsert','En filmkväll'],
+      ['Vilka saker fick eleverna ta med?','Böcker, spel och kläder','Bara mat','Bara skolbänkar','Nya mobiltelefoner'],
+      ['Vad skulle de kontrollera före bytet?','Att sakerna var hela och rena','Att sakerna var dyra','Att allt var av samma färg','Att sakerna var nya'],
+      ['Var stod borden?','I skolans aula','I gymnastiksalen','På skolgårdens tak','I bibliotekets källare'],
+      ['Vad gjorde några elever med saker som blev över?','Skänkte dem till en hjälporganisation','Slängde allt i skogen','Gömde dem i klassrummet','Tog med dem till matsalen'],
+      ['Vad kan återanvändning bidra till?','Mindre avfall och sparade resurser','Mer skräp','Fler inköp','Större vattenförbrukning varje gång'],
+      ['Hur tyckte klassen att dagen hade varit?','Rolig och meningsfull','Tråkig och onödig','Läskig','För svår att förstå'] ]},
+    {title:'Stjärnorna ovanför oss', text:'En klar kväll gick Farah och hennes morfar ut på balkongen för att titta på stjärnorna. Morfar tog fram en enkel stjärnkarta och visade hur man kunde hitta Karlavagnen. Farah trodde först att stjärnorna låg nära varandra, men morfar förklarade att de kan befinna sig på mycket olika avstånd från jorden. Ljuset från vissa stjärnor har rest i många år innan det når våra ögon. De släckte balkonglampan för att se himlen tydligare. Farah försökte rita av mönstret i sin anteckningsbok. Hon bestämde sig för att lära sig känna igen fler stjärnbilder under vintern.', questions:[
+      ['Vem tittade Farah på stjärnorna med?','Sin morfar','Sin bror','Sin lärare','Sin granne'],
+      ['Vad tog morfar fram?','En stjärnkarta','En kikare för fåglar','En väderrapport','En karta över staden'],
+      ['Vilken stjärnbild visade han?','Karlavagnen','Orion','Svanen','Lejonet'],
+      ['Vad förklarade morfar om stjärnorna?','De kan ligga på mycket olika avstånd från jorden','Alla ligger lika nära jorden','De rör sig aldrig','De syns bara på vintern'],
+      ['Varför släckte de balkonglampan?','För att se himlen tydligare','För att spara batteri i kartan','För att göra det varmare','För att stjärnorna skulle flytta sig'],
+      ['Vad gjorde Farah i sin anteckningsbok?','Ritade av stjärnmönstret','Skrev en inköpslista','Räknade moln','Ritade en karta över skolan'],
+      ['Vad ville Farah lära sig?','Känna igen fler stjärnbilder','Bygga ett teleskop direkt','Bli astronaut nästa dag','Mäta balkongen'] ]},
+    {title:'En hjälpsam granne', text:'När familjen flyttade till ett nytt område kände de nästan ingen. En regnig eftermiddag ringde det på dörren. Utanför stod grannen Ingrid med en korg nybakade bullar och en karta över området. Hon visade var närmaste busshållplats, mataffär och vårdcentral låg. Nästa vecka behövde familjen hjälp att bära en bokhylla uppför trappan. Ingrid knackade på och frågade om hon kunde hjälpa till. Efter en stund var bokhyllan på plats och de drack saft tillsammans. Familjen lärde sig att det ofta blir lättare att trivas på en ny plats när man vågar hälsa och ta emot hjälp. De bestämde sig för att bjuda Ingrid på middag nästa helg.', questions:[
+      ['Vad hade familjen nyligen gjort?','Flyttat till ett nytt område','Startat en restaurang','Åkt på semester','Bytt skola för tredje gången'],
+      ['Vad hade Ingrid med sig första gången?','En korg bullar och en karta','En bokhylla','En bukett rosor och en cykel','En låda med verktyg'],
+      ['Vilka platser visade Ingrid på kartan?','Busshållplats, mataffär och vårdcentral','Bio, museum och flygplats','Skola, strand och slott','Stadion, hamn och teater'],
+      ['Vad behövde familjen hjälp med nästa vecka?','Att bära en bokhylla','Att måla taket','Att laga bilen','Att hitta en katt'],
+      ['Vad gjorde de efter att bokhyllan var på plats?','Drack saft tillsammans','Åkte till affären','Började flytta igen','Bakade en tårta direkt'],
+      ['Vad lärde sig familjen?','Att hälsa och ta emot hjälp kan göra det lättare att trivas','Att man aldrig ska prata med grannar','Att kartor inte är användbara','Att flytta alltid är enkelt'],
+      ['Vad planerade familjen?','Att bjuda Ingrid på middag','Att flytta tillbaka','Att sälja bokhyllan','Att åka på en lång resa'] ]},
+    {title:'Mysteriet med de tomma fågelborden', text:'Varje vinter fyllde skolans vaktmästare fågelborden med frön. Men en måndag morgon var alla frön borta, trots att det inte hade snöat eller blåst. Eleverna i naturklubben bestämde sig för att undersöka saken. De fyllde på frön och tittade på håll från ett fönster. Först kom små talgoxar, sedan en ekorre som snabbt stoppade frön i kinderna och sprang iväg. Eleverna satte upp en liten kamera och såg senare att ekorren kom tillbaka flera gånger. De bestämde sig för att lägga en del frön i en särskild matare som var svårare för ekorren att tömma. Nu fanns det mat kvar åt både fåglarna och ekorren.', questions:[
+      ['Vad fyllde vaktmästaren fågelborden med?','Frön','Brödskivor','Fruktjuice','Små stenar'],
+      ['Vad var konstigt en måndag morgon?','Alla frön var borta','Fågelborden hade försvunnit','Det låg snö överallt','Fönstret var öppet'],
+      ['Vilka elever undersökte saken?','Eleverna i naturklubben','Elevrådet','Skolkören','Fotbollslaget'],
+      ['Vilka fåglar kom först?','Talgoxar','Svalor','Svanar','Måsar'],
+      ['Vilket djur tog också frön?','En ekorre','En räv','En hare','En igelkott'],
+      ['Hur fick eleverna veta vad som hände?','De satte upp en liten kamera','De frågade alla grannar','De följde spår i snön','De läste i en gammal bok'],
+      ['Vilken lösning valde de?','En matare som var svårare att tömma','Att sluta mata fåglarna','Att ta bort alla träd','Att flytta fåglarna till skolan'] ]}
+  ];
+
+  BANKS.engelska_ord = [
+    ["What is the English word for 'skola'?", "school", "shop", "street", "shoe"],
+    ["What is the English word for 'fönster'?", "window", "winter", "winner", "wonder"],
+    ["Choose the opposite of 'early'.", "late", "fast", "near", "quiet"],
+    ["What does 'borrow' mean?", "to use something and return it later", "to buy something forever", "to throw something away", "to make something"],
+    ["Which word means 'hungrig'?", "hungry", "thirsty", "angry", "sleepy"],
+    ["What is the plural of 'child'?", "children", "childs", "childes", "childrens"],
+    ["Which word means 'carefully'?", "with care", "very loudly", "without thinking", "in a hurry"],
+    ["What is the English word for 'granne'?", "neighbour", "teacher", "stranger", "cousin"],
+    ["What does 'environment' mean?", "the natural world around us", "a school subject only", "a kind of food", "a type of sport"],
+    ["Choose a synonym for 'happy'.", "glad", "upset", "tired", "afraid"]
+  ];
+  BANKS.engelska_grammar = [
+    ["Choose the correct sentence.", "She goes to school every day.", "She go to school every day.", "She going to school every day.", "She gone to school every day."],
+    ["Complete: Yesterday, we ___ football.", "played", "play", "plays", "playing"],
+    ["Choose the correct word: I ___ finished my homework.", "have", "has", "is", "are"],
+    ["Complete: There ___ three apples on the table.", "are", "is", "be", "was"],
+    ["Which is a pronoun?", "they", "quickly", "blue", "running"],
+    ["Choose the correct question.", "Where do you live?", "Where you do live?", "Where does you live?", "Where live you?"],
+    ["Complete: If it rains, we ___ stay inside.", "will", "would have", "did", "are"],
+    ["Which sentence is in the past tense?", "He watched a film.", "He watches a film.", "He is watching a film.", "He will watch a film."],
+    ["Choose the correct article: She ate ___ apple.", "an", "a", "thee", "some an"],
+    ["Complete: My sister is taller ___ me.", "than", "then", "that", "as"]
+  ];
+  BANKS.engelska_mixed = [
+    ["What is the past tense of 'go'?", "went", "goed", "gone", "going"],
+    ["What does 'borrow' mean?", "to use and return later", "to give away forever", "to lose something", "to make a copy"],
+    ["Choose the correct sentence.", "They were playing outside.", "They was playing outside.", "They is playing outside.", "They be playing outside."],
+    ["Which word is an adjective?", "beautiful", "quickly", "jump", "under"],
+    ["What is the opposite of 'dangerous'?", "safe", "risky", "difficult", "wild"],
+    ["Complete: We ___ dinner when the phone rang.", "were eating", "eat", "eats", "are eat"],
+    ["What does 'instead' mean?", "as an alternative", "at the same time always", "very loudly", "in the past"],
+    ["Choose the correct spelling.", "because", "becaus", "becose", "beacause"],
+    ["Which word means 'försiktig'?", "careful", "careless", "cheerful", "fearless"],
+    ["Complete: He has lived here ___ 2020.", "since", "for", "during", "from"]
+  ];
+  BANKS.teknik_maskiner = [
+    ["Vilken enkel maskin använder en sax främst?", "Hävstång och kil", "Solcell", "Termometer", "Batteri"],
+    ["Vad gör en remskiva lättare?", "Att lyfta eller ändra riktning på en kraft", "Att mäta temperatur", "Att lagra elektricitet", "Att rena vatten"],
+    ["Vad är en skruv för typ av enkel maskin?", "Ett lutande plan som går runt en cylinder", "En sorts batteri", "En elektrisk ledning", "En sensor"],
+    ["Vad gör kugghjul i en maskin?", "Överför och förändrar rörelse", "Skapar vatten", "Mäter ljud", "Stoppar all friktion"],
+    ["Vad används en hävstång till?", "Att förstärka eller ändra kraftens riktning", "Att mäta längd digitalt", "Att lagra information", "Att göra material genomskinliga"],
+    ["Vilket verktyg passar bäst för att dra åt en skruv?", "Skruvmejsel", "Pensel", "Termometer", "Kompass"],
+    ["Vad är friktion?", "Motstånd när ytor rör sig mot varandra", "Ljus som studsar", "Elektrisk laddning i ett batteri", "Vatten som kokar"],
+    ["Vad är en prototyp?", "En första modell som kan testas", "En färdig produkt som aldrig ändras", "En sorts naturresurs", "En ritning av en karta"],
+    ["Varför använder man ritningar vid konstruktion?", "För att planera och visa hur något ska byggas", "För att skapa elektricitet direkt", "För att göra föremål tyngre", "För att slippa mäta"],
+    ["Vad bör man göra innan man bygger en lösning?", "Undersöka behovet och planera", "Börja utan att tänka", "Välja material på måfå", "Hoppa över säkerheten"]
+  ];
+  BANKS.teknik_el = [
+    ["Vad behövs för att en enkel elektrisk krets ska fungera?", "En sluten krets med energikälla och ledningar", "Bara en lös sladd", "En plastbit", "En öppen strömbrytare utan batteri"],
+    ["Vilket material leder elektricitet bra?", "Koppar", "Gummi", "Plast", "Torrt trä"],
+    ["Vad gör en strömbrytare?", "Öppnar eller sluter en elektrisk krets", "Skapar bränsle", "Mäter massa", "Gör vatten kallt"],
+    ["Vad omvandlar en lampa elektrisk energi till?", "Ljus och värme", "Bara rörelse", "Bara ljud", "Mat och syre"],
+    ["Vilken energikälla är förnybar?", "Solenergi", "Kol", "Olja", "Naturgas"],
+    ["Vad är en sensor i en teknisk produkt?", "En del som känner av något, till exempel ljus eller temperatur", "En sorts skruv", "Ett dekorativt klistermärke", "En energikälla som alltid är fossil"],
+    ["Vad är syftet med isolering runt en elkabel?", "Att minska risken för elektriska stötar och kortslutning", "Att göra kabeln ledande på utsidan", "Att skapa mer ström", "Att byta färg på strömmen"],
+    ["Vad gör ett batteri?", "Lagrar kemisk energi som kan ge elektrisk energi", "Lagrar bara vatten", "Mäter avstånd", "Stoppar magnetism helt"],
+    ["Vilket är ett säkert sätt att hantera el?", "Hålla elektriska apparater borta från vatten", "Dra i sladden när man tar ur kontakten", "Öppna vägguttag själv", "Använda trasiga kablar"],
+    ["Vad kan en solcell göra?", "Omvandla ljus till elektrisk energi", "Omvandla ljud till vatten", "Lagra vind i en låda", "Göra plast till metall"]
+  ];
+  BANKS.teknik_design = [
+    ["Vad är en teknisk lösning?", "En lösning som använder kunskap och verktyg för att möta ett behov", "Enbart en målning", "En sorts växt", "En historisk händelse"],
+    ["Varför testar man en konstruktion?", "För att se om den fungerar och kan förbättras", "För att undvika all planering", "För att göra den hemlig", "För att den ska bli tyngre"],
+    ["Vad betyder hållbar design?", "Att tänka på miljö, resurser och hur länge produkten håller", "Att alltid använda mest material", "Att göra produkter för engångsbruk", "Att välja material utan att undersöka dem"],
+    ["Vad är återbruk?", "Att använda en sak igen i stället för att slänga den", "Att bränna allt avfall", "Att köpa nytt varje gång", "Att blanda alla material"],
+    ["Vad är programmering?", "Att skriva instruktioner som en dator kan följa", "Att måla en vägg", "Att mäta regn", "Att odla växter"],
+    ["Vad är en algoritm?", "En tydlig steg-för-steg-beskrivning för att lösa en uppgift", "En elektrisk ledning", "Ett byggmaterial", "En sorts batteri"],
+    ["Vad gör en robot ofta?", "Utför uppgifter enligt instruktioner och sensorer", "Fungerar alltid utan energi", "Tänker exakt som en människa", "Skapar material ur ingenting"],
+    ["Varför väljer man material efter användning?", "Olika material har olika egenskaper", "Alla material är likadana", "Färg är den enda viktiga egenskapen", "Material påverkar aldrig hållbarheten"],
+    ["Vilket material är oftast genomskinligt och sprött?", "Glas", "Gummi", "Koppar", "Ull"],
+    ["Vad är ett exempel på en återkoppling när man testar en produkt?", "Information om vad som fungerade och vad som kan förbättras", "Att aldrig ändra något", "Att gömma resultatet", "Att sluta använda instruktioner"]
+  ];
+
+  // ---------- from Atharva Quest (åk 6 practice packs) ----------
+  BANKS.ma_brak = [
+    ["En vattenflaska rymmer 1 liter. Nora dricker 3 av flaskans 5 lika stora delar. Vilket bråk visar hur mycket vatten Nora har druckit?", "3/5", "5/3", "2/5", "3/8"],
+    ["Ett äpple delas i 6 lika stora klyftor. Vilken andel av äpplet är 1 klyfta?", "1/6", "6", "1/5", "5/6"],
+    ["Vad heter bråkdelens övre tal — talet som visar hur många delar man har?", "Täljare", "Nämnare", "Bråkstreck", "Summa"],
+    ["Vad heter bråkdelens undre tal — talet som visar hur många lika stora delar det hela är delat i?", "Nämnare", "Täljare", "Bråkstreck", "Produkt"],
+    ["Ett klassrum har 24 elever. 3/8 av eleverna cyklar till skolan. Hur många elever cyklar till skolan?", "9", "3", "8", "12"],
+    ["Beräkna 1/6 + 3/6. Svara som ett bråk i enklaste form.", "2/3", "4/12", "1/3", "3/4"],
+    ["Skriv 1 3/4 som ett bråk (täljare/nämnare).", "7/4", "4/4", "3/4", "5/4"],
+    ["Skriv 3/5 som procent.", "60 %", "0,6 %", "35 %", "6 %"],
+    ["Vilket bråk är störst: 3/8 eller 2/5?", "2/5", "3/8", "De är lika stora", "Går inte att avgöra"],
+    ["En resa är 40 km lång. Elin har kört 3/4 av resan. Hur långt har hon kört?", "30 km", "10 km", "120 km", "25 km"]
+  ];
+  BANKS.ma_geometri = [
+    ["En vinkel är 60 grader. Vilken typ av vinkel är det?", "Spetsig (mindre än 90°)", "Rät (exakt 90°)", "Trubbig (mellan 90° och 180°)", "Rak (exakt 180°)"],
+    ["En vinkel är 120 grader. Vilken typ av vinkel är det?", "Trubbig (mellan 90° och 180°)", "Spetsig (mindre än 90°)", "Rak (exakt 180°)", "Rät (exakt 90°)"],
+    ["En rät vinkel är exakt hur många grader?", "90°", "45°", "100°", "180°"],
+    ["En rak vinkel är exakt hur många grader?", "180°", "90°", "360°", "100°"],
+    ["En vinkel är 45 grader. Vilken typ av vinkel är det?", "Spetsig (mindre än 90°)", "Rät (exakt 90°)", "Trubbig (mellan 90° och 180°)", "Rak (exakt 180°)"],
+    ["I en triangel är två av vinklarna 50° och 60°. Hur stor är den tredje vinkeln?", "70°", "110°", "80°", "60°"],
+    ["Två vinklar ligger efter varandra på en rak linje. Den ena vinkeln är 110°. Hur stor är den andra vinkeln?", "70°", "110°", "250°", "90°"],
+    ["Tre vinklar möts i en och samma punkt och bildar tillsammans ett helt varv. Två av vinklarna är 100° och 150°. Hur stor är den tredje vinkeln?", "110°", "250°", "130°", "100°"],
+    ["I en liksidig triangel är alla tre vinklarna lika stora. Hur stor är varje vinkel?", "60°", "90°", "180°", "45°"],
+    ["Vad kallas en vinkel som är exakt 90 grader?", "Rät vinkel", "Spetsig vinkel", "Trubbig vinkel", "Rak vinkel"],
+    ["Två vinklar bildar tillsammans en rät vinkel. Den ena vinkeln är 35°. Hur stor är den andra vinkeln?", "55°", "65°", "145°", "45°"],
+    ["En figur ska bli symmetrisk kring en lodrät symmetrilinje. 5 rutor är ifyllda på vänster sida av linjen. Hur många rutor måste fyllas i på höger sida?", "5", "10", "4", "6"],
+    ["En figur ska bli symmetrisk kring en lodrät symmetrilinje. 3 rutor är ifyllda på vänster sida. Hur många rutor är ifyllda totalt när figuren är symmetrisk?", "6", "3", "9", "18"],
+    ["Hur många symmetrilinjer har en kvadrat (alla fyra sidor lika långa, alla vinklar räta)?", "4", "2", "1", "8"],
+    ["Hur många symmetrilinjer har en rektangel som INTE är en kvadrat, till exempel ett vykort eller en dörr?", "2", "4", "0", "1"],
+    ["Hur många symmetrilinjer har en liksidig triangel, där alla tre sidorna är lika långa?", "3", "1", "0", "6"],
+    ["Hur många symmetrilinjer har en regelbunden femhörning, där alla fem sidor och vinklar är lika stora?", "5", "4", "10", "1"],
+    ["Vilken av dessa figurer har EXAKT en symmetrilinje?", "Likbent triangel (som inte är liksidig)", "Kvadrat", "Parallellogram (som inte är en rektangel)", "Liksidig triangel"],
+    ["En regelbunden sexhörning (hexagon, alla sex sidor och vinklar lika) har lika många symmetrilinjer som den har sidor. Hur många symmetrilinjer har den?", "6", "3", "5", "12"]
+  ];
+  BANKS.ma_negativa = [
+    ["På en tallinje ligger punkt A vid −7 och punkt B vid 15. Hur långt är det mellan A och B?", "22", "8", "12", "21"],
+    ["Vilket tal är störst: −15 eller −8?", "−8", "−15", "De är lika stora", "Går inte att avgöra"],
+    ["En dykare simmar 9 meter under havsytan. Havsytans nivå räknas som 0 meter. Vilken höjd, i meter, befinner sig dykaren på?", "−9 m", "9 m", "−8 m", "0 m"],
+    ["Kontot visar −60 kr. Erik sätter in 100 kr på kontot. Vad visar kontot efter insättningen?", "40 kr", "160 kr", "−40 kr", "−160 kr"],
+    ["Vilket påstående om −25 kr och −10 kr i skuld stämmer?", "−25 kr är en större skuld än −10 kr", "−25 kr är en mindre skuld än −10 kr", "Skulderna är lika stora", "Går inte att avgöra"],
+    ["Kontot visar −120 kr. Du sätter in 45 kr. Vad visar kontot nu?", "−75 kr", "165 kr", "75 kr", "−165 kr"],
+    ["Vilket tal ligger 6 steg till vänster om 2 på tallinjen?", "−4", "8", "4", "−3"],
+    ["Klockan 07 en vårmorgon är det 4 °C. Fram till klockan 13 stiger temperaturen med 9 grader. Vilken temperatur är det klockan 13?", "13 °C", "9 °C", "−5 °C", "5 °C"],
+    ["Vilken temperatur är kallast: −8 °C eller −3 °C?", "−8 °C", "−3 °C", "De är lika kalla", "Går inte att avgöra"],
+    ["Det var −3 °C på morgonen. Fram till eftermiddagen steg temperaturen till 5 °C. Hur många grader steg temperaturen?", "8 grader", "2 grader", "5 grader", "3 grader"],
+    ["Det var 6 °C på kvällen. Under natten sjönk temperaturen med 10 grader. Vilken temperatur var det på morgonen?", "−4 °C", "16 °C", "4 °C", "−16 °C"],
+    ["Vilket påstående om −12 °C och −7 °C stämmer?", "−12 °C är kallare än −7 °C", "−12 °C är varmare än −7 °C", "De är lika varma", "Går inte att avgöra"],
+    ["Temperaturen är −2 °C och sjunker med 6 grader. Vad blir den nya temperaturen?", "−8 °C", "4 °C", "−4 °C", "8 °C"]
+  ];
+  BANKS.ma_skala = [
+    ["Ett rum är ritat i skala 1:100. I verkligheten är rummet 8 m långt och 5 m brett. Hur stor är golvytan?", "40 m²", "13 m²", "26 m²", "400 m²"],
+    ["Ett rum är 8 m långt och 5 m brett. Hur lång är rummets omkrets (alla fyra väggarna tillsammans)?", "26 m", "40 m", "13 m", "16 m"],
+    ["En ritning är i skala 1:100. Hur långt i verkligheten motsvarar 1 cm på ritningen?", "1 m", "100 m", "10 m", "1 cm"],
+    ["En staty är avbildad som en modell i skala 1:300. Modellen är 12 cm hög. Hur hög är statyn i verkligheten, i meter?", "36 m", "3 600 m", "0,04 m", "3,6 m"],
+    ["En bro är 90 meter lång i verkligheten. Robin bygger en modell av bron i skala 1:300. Hur lång blir modellen, i cm?", "30 cm", "27 000 cm", "0,3 cm", "3 cm"],
+    ["På en karta är skalan sådan att 1 cm på kartan motsvarar 200 m i verkligheten. Vägen mellan två platser är 4 cm på kartan. Hur lång är vägen i verkligheten, i meter?", "800 m", "200 m", "204 m", "8 000 m"],
+    ["Vilken skala ger den minsta modellen jämfört med verkligheten: 1:50 eller 1:500?", "1:500", "1:50", "De ger lika stora modeller", "Går inte att avgöra"],
+    ["En modell är byggd i skala 1:20. Modellen är 8 cm hög. Hur hög är originalet i verkligheten?", "160 cm", "0,4 cm", "16 cm", "28 cm"],
+    ["En ritning är i skala 1:50. Hur många cm i verkligheten motsvarar 3 cm på ritningen?", "150 cm", "50 cm", "0,06 cm", "1500 cm"]
+  ];
+  BANKS.ma_statistik = [
+    ["Ida läste så här många böcker: måndag 3, tisdag 5, onsdag 2, torsdag 4, fredag 6. Vilken dag läste hon flest böcker?", "Fredag", "Tisdag", "Torsdag", "Måndag"],
+    ["Ida läste så här många böcker: måndag 3, tisdag 5, onsdag 2, torsdag 4, fredag 6. Vad är medelvärdet per dag?", "4", "20", "5", "3"],
+    ["Ida läste så här många böcker: måndag 3, tisdag 5, onsdag 2, torsdag 4, fredag 6. Vad är medianen (mittenvärdet när talen sorteras)?", "4", "2", "6", "5"],
+    ["Fem elever fick följande poäng på ett prov: Alex 6, Bea 8, Cesar 6, Dana 9, Erik 6. Vad är typvärdet (det poäng som flest elever fick)?", "6", "9", "7", "8"],
+    ["Samma fem elever fick: Alex 6, Bea 8, Cesar 6, Dana 9, Erik 6. Vad är variationsbredden (skillnaden mellan högsta och lägsta poängen)?", "3", "15", "9", "6"],
+    ["Samma fem elever fick: Alex 6, Bea 8, Cesar 6, Dana 9, Erik 6. Vad är medelvärdet av poängen?", "7", "35", "6", "8"],
+    ["På ett annat prov fick fem andra elever: Maja 7, Oscar 3, Elin 9, Noah 5, Ida 8. Vad är medianen av dessa poäng?", "7", "6,4", "5", "9"],
+    ["Vilket lägesmått (statistiskt mått) beskriver \"det vanligaste värdet\" i en datamängd?", "Typvärde", "Medelvärde", "Median", "Variationsbredd"],
+    ["Punkt A har koordinaterna (3, 4). Ett koordinatpar skrivs (x, y). Vilken är punkt A:s x-koordinat?", "3", "4", "7", "1"],
+    ["Punkt B har koordinaterna (5, 2). Ett koordinatpar skrivs (x, y). Vilken är punkt B:s y-koordinat?", "2", "5", "7", "3"],
+    ["Punkt A ligger i (3, 4) och punkt B i (5, 2). Vilken punkt ligger närmast x-axeln?", "Punkt B", "Punkt A", "De ligger lika nära", "Går inte att avgöra"],
+    ["Punkt A ligger i (3, 4) och punkt B i (5, 2). Hur mycket större är A:s y-koordinat än B:s?", "2", "6", "1", "4"],
+    ["Punkt A ligger i (3, 4) och punkt B i (5, 2). Vilken punkt ligger längst till höger?", "Punkt B", "Punkt A", "De ligger lika långt till höger", "Går inte att avgöra"],
+    ["Fem elever tävlade i längdhopp på idrotten. Så här långt hoppade de:\n\nElla: 314 cm\nNoah: 298 cm\nWilma: 356 cm\nElias: 275 cm\nSaga: 340 cm\n\nHur långt hoppade Wilma, enligt tabellen?", "356 cm", "314 cm", "340 cm", "298 cm"],
+    ["Fem elever tävlade i längdhopp på idrotten. Så här långt hoppade de:\n\nElla: 314 cm\nNoah: 298 cm\nWilma: 356 cm\nElias: 275 cm\nSaga: 340 cm\n\nVem hoppade längst enligt tabellen?", "Wilma", "Ella", "Noah", "Saga"],
+    ["Fem elever tävlade i längdhopp på idrotten. Så här långt hoppade de:\n\nElla: 314 cm\nNoah: 298 cm\nWilma: 356 cm\nElias: 275 cm\nSaga: 340 cm\n\nVem hoppade kortast enligt tabellen?", "Elias", "Noah", "Ella", "Saga"],
+    ["Fem elever tävlade i längdhopp på idrotten. Så här långt hoppade de:\n\nElla: 314 cm\nNoah: 298 cm\nWilma: 356 cm\nElias: 275 cm\nSaga: 340 cm\n\nHur mycket längre hoppade Wilma än Elias, enligt tabellen?", "81 cm", "631 cm", "91 cm", "71 cm"],
+    ["Fem elever tävlade i längdhopp på idrotten. Så här långt hoppade de:\n\nElla: 314 cm\nNoah: 298 cm\nWilma: 356 cm\nElias: 275 cm\nSaga: 340 cm\n\nHur långt hoppade de fem eleverna tillsammans, enligt tabellen? Räkna ihop alla fem resultaten.", "1 583 cm", "1 593 cm", "1 483 cm", "1 573 cm"]
+  ];
+  BANKS.engelska_quest = [
+    ["My sister ___ football every Saturday.", "plays", "play", "played", "playing"],
+    ["Yesterday, we ___ (go) to the cinema.", "went", "goed", "gone", "goes"],
+    ["There ___ three books on the table.", "are", "is", "was", "be"],
+    ["This exercise is ___ than the last one.", "more difficult", "difficulter", "most difficult", "difficult more"],
+    ["She is reading a book ___ the moment.", "at", "in", "on", "by"],
+    ["I have two ___.", "children", "childs", "childrens", "child"],
+    ["___ apple a day keeps the doctor away.", "An", "A", "The", "—  (no word needed)"],
+    ["Give the book to ___. (Anna and Tom are waiting.)", "them", "they", "their", "theirs"],
+    ["What time ___ you get up this morning?", "did", "do", "does", "was"],
+    ["I ___ (not/finish) my homework yet.", "haven't finished", "didn't finish", "haven't finish", "hasn't finished"],
+    ["We ___ swimming every summer.", "go", "goes", "went", "going"],
+    ["Which sentence clearly states an OPINION (something a person believes, not a fact)?", "I think school should start later in the morning.", "Water boils at 100 degrees Celsius.", "Stockholm is the capital of Sweden.", "There are seven days in a week."],
+    ["You are writing: \"In my opinion, every student should learn to swim.\" Which sentence would be the BEST reason to support it?", "Swimming can save your life if you fall into deep water.", "Swimming is more fun than football.", "Everyone likes swimming.", "My friend swims every Saturday."],
+    ["Which ONE word is missing? \"___ my opinion, homework helps students practise on their own.\" Write the missing word.", "In", "On", "At", "For"],
+    ["Read this short opinion text:\n\n\"I believe our school should have a longer lunch break. First of all, twenty minutes is not enough time to eat properly. Also, students rush and sometimes feel sick afterwards. Finally, a longer break would give us time to relax before afternoon lessons.\"\n\nWhat does the word \"Finally\" do in this text?", "It introduces the last reason in the list", "It shows something took a long time to happen", "It means the writer changed their mind", "It adds a fact that is not an opinion"],
+    ["In an opinion text about banning phones in school, which sentence acknowledges a COUNTER-ARGUMENT (the other side's view) fairly?", "Some people say phones help students look up information.", "People who disagree with me are silly.", "Phones are the worst invention ever made.", "Nobody has ever said anything good about phones."],
+    ["Read this opinion:\n\n\"Our class should grow vegetables in the school garden. It would teach us where food comes from, and we could cook with what we grow.\"\n\nWhich sentence gives the STRONGEST additional reason to support this opinion?", "Vegetables we grow ourselves are fresh and cost nothing.", "Gardens attract a lot of insects.", "Some schools have gardens.", "I once saw a carrot growing in a field."],
+    ["Complete the sentence with ONE word:\n\n\"Reading is important ___ it helps you learn new words.\" Write the missing word.", "because", "but", "so", "although"],
+    ["Which closing sentence works BEST at the end of an opinion text about having pets?", "Overall, pets teach responsibility and bring joy, so I believe every family should consider one.", "Next, let me tell you what dogs eat.", "That is all I have to say about pets.", "Anyway, I have to go now."],
+    ["Which of these is the most appropriate way to START a friendly letter introducing yourself to a new pen pal?", "\"Hi, my name is...\"", "\"Dear Sir or Madam,\"", "\"TO WHOM IT MAY CONCERN,\"", "No greeting at all — just start with a fact."],
+    ["Which sentence uses the correct verb form to describe something you do every day (a routine or habit)?", "I walk to school every morning.", "I walked to school every morning.", "I walking to school every morning.", "I am walk to school every morning."],
+    ["My sister ___ (play) tennis every weekend.", "plays", "play", "playing", "is play"],
+    ["Which of these is a good closing phrase for a friendly letter to a pen pal?", "\"Write back soon!\"", "\"Yours faithfully,\"", "\"Sincerely, Customer Service Team\"", "No closing needed — just stop writing."],
+    ["When writing about your hobbies, which sentence gives the most SPECIFIC and INTERESTING detail, rather than just a generic statement?", "I love football because I play in a team every Saturday and we won our last three matches.", "I like sports.", "Sports are fun.", "I do things."],
+    ["I have two brothers and one sister. ___ names are Tom, Ben, and Lucy.", "Their", "There", "They're", "Theirs"],
+    ["Which question would be safe and appropriate to ask a new pen pal to learn more about them?", "\"What do you like to do in your free time?\"", "\"What is your home address and phone number?\"", "\"How much money do your parents make?\"", "\"What is your password?\""],
+    ["The weather was extremely cold, so Ben put on a thick ___ before going outside.", "jacket", "plate", "lamp", "spoon"],
+    ["Maria was starving after the long hike, so she quickly ate a big ___.", "sandwich", "pillow", "umbrella", "calendar"],
+    ["The ancient castle was completely ___ — no one had lived there for a hundred years, and dust covered every room.", "abandoned", "crowded", "modern", "expensive"],
+    ["In the story, the hero was very generous, unlike the ___ villain who never shared anything.", "selfish", "generous", "friendly", "tall"],
+    ["She was so ___ after running the marathon that she could barely stand.", "tired", "excited", "curious", "confused"],
+    ["The detective found an important ___ at the crime scene — a single muddy footprint by the window.", "clue", "recipe", "ticket", "song"],
+    ["The comedian's joke really fell flat — nobody laughed at all. What does \"fell flat\" mean here?", "was not successful — it failed to get a reaction", "fell on the floor", "was very funny", "was very short"],
+    ["Even though the test was extremely difficult, Sam didn't panic or complain even once — he stayed completely ___.", "calm", "angry", "nervous", "loud"]
+  ];
+  // Longer texts from Atharva Quest: 7 random questions are picked each time.
+  READING_PASSAGES.push(
+    {title:"Fyren på Skarven", text:"Jag sitter i förstäven med väskan hårt tryckt mot bröstet och tittar på ön som växer fram ur dimman. Fyren reser sig vit och smal mot den gråa himlen, som ett finger som pekar rakt upp. Båtens motor tjatar och tjatar, och jag känner hur magen vrider sig av nervositet. Tre veckor. Jag ska bo här i tre hela veckor, hos farbror Sixten som jag knappt känner, medan mamma och pappa jobbar i Kanada.\n\nFarbror Sixten står redan på bryggan och vinkar med hela armen, som om han försöker fånga ett flygplan. Han är stor och skäggig och har en stickad mössa fast det är juni.\n\n– Elis! ropar han. Välkommen till Skarven!\n\nJag klättrar upp på bryggan med väskan och benen fortfarande ostadiga efter båtresan. Farbror Sixten tar tag i väskan innan jag hinner protestera och går före mig mot fyren, med långa, tunga steg.\n\n– Du får sova i vaktrummet, säger han över axeln. Det var där jag sov när jag var i din ålder och besökte min farbror. Nu är det din tur.\n\nInne i fyren luktar det tjära och gammalt papper. Trappan snurrar sig uppåt genom hela huset, och varje våning har ett litet runt fönster som släpper in ett skivat ljus. Jag räknar stegen medan vi går: hundra och tjugotre, innan vi når lanterninrummet högst upp, där den stora linsen vilar som ett enormt öga.\n\n– Här uppe tänder jag lampan varje kväll, säger farbror Sixten och stryker handen längs glaset, nästan ömt. Har gjort det i tjugosju år. Sen pappa gick bort tog jag över.\n\nJag nickar, fast jag inte riktigt förstår vad det innebär att tända en lampa varje kväll i tjugosju år. Det låter både tråkigt och viktigt på samma gång.\n\nNär vi går ner igen stannar jag vid en dörr på tredje våningen. Den är låst med ett tjockt hänglås, och någon har klistat en gammal lapp på den: FÖRRÅD – EJ TILLTRÄDE.\n\n– Vad är där inne? frågar jag.\n\nFarbror Sixten stannar till. Bara för en sekund, men jag ser det.\n\n– Bara gamla grejer, säger han och går vidare utan att vänta på mig. Farligt och dammigt. Du håller dig borta därifrån, Elis.\n\nJag följer efter, men jag kan inte sluta tänka på den låsta dörren.\n\nEfter lunch cyklar jag ner till affären för att köpa mjölk, på en cykel som är minst tio år för liten för mig. Vägen går längs klipphällarna, förbi fiskebåtar som guppar i den svaga vinden. Utanför affären sitter en flicka på en upp-och-nervänd hink och läser en tjock bok.\n\n– Du är farbror Sixtens brorson, säger hon utan att titta upp. Alla vet det redan.\n\n– Hur då? frågar jag.\n\n– Det är en liten ö, säger hon och ler snett. Jag heter Saga förresten. Jag bor i huset med det röda taket, om du undrar.\n\nJag undrar inte, men jag säger ingenting om det.\n\n– Har du sett vaktrummet än? frågar Saga. Och förrådet på tredje våningen?\n\n– Vaktrummet, ja. Förrådet är låst.\n\nSaga lägger ner boken i knät.\n\n– Alla på ön vet vad som ligger där, säger hon. Fast ingen har sett det på riktigt. Din farbror pratar aldrig om det. Frågar man honom byter han bara samtalsämne.\n\n– Vad skulle det vara, då?\n\nHon rycker på axlarna, men jag ser att hon har mer att berätta, om jag bara väntar.\n\n– Fråga honom själv, säger hon till slut. Se vad han säger. Eller vad han inte säger.\n\nJag cyklar hem med mjölken skvalpande i cykelkorgen och tänker på dörren, på lappen, på farbror Sixtens ansikte när jag frågade. Fyren blinkar redan där uppe på klippan, fast solen inte har gått ner än. Ett öga som aldrig riktigt sover.", questions:[
+      ["Vad känner Elis när båten närmar sig ön?", "Han är nervös", "Han är road och glad", "Han är likgiltig, det spelar ingen roll för honom", "Han är arg"],
+      ["Vad säger det om Elis att han lägger märke till och räknar antalet trappsteg i fyren?", "Att han lägger noga märke till detaljer omkring sig", "Att han är road av matematik", "Att farbror Sixten har bett honom räkna", "Att han är rädd för trappor"],
+      ["Vad heter flickan som Elis möter utanför affären?", "Saga", "Sixten", "Maja", "Lisa"],
+      ["Hur beter sig Saga när hon pratar med Elis första gången?", "Direkt och lite retsamt", "Blygt och tystlåtet", "Argt och otåligt", "Artigt och formellt"],
+      ["Vad visar meningen \"Jag undrar inte, men jag säger ingenting om det\" om Elis?", "Att han håller vissa tankar för sig själv istället för att säga dem högt", "Att han är nyfiken på allt Saga säger", "Att han redan känner till var Saga bor", "Att han inte lyssnar på vad Saga säger"],
+      ["Vilket ord beskriver bäst hur farbror Sixten reagerar när Elis frågar vad som finns i det låsta förrådet?", "Tveksam och undvikande", "Road", "Road och pratsam", "Förvånad"],
+      ["Vad tycker Elis om att farbror Sixten tänder fyrens lampa varje kväll, år efter år?", "Han tycker det låter både tråkigt och viktigt", "Det låter helt meningslöst för honom", "Han förstår direkt varför det är viktigt", "Han blir avundsjuk"],
+      ["Vad tänker Elis på när han cyklar hem med mjölken i slutet av texten?", "Den låsta dörren och farbror Sixtens reaktion", "Vad han ska äta till middag", "Om Saga vill bli hans vän", "Hur han ska hinna med skolan"],
+      ["Vilket citat ur texten är BÄST som bevis för att farbror Sixten döljer något om förrådet?", "\"Farbror Sixten stannar till. Bara för en sekund, men jag ser det.\"", "\"Han är stor och skäggig och har en stickad mössa fast det är juni.\"", "\"Jag räknar stegen medan vi går: hundra och tjugotre.\"", "\"Vägen går längs klipphällarna, förbi fiskebåtar som guppar i den svaga vinden.\""],
+      ["Vilket av dessa påståenden STÖDS av bevis i texten (går att bevisa med något som faktiskt står där)?", "Farbror Sixten har bott och arbetat på ön i minst tjugosju år.", "Elis har varit på ön tidigare, innan den här resan.", "Farbror Sixten är arg på Elis.", "Saga och farbror Sixten är släkt med varandra."],
+      ["Vilket ord i texten beskriver exakt VAD dörren till förrådet är stängd med (låsanordningen)?", "hänglås", "kodlås", "kedja", "regel"],
+      ["Vilken av dessa meningar är en ÅSIKT (vad någon TYCKER eller KÄNNER), snarare än ett FAKTUM som går att bevisa med texten?", "\"Det låter både tråkigt och viktigt på samma gång.\"", "\"Trappan snurrar sig uppåt genom hela huset.\"", "\"Fyren blinkar redan där uppe på klippan.\"", "\"Den är låst med ett tjockt hänglås.\""],
+      ["Om någon påstår att \"Elis är arg på farbror Sixten under hela texten\", vilket är SANT om det påståendet?", "Påståendet stämmer INTE — texten visar ingen ilska från Elis, bara nervositet och nyfikenhet.", "Texten säger ingenting alls om Elis känslor.", "Påståendet stämmer helt — Elis är arg genom hela texten.", "Elis säger rakt ut att han är arg på farbror Sixten."],
+      ["Vilket enda ord beskriver HUR farbror Sixten rör vid glaset i lanterninrummet, på ett sätt som visar starka känslor?", "ömt", "hårt", "snabbt", "slarvigt"],
+      ["Farbror Sixten säger: \"Har gjort det i tjugosju år. Sen pappa gick bort tog jag över.\" Vad kan man dra slutsatsen om hans pappa av detta, även om det inte sägs rakt ut?", "Han dog, och farbror Sixten tog över hans uppgift att sköta fyren.", "Han sköter fortfarande fyren tillsammans med farbror Sixten.", "Han flyttade till en annan ö.", "Han bytte jobb till något annat."],
+      ["Farbror Sixten \"stryker handen längs glaset, nästan ömt\" när han pratar om lampan. Vad kan man dra slutsatsen om hans känslor för fyren?", "Han känner en stark, personlig koppling till fyren, kanske kopplad till minnet av sin pappa.", "Han bryr sig inte särskilt mycket om fyren längre.", "Han är irriterad över att behöva putsa glaset så ofta.", "Han är orolig för att glaset ska gå sönder om han inte är försiktig."],
+      ["Efter samtalet om förrådet skriver Elis: \"Jag följer efter, men jag kan inte sluta tänka på den låsta dörren.\" Vad säger detta om Elis?", "Han är väldigt nyfiken och kan inte släppa mysteriet, även om farbror Sixten bad honom låta bli.", "Han har redan glömt bort dörren.", "Han är rädd för dörren och vill aldrig gå nära den igen.", "Han tycker inte att dörren är särskilt intressant."],
+      ["Elis liknar fyrens lins vid \"ett enormt öga\", och texten avslutas med \"Ett öga som aldrig riktigt sover\". Vad förstärker den bilden mest, sett till hela texten?", "Känslan av att fyren alltid vakar, precis som mysteriet med förrådet gör att något känns olöst i bakgrunden hela tiden.", "Att fyrens lampa lyser mycket starkt.", "Att fyren är rund till formen.", "Att fyren är väldigt gammal."],
+      ["Saga antar att Elis undrar var hon bor, och han svarar: \"Jag undrar inte, men jag säger ingenting om det.\" Varför säger han så, tror du?", "Han är lite blyg eller reserverad, och väljer att inte säga emot henne rakt ut.", "Han bryr sig inte alls om vad Saga säger.", "Han är arg på Saga för att hon pratar för mycket.", "Han visste redan exakt var hon bodde."],
+      ["\"Fyren blinkar redan där uppe på klippan, fast solen inte har gått ner än.\" Vad kan denna detalj antyda om fyrens roll i berättelsen som helhet?", "Att fyren alltid är redo och vakar, vilket förstärker känslan av att något ständigt \"vakar\" i bakgrunden i hela berättelsen.", "Att det redan är natt när Elis cyklar hem.", "Att fyrens lampa är trasig och blinkar av misstag.", "Att farbror Sixten glömde stänga av lampan på dagen."],
+      ["Vilken fras i meningen \"Sen pappa gick bort tog jag över\" är en mildare, artigare omskrivning för att säga att någon har dött?", "gick bort", "tog över", "har gjort det", "tjugosju år"],
+      ["Vad handlar texten HUVUDSAKLIGEN om?", "Elis anländer till en ö för att bo hos sin farbror Sixten, och blir nyfiken på en hemlighet farbrorn inte vill prata om.", "Elis cyklar till affären för att köpa mjölk.", "Saga läser en tjock bok utanför affären.", "Fyren har många trappor och fönster."],
+      ["Vilken mening sammanfattar BÄST vad som händer i texten?", "Elis anländer till en ö för att bo hos sin farbror, och blir nyfiken på en hemlighet farbrorn inte vill prata om.", "Fyren har tjugotre trappsteg upp till lanterninrummet.", "Elis mamma och pappa jobbar i Kanada.", "Saga bor i ett hus med rött tak."],
+      ["Vilken exakt fras står på lappen som sitter på den låsta dörren, och som visar tydligast att ingen ska gå in?", "EJ TILLTRÄDE", "PRIVAT", "FARA", "STÄNGT"],
+      ["Varför är det viktigt för HELA berättelsen att farbror Sixten byter samtalsämne när Elis frågar om förrådet?", "Det visar att farbror Sixten döljer något och bygger upp mysteriet som driver berättelsen framåt.", "Det visar att farbror Sixten är trött efter båtresan.", "Det visar att Elis pratar för mycket under resan.", "Det visar att affären ligger långt bort från fyren."],
+      ["Vilken rubrik skulle passa BÄST för texten?", "Hemligheten i fyren", "En cykeltur till affären", "Fyrens hundra tjugotre trappsteg", "Sagas bok"],
+      ["Vad är den STÖRSTA skillnaden mellan en huvudtanke och en stödjande detalj?", "Huvudtanken är den centrala idén i texten, medan stödjande detaljer är exempel eller fakta som förstärker den.", "Det finns ingen skillnad — de betyder samma sak.", "Huvudtanken är alltid den allra första meningen i texten.", "Stödjande detaljer är alltid dialog mellan personer."],
+      ["Vilken detalj i texten är MINST viktig för huvudtanken (skulle kunna tas bort utan att historien ändras särskilt mycket)?", "Att Elis cyklar på en cykel som är \"minst tio år för liten\" för honom.", "Att förrådet är låst med ett hänglås.", "Att farbror Sixten byter samtalsämne när han blir frågad om förrådet.", "Att Saga säger att alla vet vad som finns där men ingen har sett det."],
+      ["Var utspelar sig berättelsen?", "På en ö med en fyr", "I en stad", "I ett hus i skogen", "På ett tåg"],
+      ["Vilken årstid är det när berättelsen börjar?", "Sommar", "Vinter", "Höst", "Vår"],
+      ["Vad heter ön där farbror Sixten bor?", "Skarven", "Fyrön", "Måsen", "Klippan"],
+      ["Hur är vädret när Elis anländer till ön med båten?", "Disigt och dimmigt", "Soligt och klart", "Snöigt", "Stormigt"],
+      ["Var ska Elis sova första natten?", "I vaktrummet", "I lanterninrummet", "I förrådet", "I affären"],
+      ["Vad finns på tredje våningen i fyren?", "Ett låst förråd", "Vaktrummet", "Ett kök", "En trädgård"],
+      ["Vad passerar Elis längs vägen när han cyklar till affären?", "Klipphällar och fiskebåtar", "Skog och sjöar", "Höga berg", "En stor motorväg"],
+      ["Vilket fordon använder Elis för att ta sig till affären?", "cykel", "bil", "båt", "buss"],
+      ["Vilken känsla skapar beskrivningen av fyren som \"ett öga som aldrig riktigt sover\"?", "Att fyren känns vaksam och lite olycksbådande", "Att fyren är trygg och lugnande", "Att fyren är trasig", "Att fyren är obetydlig"],
+      ["I vilken ordning presenteras händelserna i texten?", "Kronologisk ordning — händelserna berättas i den ordning de faktiskt händer.", "Bakvänd ordning — slutet av historien berättas först.", "Ingen särskild ordning — händelserna är helt slumpmässigt blandade.", "Flera olika tidsperioder blandas hela tiden."],
+      ["Vilken teknik använder författaren för att bygga upp mysteriet kring förrådet, sett till HELA textens uppbyggnad?", "Författaren lämnar frågan om förrådet olöst genom hela texten, så att läsaren fortsätter undra.", "Författaren avslöjar direkt i början vad som finns i förrådet.", "Författaren berättar historien baklänges, från slutet till början.", "Författaren använder bara dialog, ingen berättarröst alls."],
+      ["Var i texten får läsaren reda på att farbror Sixtens pappa är död?", "Genom farbror Sixtens egen dialog (\"Sen pappa gick bort tog jag över\").", "Genom en berättarkommentar från Elis som förklarar det direkt.", "Genom en tidningsartikel som nämns i texten.", "Genom ett brev som Elis hittar."],
+      ["Vilken funktion har det FÖRSTA stycket (om båtresan och nervositeten) för HELA textens uppbyggnad?", "Det introducerar huvudpersonen, situationen och en känsla som sätter tonen för resten av texten.", "Det är en tillbakablick (flashback) till något som hänt långt tidigare.", "Det avslutar historien och sammanfattar vad som hänt.", "Det beskriver förrådet i detalj."],
+      ["Vilken typ av text är detta, sett till HUR den är skriven?", "En berättande text (skönlitterär berättelse).", "En faktatext.", "En instruktion (steg-för-steg-anvisning).", "En annons."],
+      ["Var i texten introduceras mysteriet för läsaren FÖRSTA gången?", "När Elis och farbror Sixten stannar vid den låsta dörren på tredje våningen.", "När texten beskriver fyrens lins som ett enormt öga.", "När båten närmar sig ön i första stycket.", "När Elis cyklar hem med mjölken på kvällen."],
+      ["Vilket skiljetecken används i texten för att visa att en person börjar prata (dialog)?", "tankstreck", "citattecken", "parentes", "kolon"]
+    ]},
+    {title:"En stad i norra Tyskland", text:"I norra Tyskland ligger en stad som blev rik på något så vardagligt som vatten. Staden heter Lüneburg och har funnits i över tusen år. Det som gjorde Lüneburg berömt var inte vattnet i sig, utan det som fanns i det: salt.\n\nSaltet i Lüneburg kommer från underjorden. För hundratals miljoner år sedan låg ett hav där staden nu står. När havet torkade ut blev saltet kvar i jorden som tjocka lager. Regnvatten som rör sig ner genom marken löser upp saltet och bildar en starkt salthaltig vätska, som kallas sölv. Sölvet är mycket saltare än havsvatten – ungefär tio gånger saltare.\n\nRedan på 800-talet började människor i trakten koka salt ur sölvet. Kokningen gick till så här: sölvet hälldes i stora järngrytor som hängde över elden. När vattnet kokade bort blev saltet kvar i botten av grytan. Det var ett långsamt arbete och det krävde enorma mängder ved. Skogarna runt staden höll på att huggas ner helt, eftersom varje gryta behövde brinna dag efter dag.\n\nVarför var salt så viktigt att man brände hela skogar för att få fram det? Svaret handlar om mat. Innan kylskåpet uppfanns var det nästan omöjligt att spara kött och fisk mer än några dagar. Men om man gnuggade köttet med salt, eller la ner det i starkt saltat vatten, kunde det hålla i månader eller till och med år. Salt stoppade alltså mat från att bli dåligt. En stad som kunde leverera salt hade en vara som alla behövde, året runt, i alla länder.\n\nUnder medeltiden växte Lüneburg till ett av Nordeuropas viktigaste centrum för salt. Köpmännen i staden organiserade sig i ett skrå, en förening som bestämde vem som fick sälja salt och till vilket pris. Saltet lastades på kärror och kördes till hamnstaden Lübeck vid Östersjön. Vägen mellan de två städerna var cirka sex mil lång och kallades Alte Salzstraße, den gamla saltvägen. Resan tog flera dagar, eftersom en fullastad kärra rörde sig långsamt på dåliga vägar.\n\nFrån Lübeck seglade saltet vidare österut till bland annat Skandinavien och Baltikum. Där användes det framför allt till något som betydde enormt mycket för folk i Sverige: sillfisket. Den sill som fångades i Öresund varje höst måste saltas in direkt på båtarna, annars blev den osäljbar redan innan den nådde land. Utan salt från Lüneburg ingen saltad sill – och under flera hundra år var saltad sill en av de vanligaste rätterna i hela Norden.\n\nLüneburgs välstånd syns ännu idag. Stadens gamla centrum är fullt av tegelhus från medeltiden och renässansen, byggda av köpmän som blivit förmögna på salt. Många av husen lutar konstigt åt ett håll. Orsaken är just saltet: under århundradena har sölvet som sipprat upp genom marken mjukgat upp leran under husgrunderna, så att byggnaderna sakta har sjunkit snett. I dag är staden en av Tysklands mest besökta turistorter, och det gamla saltkoket finns kvar som museum. Grytorna står kvar, tomma men hela, som en påminnelse om tiden när vatten från underjorden gjorde en liten stad till en stormakt – i alla fall på saltmarknaden.", questions:[
+      ["Vad är \"sölv\", enligt texten?", "En starkt salthaltig vätska från underjorden", "Vanligt regnvatten", "Havsvatten", "Ett slags gammalt järngryta"],
+      ["Varför var salt så viktigt för människor förr, enligt texten?", "Salt höll maten färsk mycket längre", "Maten smakade bättre med salt", "Salt var nyttigt för hälsan", "Salt var billigt att tillverka"],
+      ["Vilken stad skulle saltet från Lüneburg köras till med kärror? Svara med stadens namn.", "Lübeck", "Lüneburg", "Hamburg", "Berlin"],
+      ["Varför lutar många av husen i Lüneburgs gamla stadskärna, enligt texten?", "Sölvet har mjukgat upp leran under husgrunderna", "Jordbävningar har skakat dem", "De byggdes billigt och slarvigt", "Vinden har tryckt dem åt ett håll"],
+      ["Vilket problem orsakade saltkokningen i området runt Lüneburg?", "Skogarna höll på att huggas ner helt", "Sölvet blev mindre salt", "Vattnet i underjorden tog slut", "Grytorna sprang ofta sönder"],
+      ["Vad kallas köpmännens förening som bestämde vem som fick sälja salt och till vilket pris? Svara med ordet.", "skrå", "klubb", "parti", "råd"],
+      ["Vad finns i Lüneburg idag som påminner om saltkokningen?", "Ett museum med de gamla grytorna", "Nya skogar planterade på 1800-talet", "En staty av en köpman", "Ingenting — allt är borta"]
+    ]},
+    {title:"Ljuden från garaget", text:"Var kväll efter middagen försvinner Jonas ut till garaget. Elin har lagt märke till det i snart två veckor nu. Han reser sig från bordet, muttrar något om \"en grej\", och är borta i över en timme. När han kommer in igen har han svarta fläckar på händerna och luktar olja.\n\n— Vad håller du på med där ute? frågar Elin en torsdag när Jonas kommer in och genast går rakt mot handfatet.\n\n— Inget särskilt. Jonas skrubbar händerna hårt, som om han vill skrubba bort frågan också.\n\n— Det är inte inget. Du är där ute varje kväll. Elin sätter sig på köksbordet och korsar armarna. Har du gjort något dumt?\n\n— Nej! Jonas vänder sig om så snabbt att vattnet stänker på golvet. Varför skulle jag ha gjort något dumt?\n\n— Jag vet inte. Du är konstig. Och du blir sur så fort någon frågar.\n\nJonas svarar inte. Han torkar händerna på en handduk och går ut ur köket utan att säga mer. Elin blir sittande kvar. Något är fel, tänker hon. Kanske har han råkat illa ut med någon på skolan. Kanske skäms han för något.\n\nNästa kväll väntar Elin tills Jonas gått ut, räknar till hundra och smyger sedan efter honom över gräsmattan. Garagedörren står på glänt. Hon kikar in genom springan.\n\nDär inne, mitt på golvet, står en gammal cykel. Ramen är fläckig av rost och det ena pedaldrevet hänger löst. Jonas sitter på huk bredvid den med en skruvnyckel i handen och en ficklampa i munnen.\n\nElin trycker upp dörren. Jonas rycker till så hårt att skruvnyckeln far ur handen och slår i betonggolvet med en smäll.\n\n— Vad — Elin! Han reser sig så fort att han slår huvudet i hyllan ovanför. Du får inte vara här!\n\n— Är det din nya cykel? Elin går närmare och lägger märke till att sadeln är helt ny, medan resten av cykeln ser urgammal ut.\n\nJonas suckar och sätter sig på en verktygslåda. Han ser inte längre arg ut, bara trött.\n\n— Den är inte min. Jag hittade den på återvinningscentralen för tre veckor sen. Den låg bland skrotet, helt övergiven. Han stryker med handen över styret. Kommer du ihåg att mammas cykel gick sönder i somras? Hon har inte haft råd att köpa en ny än.\n\nElin sätter sig långsamt bredvid honom på golvet.\n\n— Så du lagar den … åt mamma?\n\n— Hennes födelsedag är på lördag. Jonas plockar upp skruvnyckeln igen och vänder den mellan fingrarna. Jag ville inte säga något förrän jag var säker på att jag faktiskt kunde få den att fungera. Det kändes dumt att lova något jag kanske inte kunde hålla.\n\n— Det är därför du blivit så konstig. Elin ler brett. Jag trodde du var i trubbel!\n\n— Jag vet. Jonas skrattar till, lite skamset. Förlåt att jag var sur. Jag var bara livrädd att du eller mamma skulle upptäcka den för tidigt och förstöra överraskningen.\n\nElin tittar på den halvfärdiga cykeln, på oljan under brorsans naglar, på de tre veckorna av tystnad som plötsligt känns helt begripliga.\n\n— Jag säger ingenting. Men — hon pekar på det lösa pedaldrevet — jag kan hjälpa dig skruva det där. Vi hinner nog till lördag om vi är två.\n\nJonas räcker henne skruvnyckeln utan att tveka.", questions:[
+      ["Vad tror Elin i början av berättelsen är anledningen till att Jonas beter sig konstigt?", "Att han har råkat illa ut eller gjort något dumt", "Att han planerar en fest", "Att han bara är trött efter skolan", "Att han har bråkat med en kompis"],
+      ["Varför vill Jonas inte berätta för Elin vad han gör i garaget, innan cykeln är klar?", "Han vill inte lova något han kanske inte kan hålla", "Han tycker inte om Elin", "Han vet inte själv vad han håller på med", "Han har glömt bort att berätta"],
+      ["Vem är den halvfärdiga cykeln egentligen tänkt som present till?", "mamma", "Elin", "pappa", "mormor"],
+      ["Var hittade Jonas cykeln?", "På återvinningscentralen", "I garaget hemma", "Hos en kompis", "I en affär"],
+      ["Vilken detalj får Elin att förstå att cykeln inte är helt ny, utan har blivit lagad/renoverad?", "Att sadeln är ny men resten av cykeln ser gammal ut", "Att Jonas har en ficklampa", "Att cykeln är röd", "Att cykeln står i garaget"],
+      ["Vilken veckodag är mammas födelsedag, enligt Jonas?", "lördag", "torsdag", "söndag", "fredag"],
+      ["Varför rycker Jonas till och tappar skruvnyckeln när Elin öppnar garagedörren?", "Han blir rädd/överraskad av att plötsligt bli upptäckt", "Cykeln välter mot honom", "Han tappar balansen av misstag", "Han hör ett läskigt ljud utifrån"],
+      ["Vilket påstående beskriver bäst vad berättelsen som helhet handlar om?", "Att ett beteende som verkar konstigt utifrån kan ha en omtänksam anledning bakom sig", "Att man inte ska snoka i andras saker", "Att cyklar är svåra att laga", "Att syskon alltid bråkar med varandra"]
+    ]},
+    {title:"Stämmer det verkligen?", text:"Har du hört talas om att man inte får svälja tuggummi, för då stannar det i magen i sju år? Många barn får höra det här av en förälder eller storasyskon, och myten är minst femtio år gammal. Frågan är: stämmer det?\n\nSanningen är att tuggummi inte alls stannar i magen i sju år. Ett tuggummi är tillverkat av två olika delar: en tuggbas av gummiliknande material, och smakämnen och socker (eller sötningsmedel) runt om. Kroppen kan bryta ner och ta upp smakämnena och sockret precis som vilken annan mat som helst. Tuggbasen däremot går inte att bryta ner — magsäcken och tarmarna saknar de enzymer som skulle behövas för det.\n\nMen \"kan inte brytas ner\" betyder inte \"stannar kvar\". Matsmältningssystemet är byggt för att transportera vidare även sådant som inte kan brytas ner, till exempel fibrer från frukt och grönsaker. Tuggbasen följer helt enkelt med resten av det som äts genom tunntarmen och tjocktarmen, och lämnar kroppen på samma sätt som annat matavfall — vanligtvis inom ett till tre dygn, inte sju år.\n\nLäkare bekräftar att ett enstaka svalt tuggummi nästan aldrig orsakar problem. Risken finns först om någon sväljer väldigt många tuggummin under kort tid, eller sväljer dem tillsammans med annat som inte smälts, som stora mängder frön eller hår. Då kan klumpar i sällsynta fall bildas och orsaka en blockering i tarmen. Men det handlar om extrema mängder, inte ett enstaka sväljt tuggummi efter idrottslektionen.\n\nVarför lever myten då kvar så envist? Antagligen för att sju år känns som en skrämmande lång tid för ett barn, vilket gör att fler minns rådet och för det vidare — även om ingen av dem som säger det egentligen vet varifrån siffran sju kommer.\n\nNågra andra vanliga myter om kroppen:\n\n1. Att man blir permanent blind av att titta rakt på solen är fel i sin helhet — men under en solförmörkelse kan starkt UV-ljus faktiskt skada näthinnan om man tittar utan skydd. Delvis sant. 2. Att hår och naglar fortsätter växa efter döden är en missuppfattning. Det som sker är att huden torkar och drar ihop sig, vilket får hår och naglar att se längre ut. Myt. 3. Att man förlorar mest kroppsvärme genom huvudet, mer än genom andra kroppsdelar av samma storlek, är en gammal missuppfattning som spreds via en förvrängd militärstudie från 1950-talet. Myt. 4. Att morötter är bra för synen stämmer delvis — de innehåller A-vitamin, som verkligen behövs för ögonen. Men att äta extra morötter ger inte extra bra syn eller nattsyn utöver det normala. Delvis sant.\n\nKällor: 1177.se, Livsmedelsverket.", questions:[
+      ["Vad är myten som texten handlar om?", "Att tuggummi stannar i magen i sju år", "Att tuggummi är farligt att äta", "Att tuggummi inte går att svälja", "Att tuggummi gör dig sjuk direkt"],
+      ["Vilken detalj i texten förklarar VARFÖR tuggbasen inte kan brytas ner av kroppen?", "Magsäcken och tarmarna saknar de enzymer som behövs", "Tuggbasen är gjord av metall", "Tuggummi är för stort för att svälja", "Kroppen är allergisk mot tuggummi"],
+      ["Vad kallas den del av tuggummit som kroppen INTE kan bryta ner?", "tuggbasen", "sockret", "smakämnena", "sötningsmedlet"],
+      ["Varför tror texten att myten om tuggummi lever kvar, trots att den inte stämmer?", "För att sju år känns som en skrämmande lång tid för ett barn, vilket gör att fler minns och för myten vidare", "För att läkare har bekräftat att myten är sann", "För att tuggummiföretag sprider myten medvetet", "För att ingen någonsin har undersökt saken"],
+      ["Vad säger texten om att titta rakt på solen?", "Att det är farligt bara under en solförmörkelse om man saknar skydd", "Att det alltid är helt ofarligt", "Att det gör en permanent blind direkt", "Att man aldrig kan skadas av det"],
+      ["Vilken myndighet/webbplats om mat nämns som källa längst ner i texten?", "Livsmedelsverket", "Skolverket", "SMHI", "Naturvårdsverket"],
+      ["Vilket påstående beskriver bäst hur texten använder fakta och källor för att bemöta tuggummimyten?", "Texten förklarar hur tuggummi är uppbyggt och hur matsmältningen fungerar, och bekräftar detta med vad läkare säger", "Texten ger inga konkreta skäl, bara ett påstående", "Texten litar bara på vad folk brukar säga", "Texten säger att myten är sann men ovanlig"]
+    ]},
+    {title:"Tunnlar", text:"En bro tar oss över ett hinder. En tunnel gör tvärtom — den tar oss under eller genom ett hinder, till exempel ett berg, en stad eller till och med havsbotten. Precis som med broar finns det flera olika sätt att bygga en tunnel, och valet av metod beror på vad man ska tunnla genom.\n\nEn bergtunnel sprängs eller borras rakt igenom fast berg. Det är den vanligaste tunnel-typen i ett bergigt land som Sverige. Man borrar först hål i berget, fyller dem med sprängmedel och spränger bort en bit i taget. Efter varje sprängning måste taket och väggarna förstärkas med bultar och sprutbetong, annars kan berget rasa. Norra länken och Södra länken i Stockholm är båda bergtunnlar.\n\nEn borrad tunnel byggs istället med en enorm borrmaskin, ofta kallad TBM (tunnel boring machine). Maskinen är formad som en lång cylinder med ett roterande borrhuvud längst fram, och den gräver sig sakta framåt genom jord eller mjukare berg. Bakom borrhuvudet sätter maskinen automatiskt upp färdiga betongsegment som bildar tunnelns vägg, så tunneln är klar direkt bakom maskinen. Kanaltunneln mellan Storbritannien och Frankrike, som går under havsbotten, borrades på det här sättet.\n\nEn sänktunnel byggs på ett helt annat sätt. Man tillverkar långa, ihåliga betongtuber på land eller i en torrdocka. Tuberna bogseras sedan ut till rätt plats på vattnet, fylls med vatten så att de sjunker, och sänks ner i en ränna som grävts i botten. När alla tuber ligger på plats kopplas de ihop under vattnet, och till sist pumpas vattnet ut igen inifrån. Öresundstunneln mellan Sverige och Danmark är byggd på det här sättet — den möter Öresundsbron mitt ute på en konstgjord ö, Peberholm.\n\nEn schakttunnel används oftast på grunt djup, till exempel för tunnelbanor nära markytan. Man gräver helt enkelt ett stort öppet schakt, bygger tunnelns väggar och tak på plats, och fyller sedan igen jorden ovanpå. Det är billigare än att borra, men stör trafiken ovanför mycket mer under byggtiden, eftersom hela gatan måste grävas upp.\n\nAlla tunnlar, oavsett byggmetod, måste ha fungerande ventilation. Utan luftväxling skulle avgaser och damm bli farliga för både arbetare och senare trafikanter. Långa vägtunnlar har därför ofta stora fläktar inbyggda i taket, och vissa har separata utrymningstunnlar bredvid huvudtunneln som en extra säkerhet vid brand.\n\nNågra kända tunnlar i världen:\n\n1. Gotthardtunneln i Schweiz är en av världens längsta järnvägstunnlar och går rakt genom Alperna — en bergtunnel, till stor del sprängd för hand innan moderna borrmaskiner fanns. 2. Eurotunneln mellan Storbritannien och Frankrike är cirka 50 kilometer lång, varav en stor del ligger under havsbotten — en borrad tunnel. 3. Öresundstunneln mellan Malmö och Köpenhamn är en sänktunnel, byggd av förtillverkade betongtuber som sänktes ner i Öresund.\n\nKällor: Trafikverket, Nationalencyklopedin.", questions:[
+      ["Vad gör en tunnel, till skillnad från en bro?", "Den tar oss under eller genom ett hinder", "Den tar oss över ett hinder", "Den hindrar trafik helt", "Den byggs alltid av trä"],
+      ["Vilken detalj i texten förklarar VARFÖR taket och väggarna i en bergtunnel måste förstärkas efter varje sprängning?", "Annars kan berget rasa", "Annars läcker vatten in i tunneln", "Annars blir tunneln för smal för trafik", "Annars stannar borrmaskinen"],
+      ["Vad heter den konstgjorda ön där Öresundstunneln möter Öresundsbron, enligt texten?", "Peberholm", "Öresund", "Saltholmen", "Ven"],
+      ["Varför stör en schakttunnel trafiken ovanför mycket mer än en borrad tunnel gör, under byggtiden?", "Eftersom hela gatan måste grävas upp", "Eftersom den byggs under vatten", "Eftersom man måste spränga genom berg", "Eftersom den saknar ventilation"],
+      ["Vilken tunnel-typ nämns som exempel tillsammans med Norra länken och Södra länken i Stockholm?", "Bergtunnel", "Borrad tunnel", "Sänktunnel", "Schakttunnel"],
+      ["Vilken förkortning använder texten för den stora borrmaskin som bygger borrade tunnlar?", "TBM", "GPS", "TNT", "BRO"],
+      ["Vilket påstående beskriver bäst hur texten använder exempel för att stödja sin förklaring av de olika tunnel-typerna?", "Texten ger konkreta, namngivna exempel (som Öresundstunneln och Gotthardtunneln) kopplade till varje byggmetod", "Texten ger bara gissningar utan några konkreta exempel", "Texten nämner inga verkliga tunnlar alls", "Texten säger att alla tunnlar byggs på exakt samma sätt"]
+    ]}
+  );
+  var ENGLISH_READING_PASSAGES = [
+    {title:"Kite Day", text:"Leo had been waiting for Kite Day for three weeks. He had built his kite himself — a red diamond with two long tails made from strips of an old T-shirt. His grandad had helped him cut the sticks, but the knot in the middle was Leo's own work, tied and re-tied at least ten times until it held.\n\nThe morning of Kite Day, the sky over Willow Park was grey and completely still. Not a single leaf moved on the trees.\n\n\"No wind,\" said Priya, who had come with her paper kite shaped like a butterfly. She didn't sound sad about it. \"We could just eat our sandwiches and go home.\"\n\nLeo looked up at the flat grey clouds and felt something twist in his stomach. Three weeks of work, and now this.\n\nBut Grandad, who had walked them to the park, crouched down and pointed at the far end of the field. \"Wind doesn't always show itself down here,\" he said. \"Look at the top of that oak tree by the fence.\"\n\nLeo squinted. High above, the topmost branches were waving gently back and forth.\n\n\"There's your wind,\" said Grandad. \"It's just hiding near the ground. You'll have to run for it.\"\n\nSo when the whistle blew, while other kids stood around waiting, Leo picked up his kite, held the string tight, and ran straight into the middle of the field as fast as he could. For three terrible seconds nothing happened. Then the line pulled — a small tug at first, then a strong, steady pull, like a fish taking the bait.\n\n\"It's flying!\" shouted Priya behind him. \"Leo, it's really flying!\"\n\nHe let out more string, and the red diamond climbed until it was higher than the oak tree, its two T-shirt tails dancing. By the time he finally stopped running, he was breathing hard and laughing at the same time. Half the park was watching.\n\nAt the end of the day, Leo didn't win the prize for highest flyer. That went to a boy with a huge black kite and a dad holding a fishing rod reel. But on the walk home, Grandad tapped the empty spool in Leo's hands.\n\n\"You're the one who figured out you had to run,\" he said. \"That kite didn't fly because of the wind. It flew because you didn't stand still.\"", questions:[
+      ["What is the PROBLEM in this story?", "There is no wind for the kites to fly", "Priya brought a paper kite instead of a real one", "Leo loses the highest-flyer prize", "Leo forgot to bring sandwiches"],
+      ["How does the author show that Leo CARES a lot about his kite?", "By showing him tie the knot ten times and feel his stomach twist", "By telling us Grandad helped him build it", "By saying directly: 'Leo loved his kite more than anything'", "By describing the colour of the kite"],
+      ["Which sentence from the story contains a COMPARISON (something described as being like something else)?", "\"Then the line pulled ... like a fish taking the bait.\"", "\"The sky over Willow Park was grey and completely still.\"", "\"Not a single leaf moved on the trees.\"", "\"Half the park was watching.\""],
+      ["Where does the story take place? Answer with the name of the place (one or two words).", "Willow Park", "Kite Hill", "Oak Park", "the beach"],
+      ["What LESSON does the story teach, according to Grandad's last line?", "Taking action matters more than waiting for perfect conditions", "Winning prizes is the most important thing", "Always listen to your grandparents", "Kites need expensive equipment to fly well"],
+      ["How is Priya DIFFERENT from Leo in how she reacts to the windless morning?", "Priya is calm about no wind; Leo is disappointed", "Priya gets angry and shouts at the organisers", "Priya knows more about kites than Leo", "Priya refuses to come to the park at all"],
+      ["What were the two long tails of Leo's kite made from? Answer in two words.", "an old T-shirt", "old newspaper", "plastic bags", "ribbon"],
+      ["Who helped Leo BUILD the kite?", "His grandad", "Priya", "His teacher", "He built it completely alone"]
+    ]},
+    {title:"Room 14", text:"Maya's trainers squeaked on the polished floor as she walked into Room 14 for the first time. New school, new city, and now — new science club, apparently, because her mum had signed her up without asking.\n\n\"You must be Maya,\" said a boy with glasses too big for his face. \"I'm Oskar. We're building a weather station for the fair next month.\"\n\nMaya nodded and looked around the room. Old posters of the solar system covered one wall, and a row of dusty trophies sat behind a glass cabinet in the corner. Something about the cabinet caught her eye — a strange, low humming sound, like a fridge that needed fixing.\n\n\"What's making that noise?\" she asked.\n\nOskar didn't even look up from his wires. \"Nobody knows. Ms. Bell says it's an old air pump, but it's been unplugged for two years. Weird, right?\"\n\n\"Then why does it hum?\"\n\nHe shrugged. \"Ask Ms. Bell. She just says 'the building is old' and changes the subject.\"\n\nMaya walked closer to the cabinet. Behind the glass, next to the trophies, sat a small wooden box with a brass latch, half-hidden under a folded blue cloth. She hadn't noticed it at first.\n\n\"What's in the box?\" she asked.\n\n\"No idea. It's always been there. Priya thinks it's something Ms. Bell won a prize for, years ago, before she was our teacher.\"\n\n\"Has anyone opened it?\"\n\n\"The cabinet's locked. Ms. Bell has the only key, and she keeps it on a chain around her neck. Never takes it off — not even during fire drills.\"\n\nThat was strange enough to make Maya want to know more, but the bell rang, and everyone hurried to their next lesson.\n\nFor the rest of the week, Maya kept noticing small things. Ms. Bell always glanced at the cabinet before she left the room, as if checking it was still locked. When a younger student asked about the humming sound during assembly, Ms. Bell laughed it off and quickly talked about something else. And once, after school, Maya swore she saw a faint blue light flicker behind the glass — just for a second — before it disappeared.\n\nOn Thursday, Maya finally worked up the courage to ask Ms. Bell directly.\n\n\"What's really inside the wooden box?\"\n\nMs. Bell paused, halfway through packing her bag. For a moment, she looked like she might actually answer. Then she smiled instead.\n\n\"Something that reminds me why I became a teacher,\" she said. \"Maybe I'll show the science club, if you win the fair this year.\"\n\nIt wasn't really an answer, but it wasn't a no, either.\n\nBy Friday, half the science club had a theory. Oskar thought it was an old invention that didn't work properly. Priya was certain it was a trophy from a science competition Ms. Bell had won as a student. One younger boy, Felix, insisted it was a robot that Ms. Bell had built herself and was too embarrassed to show anyone.\n\nMaya didn't know what to believe, but she found herself looking forward to science club more than any other lesson that week — and she still hadn't finished a single wire on the weather station.\n\nAs she left school on Friday, she glanced back at Room 14's window one last time. The lights were off, but for just a moment, she was almost sure she saw that same faint blue glow.", questions:[
+      ["The text says Ms. Bell \"always glanced at the cabinet before she left the room, as if checking it was still locked.\" What can you infer from this?", "She's checking to make sure it's still locked, because she doesn't want anyone to see inside.", "She likes looking at the old trophies.", "She's dusting the cabinet before she leaves.", "She's checking a clock that happens to be near the cabinet."],
+      ["Ms. Bell says the humming noise comes from an air pump that's been unplugged for two years. What can you infer from this explanation?", "The explanation doesn't make sense, so something else is probably causing the sound.", "The air pump must have a very long-lasting battery.", "Ms. Bell is lying to save money on the electricity bill.", "Old buildings naturally hum, unrelated to any machine."],
+      ["Ms. Bell says the box holds \"something that reminds me why I became a teacher.\" What can you infer about her feelings toward it?", "It has strong personal or emotional meaning for her, not just being an old object.", "She doesn't care about it at all.", "She wants to throw it away.", "It was a gift from Oskar."],
+      ["When Ms. Bell \"laughed it off and quickly talked about something else\" after a student asked about the noise, what does this suggest?", "She wants to avoid answering questions about the cabinet.", "She didn't hear the question.", "She thinks the question is silly and not worth answering.", "She was late for a meeting."],
+      ["The text says, \"It wasn't really an answer, but it wasn't a no, either.\" What does this sentence suggest about what might happen later?", "There's a real possibility Ms. Bell might show the science club the box someday.", "Ms. Bell will definitely never show anyone the box.", "The box has already been opened.", "Ms. Bell forgot Maya's question entirely."],
+      ["What can you infer about Maya from the fact that she \"finally worked up the courage\" to ask Ms. Bell directly?", "Asking directly wasn't easy for her — she felt a bit nervous or shy about it.", "She is naturally very confident and never feels nervous.", "A teacher told her she had to ask.", "She didn't actually want to know the answer."],
+      ["What single word describes HOW the blue light appeared — not glowing steadily, but doing what instead?", "It flickered", "It shone brightly", "It stayed dark", "It changed colour"],
+      ["Which ONE piece of evidence gives the STRONGEST proof that Ms. Bell already knows exactly what's in the box, rather than just being generally careful or evasive about the locked cabinet?", "She hints she might show it if they win the fair, implying she knows exactly what's there.", "She has the only key and never takes it off, even during fire drills.", "She changes the subject when asked about the noise.", "She glances at the cabinet before leaving the room, as if checking the lock."],
+      ["What is Maya's science club building for the fair?", "A weather station", "A model of the solar system", "A robot", "A trophy display"],
+      ["What is the name of the boy who is already in the science club?", "Oskar", "Felix", "Priya", "Ms. Bell"],
+      ["According to Ms. Bell, what old machine is supposedly making the humming sound?", "air pump", "an old fridge", "a computer", "a heater"],
+      ["How long has the air pump been unplugged, according to Oskar?", "Two years", "It has never been unplugged", "One week", "Five years"],
+      ["What colour is the cloth covering the wooden box?", "blue", "red", "green", "black"],
+      ["Where does Ms. Bell keep the key to the cabinet?", "On a chain around her neck", "In her desk drawer", "In her handbag", "She gave it to Oskar to look after"],
+      ["What does Oskar think is inside the box?", "An old invention that didn't work properly", "A trophy from a science competition", "A robot Ms. Bell built herself", "Old school photographs"],
+      ["What does Priya think is inside the box?", "A trophy from a science competition Ms. Bell won as a student", "A robot Ms. Bell built and is embarrassed to show", "An old invention that didn't work properly", "A letter from a former student"],
+      ["What does Ms. Bell say when Maya asks what's really inside the box?", "\"Something that reminds me why I became a teacher.\"", "She refuses to say anything at all.", "\"It's just an old, broken machine.\"", "\"You'll never find out.\""],
+      ["In what order does the story present its events?", "Chronological order — events are told in the order they happen.", "Backwards order — the ending is told first.", "Completely random order.", "Several different time periods mixed together."],
+      ["How does the author build the mystery about the box, in terms of the WHOLE story's structure?", "The author leaves the mystery unsolved, giving the reader small clues throughout instead of a clear answer.", "The author reveals what's in the box in the very first paragraph.", "The author tells the story backwards, from the ending to the beginning.", "The author only uses dialogue, with no narration at all."],
+      ["How does the reader first learn that Ms. Bell's explanation for the humming noise doesn't quite make sense?", "Through Oskar's own dialogue, when he says \"Weird, right?\" about the unplugged pump.", "Through a direct comment from the narrator explaining the inconsistency.", "Through a newspaper article mentioned in the story.", "Through a note Maya finds in her locker."],
+      ["What is the function of the FIRST paragraph, for the structure of the whole story?", "It introduces the main character and her situation, setting up the rest of the story.", "It is a flashback to something that happened years earlier.", "It summarises the whole story and reveals the ending.", "It describes what's inside the wooden box in detail."],
+      ["What type of text is this, based on how it's written?", "A fictional narrative (a made-up story).", "A factual report.", "A set of instructions.", "An advertisement."],
+      ["Where in the story is the mystery FIRST introduced to the reader?", "When Maya first notices the strange humming sound coming from the cabinet.", "When Maya walks into Room 14 for the very first time.", "When the science club shares their theories on Friday.", "When Maya leaves school at the very end of the story."],
+      ["What punctuation mark does this text use to show that a character is speaking?", "quotation marks", "dashes", "brackets", "commas"]
+    ]}
+  ];
+  // ---------- from Atharva Coach (school homework + national test topics) ----------
+  // Procent: Läxa 8 and Läxa 9 from school.
+  BANKS.ma_procent = [
+    ["Vad betyder ordet procent?", "Hundradelar – ”av hundra”", "Tiondelar – ”av tio”", "Tusendelar – ”av tusen”", "Hela – ”av ett”"],
+    ["Ett rutnät har 100 rutor. 1 ruta är blå. Hur många procent är blått?", "1 %", "10 %", "100 %", "0,1 %"],
+    ["Hur många procent är 1/2?", "50 %", "25 %", "12 %", "2 %"],
+    ["Hur många procent är 1/4?", "25 %", "40 %", "14 %", "75 %"],
+    ["Hur många procent är 3/4?", "75 %", "34 %", "25 %", "70 %"],
+    ["Hur många procent är 1/10?", "10 %", "1 %", "20 %", "100 %"],
+    ["En cirkel är delad i 4 lika stora delar och 1 del är röd. Hur många procent är rött?", "25 %", "4 %", "1 %", "75 %"],
+    ["En cirkel är delad i 10 lika stora delar och 4 delar är röda. Hur många procent är rött?", "40 %", "4 %", "60 %", "25 %"],
+    ["Ett rutnät har 100 rutor och 75 är gröna. Hur stor del är grön i decimalform?", "0,75", "7,5", "0,075", "75"],
+    ["Ett rutnät har 100 rutor och 75 är gröna. Hur stor del är grön i bråkform?", "75/100", "25/100", "75/10", "100/75"],
+    ["Skriv 0,3 i procentform.", "30 %", "3 %", "0,3 %", "300 %"],
+    ["Skriv 45 % i decimalform.", "0,45", "4,5", "45,0", "0,045"],
+    ["Vilket är störst: 0,4, 45 % eller 2/5?", "45 %", "0,4", "2/5", "Alla är lika stora"],
+    ["Vilket bråk är lika mycket som 20 %?", "1/5", "1/20", "2/100", "1/2"],
+    ["En glasburk med sylt väger 1 kg. När burken är halvfylld med sylt väger den 550 g. Hur mycket väger glasburken?", "100 g", "450 g", "500 g", "50 g"],
+    ["Vendela och Nada skottar varsin lika lång gång. Vendela behöver 9 minuter och Nada 6 minuter. Hur stor del har Vendela kvar när Nada är klar?", "1/3", "2/3", "1/2", "1/6"],
+    ["Riita äter upp 20 % av chokladkartongens 40 bitar. Hur många bitar äter hon?", "8 bitar", "20 bitar", "4 bitar", "10 bitar"],
+    ["Hur mycket är 50 % av 22 korvar?", "11 korvar", "44 korvar", "12 korvar", "2 korvar"],
+    ["Hur mycket är 50 % av 300 snäckor?", "150 snäckor", "600 snäckor", "30 snäckor", "250 snäckor"],
+    ["Hur mycket är 50 % av 1 450 gram?", "725 g", "700 g", "2 900 g", "745 g"],
+    ["Hur mycket är 25 % av 8 äpplen?", "2 äpplen", "4 äpplen", "6 äpplen", "3 äpplen"],
+    ["Hur mycket är 25 % av 12 pennor?", "3 pennor", "4 pennor", "6 pennor", "9 pennor"],
+    ["Hur mycket är 25 % av 28 gem?", "7 gem", "4 gem", "14 gem", "21 gem"],
+    ["Hur mycket är 25 % av 16 blommor?", "4 blommor", "8 blommor", "6 blommor", "12 blommor"],
+    ["Hur mycket är 75 % av 24?", "18", "6", "12", "20"],
+    ["Hur mycket är 75 % av 120?", "90", "30", "60", "100"],
+    ["Hur mycket är 75 % av 604?", "453", "151", "302", "450"],
+    ["Hur mycket är 75 % av 480?", "360", "120", "240", "400"],
+    ["Hur mycket är 10 % av 8 000?", "800", "80", "8", "80 000"],
+    ["Hur mycket är 10 % av 30?", "3", "30", "0,3", "300"],
+    ["Hur mycket är 10 % av 3 000?", "300", "30", "3", "30 000"],
+    ["Hur mycket är 60 % av 90?", "54", "60", "36", "9"],
+    ["Hur mycket är 60 % av 1 000?", "600", "60", "400", "6 000"],
+    ["Hur mycket är 60 % av 510?", "306", "204", "360", "51"],
+    ["Hur mycket är 60 % av 2 100?", "1 260", "840", "1 200", "126"],
+    ["En tröja kostar 200 kr. Priset sänks med 25 %. Vad kostar tröjan nu?", "150 kr", "175 kr", "50 kr", "225 kr"],
+    ["10 · 659 = ?", "6 590", "65 900", "669", "659"],
+    ["100 · 31 = ?", "3 100", "310", "31 000", "131"],
+    ["450 ÷ 10 = ?", "45", "4 500", "4,5", "440"],
+    ["2 300 ÷ 100 = ?", "23", "230", "2,3", "2 200"],
+    ["Beräkna värdet av x − 5 om x = 14.", "9", "19", "70", "10"],
+    ["Beräkna värdet av x − 5 om x = 31.", "26", "36", "25", "155"],
+    ["Beräkna värdet av x − 5 om x = 452.", "447", "457", "442", "450"],
+    ["En vinkel är 40°. Vilken sorts vinkel är det?", "Spetsig", "Trubbig", "Rät", "Rak"],
+    ["En vinkel är 150°. Vilken sorts vinkel är det?", "Trubbig", "Spetsig", "Rät", "Rak"]
+  ];
+  BANKS.ma_np_extra = [
+    ["En vanlig tärning kastas en gång. Hur stor är sannolikheten att få en sexa?", "1/6", "1/2", "6/1", "1/3"],
+    ["En påse har 3 röda och 7 blå kulor. Du tar en kula utan att titta. Hur stor är sannolikheten att den är röd?", "3/10", "3/7", "7/10", "1/3"],
+    ["Du singlar slant. Vilket påstående stämmer?", "Krona och klave är lika sannolika", "Krona kommer oftast", "Klave kommer oftast", "Det går inte att säga något"],
+    ["Lös ekvationen x + 7 = 15.", "x = 8", "x = 22", "x = 9", "x = 105"],
+    ["Lös ekvationen 4x = 28.", "x = 7", "x = 24", "x = 32", "x = 112"],
+    ["Lös ekvationen x ÷ 3 = 5.", "x = 15", "x = 2", "x = 8", "x = 1,5"],
+    ["En rektangel är 6 cm lång och 4 cm bred. Hur stor är arean?", "24 cm²", "20 cm²", "10 cm²", "48 cm²"],
+    ["En rektangel är 6 cm lång och 4 cm bred. Hur lång är omkretsen?", "20 cm", "24 cm", "10 cm", "12 cm"],
+    ["En kvadrat har sidan 5 cm. Hur stor är arean?", "25 cm²", "20 cm²", "10 cm²", "15 cm²"],
+    ["En triangel har basen 8 cm och höjden 5 cm. Hur stor är arean?", "20 cm²", "40 cm²", "13 cm²", "26 cm²"],
+    ["Ett rätblock är 2 cm brett, 3 cm djupt och 4 cm högt. Hur stor är volymen?", "24 cm³", "9 cm³", "12 cm³", "52 cm³"],
+    ["Hur många milliliter är 1 liter?", "1 000 ml", "100 ml", "10 ml", "10 000 ml"],
+    ["Hur många deciliter är 2,5 liter?", "25 dl", "250 dl", "2,5 dl", "0,25 dl"],
+    ["Hur många gram är 3,2 kg?", "3 200 g", "320 g", "32 g", "32 000 g"],
+    ["Hur många meter är 4,5 km?", "4 500 m", "450 m", "45 m", "45 000 m"],
+    ["Hur många minuter är 2,5 timmar?", "150 min", "250 min", "125 min", "130 min"],
+    ["En film börjar 18:45 och är 1 timme och 50 minuter lång. När slutar den?", "20:35", "20:25", "19:35", "20:45"],
+    ["Vad är 3,6 + 2,45?", "6,05", "5,51", "6,5", "6,41"],
+    ["Vilket tal är störst?", "0,7", "0,65", "0,099", "0,605"],
+    ["Vad är 0,5 · 8?", "4", "40", "0,4", "8,5"],
+    ["Talföljden är 3, 7, 11, 15, … Vilket tal kommer sedan?", "19", "18", "20", "22"],
+    ["Figur 1 har 4 stickor. Varje ny figur har 3 stickor fler än den förra. Hur många stickor har figur 5?", "16", "15", "19", "12"],
+    ["Vilket uttryck betyder ”ett tal x ökat med 5, och sedan gånger 2”?", "(x + 5) · 2", "x + 5 · 2", "2x + 5", "x · 5 + 2"],
+    ["Vilket värde har siffran 4 i talet 3 482?", "400", "4", "40", "4 000"],
+    ["Avrunda 2 678 till närmaste hundratal.", "2 700", "2 600", "2 680", "3 000"],
+    ["Ett paket med 6 yoghurtar kostar 54 kr. Vad kostar en yoghurt?", "9 kr", "8 kr", "48 kr", "60 kr"],
+    ["Vad är medelvärdet av 4, 8 och 9?", "7", "21", "8", "6"]
+  ];
+  BANKS.ma_np = [].concat(BANKS.ma_brak, BANKS.ma_geometri, BANKS.ma_negativa, BANKS.ma_skala, BANKS.ma_statistik, BANKS.ma_procent, BANKS.ma_np_extra);
+  BANKS.ma_skala_mer = BANKS.ma_skala.concat(BANKS.ma_np_extra.slice(6, 17));
+
+  var currentReadingPassage = null;
+  function readingQuestions(list){
+    list = list || READING_PASSAGES;
+    currentReadingPassage = list[rnd(0, list.length - 1)];
+    var qs = currentReadingPassage.questions;
+    // Longer texts have more than 7 questions: pick 7 at random, keep them in text order.
+    if (qs.length > 7) {
+      var pick = shuffle(qs.map(function(_, i){ return i; })).slice(0, 7).sort(function(a, b){ return a - b; });
+      qs = pick.map(function(i){ return qs[i]; });
+    }
+    return qs.map(function(item){
+      return {text:item[0], correct:item[1], options:shuffle(item.slice(1)), picked:null};
+    });
+  }
+
+  function fromBank(key){
+    return shuffle(BANKS[key]).slice(0, TOTAL).map(function(item){
+      return { text: item[0], correct: item[1], options: shuffle(item.slice(1)), picked: null };
+    });
+  }
+
+  function additionQuestions(){
+    var list = [], seen = {};
+    while (list.length < TOTAL) {
+      var a, b, kind = rnd(1, 3);
+      if (kind === 1) { a = rnd(10, 99);  b = rnd(10, 99); }
+      else if (kind === 2) { a = rnd(100, 500); b = rnd(10, 500); }
+      else { a = rnd(100, 1000); b = rnd(100, 1000); }
+      if (Math.random() < 0.5) { var t = a; a = b; b = t; }
+      var key = a + '+' + b;
+      if (seen[key]) continue;
+      seen[key] = true;
+      var correct = a + b, used = {}; used[correct] = true;
+      var wrongs = [], offs = shuffle([1, -1, 2, -2, 5, -5, 10, -10, 20, -20, 100, -100]);
+      for (var i = 0; i < offs.length && wrongs.length < 3; i++) {
+        var v = correct + offs[i];
+        if (v > 0 && !used[v]) { used[v] = true; wrongs.push(v); }
+      }
+      list.push({
+        text: fmt(a) + ' + ' + fmt(b) + ' = ?',
+        correct: fmt(correct),
+        options: shuffle([correct].concat(wrongs).map(fmt)),
+        picked: null
+      });
+    }
+    return list;
+  }
+
+  // ---------- more MATTE quizzes ----------
+  function numQ(text, correct, extras){
+    var used = {}; used[correct] = true;
+    var offs = shuffle([1, -1, 2, -2, 5, -5, 10, -10, 20, -20, 100, -100]).map(function(o){ return correct + o; });
+    var pool = shuffle(extras || []).concat(offs), wrongs = [];
+    for (var i = 0; i < pool.length && wrongs.length < 3; i++) {
+      var v = pool[i];
+      if (v > 0 && !used[v]) { used[v] = true; wrongs.push(v); }
+    }
+    return { text: text, correct: fmt(correct), options: shuffle([correct].concat(wrongs).map(fmt)), picked: null };
+  }
+  function genAdd(){
+    var k = rnd(1, 3), a, b;
+    if (k === 1) { a = rnd(10, 99); b = rnd(10, 99); }
+    else if (k === 2) { a = rnd(100, 500); b = rnd(10, 500); }
+    else { a = rnd(100, 1000); b = rnd(100, 1000); }
+    return numQ(fmt(a) + ' + ' + fmt(b) + ' = ?', a + b);
+  }
+  function genSub(){
+    var k = rnd(1, 3), a, b;
+    if (k === 1) { a = rnd(20, 99); b = rnd(10, a - 1); }
+    else if (k === 2) { a = rnd(100, 1000); b = rnd(10, a - 1); }
+    else { a = rnd(500, 1000); b = rnd(100, a - 1); }
+    return numQ(fmt(a) + ' − ' + fmt(b) + ' = ?', a - b);
+  }
+  function genMul(){
+    var k = rnd(1, 3), a, b;
+    if (k === 1) { a = rnd(2, 12); b = rnd(2, 12); }
+    else if (k === 2) { a = rnd(11, 25); b = rnd(2, 9); }
+    else { a = rnd(20, 99); b = rnd(2, 9); }
+    return numQ(a + ' × ' + b + ' = ?', a * b, [a * b + a, a * b - a, a * b + b, a * b - b]);
+  }
+  function genDiv(){
+    var k = rnd(1, 2), b, q;
+    if (k === 1) { b = rnd(2, 12); q = rnd(2, 20); }
+    else { b = rnd(2, 9); q = rnd(10, 99); }
+    return numQ(fmt(b * q) + ' ÷ ' + b + ' = ?', q, [q + 1, q - 1, q + 2, q - 2]);
+  }
+  function quizFrom(gens){
+    var list = [], seen = {}, guard = 0;
+    while (list.length < TOTAL && guard++ < 500) {
+      var q = gens[rnd(0, gens.length - 1)]();
+      if (seen[q.text]) continue;
+      seen[q.text] = true;
+      list.push(q);
+    }
+    return list;
+  }
+
+  // ---------- subjects shown in the menu ----------
+  var MATTE_QUIZZES = [
+    { id:'matte-add', tag:'MATTE', icon:'➕', title:'Addition',  color:'#6c4cf1', desc:'Numbers from 10 to 1,000', make: additionQuestions },
+    { id:'matte-sub', tag:'MATTE', icon:'➖', title:'Subtraction', color:'#6c4cf1', desc:'Numbers from 10 to 1,000', make: function(){ return quizFrom([genSub]); } },
+    { id:'matte-mul', tag:'MATTE', icon:'✖️', title:'Multiplication', color:'#6c4cf1', desc:'Times tables and bigger numbers', make: function(){ return quizFrom([genMul]); } },
+    { id:'matte-div', tag:'MATTE', icon:'➗', title:'Division', color:'#6c4cf1', desc:'Divide exactly, no remainders', make: function(){ return quizFrom([genDiv]); } },
+    { id:'matte-mix', tag:'MATTE', icon:'🧮', title:'Mix – all four', color:'#6c4cf1', desc:'Add, subtract, multiply and divide', make: function(){ return quizFrom([genAdd, genSub, genMul, genDiv]); } },
+    { id:'matte-procent', tag:'MATTE', icon:'💯', title:'Procent – Läxa 8 & 9', color:'#6c4cf1', desc:'Percent, fractions and decimals, like the school homework', make:function(){ return fromBank('ma_procent'); } },
+    { id:'matte-brak', tag:'MATTE', icon:'🍕', title:'Bråk – fractions', color:'#6c4cf1', desc:'Täljare, nämnare and parts of a whole', make:function(){ return fromBank('ma_brak'); } },
+    { id:'matte-geometri', tag:'MATTE', icon:'📐', title:'Vinklar & symmetri', color:'#6c4cf1', desc:'Angles, triangles and lines of symmetry', make:function(){ return fromBank('ma_geometri'); } },
+    { id:'matte-negativa', tag:'MATTE', icon:'🌡️', title:'Negativa tal & temperatur', color:'#6c4cf1', desc:'Number line, bank accounts and degrees below zero', make:function(){ return fromBank('ma_negativa'); } },
+    { id:'matte-skala', tag:'MATTE', icon:'📏', title:'Skala, area & enheter', color:'#6c4cf1', desc:'Scale drawings, area, volume, units and time', make:function(){ return fromBank('ma_skala_mer'); } },
+    { id:'matte-statistik', tag:'MATTE', icon:'📊', title:'Statistik & diagram', color:'#6c4cf1', desc:'Mean, median, mode, tables and coordinates', make:function(){ return fromBank('ma_statistik'); } },
+    { id:'matte-np', tag:'MATTE', icon:'🏅', title:'Nationella provet – blandat', color:'#6c4cf1', desc:'Mixed åk 6 questions in the style of the national test', make:function(){ return fromBank('ma_np'); } }
+  ];
+
+  var NO_QUIZZES = [
+    { id:'no-biologi', tag:'NO · BIOLOGI', icon:'🌱', title:'Biologi', color:'#1c9c5b', desc:'Kroppen, växter, ekosystem och biologisk mångfald', make:function(){ return fromBank('biologi'); } },
+    { id:'no-fysik', tag:'NO · FYSIK', icon:'⚡', title:'Fysik', color:'#1c9c5b', desc:'Krafter, energi, ljud, ljus och elektricitet', make:function(){ return fromBank('fysik'); } },
+    { id:'no-kemi', tag:'NO · KEMI', icon:'🧪', title:'Kemi', color:'#1c9c5b', desc:'Ämnen, blandningar, vatten och kemiska reaktioner', make:function(){ return fromBank('kemi'); } },
+    { id:'no-ak6', tag:'NO · ÅK 6', icon:'📚', title:'NO – blandat för åk 6', color:'#1c9c5b', desc:'Blandade frågor i biologi, fysik och kemi', make:function(){ return fromBank('noak6'); } }
+  ];
+
+  var SO_QUIZZES = [
+    { id:'so-geografi', tag:'SO · GEOGRAFI', icon:'🗺️', title:'Geografi', color:'#d9822b', desc:'Kartor, klimat, naturresurser', make:function(){ return fromBank('geografi'); } },
+    { id:'so-religion', tag:'SO · RELIGION', icon:'🕊️', title:'Religion', color:'#d9822b', desc:'Världsreligioner, heliga platser och högtider', make:function(){ return fromBank('religion'); } },
+    { id:'so-hallbar', tag:'SO · HÅLLBARHET', icon:'♻️', title:'Hållbar utveckling', color:'#d9822b', desc:'Miljö, samhälle och ekonomi', make:function(){ return fromBank('hallbar'); } },
+    { id:'so-ak6', tag:'SO · ÅK 6', icon:'📚', title:'SO – blandat för åk 6', color:'#d9822b', desc:'Historia, samhälle, demokrati och rättigheter', make:function(){ return fromBank('ak6'); } }
+  ];
+
+  var SVENSKA_QUIZZES = [
+    { id:'svenska-las', tag:'SVENSKA · LÄSFÖRSTÅELSE', icon:'📚', title:'Läsförståelse', color:'#2b7bd9', desc:'15 olika texter – en slumpas varje gång, med 7 frågor', reading:true, make:function(){ return readingQuestions(READING_PASSAGES); } },
+    { id:'svenska-sprak', tag:'SVENSKA · SPRÅK', icon:'✍️', title:'Språk, stavning och grammatik', color:'#2b7bd9', desc:'Ordklasser, stavning, meningsbyggnad och ord', make:function(){ return fromBank('svenska'); } }
+  ];
+
+  var ENGLISH_QUIZZES = [
+    { id:'engelska-ord', tag:'ENGELSKA · ORDFÖRRÅD', icon:'🔤', title:'Vocabulary – ord och betydelser', color:'#c93c6e', desc:'Engelska ord, motsatser och betydelser', make:function(){ return fromBank('engelska_ord'); } },
+    { id:'engelska-grammatik', tag:'ENGELSKA · GRAMMAR', icon:'✍️', title:'Grammar – grammatik', color:'#c93c6e', desc:'Verb, tempus, pronomen och meningsbyggnad', make:function(){ return fromBank('engelska_grammar'); } },
+    { id:'engelska-mix', tag:'ENGELSKA · ÅK 6', icon:'📚', title:'English – mixed for Year 6', color:'#c93c6e', desc:'Blandade frågor i ord och grammatik', make:function(){ return fromBank('engelska_mixed'); } },
+    { id:'engelska-las', tag:'ENGELSKA · READING', icon:'📖', title:'Reading – stories', color:'#c93c6e', desc:'Read a story and answer 7 questions', reading:true, make:function(){ return readingQuestions(ENGLISH_READING_PASSAGES); } },
+    { id:'engelska-skriva', tag:'ENGELSKA · WRITING', icon:'📝', title:'Grammar, words & writing', color:'#c93c6e', desc:'Words in context, opinions, letters and grammar', make:function(){ return fromBank('engelska_quest'); } }
+  ];
+
+  var TEKNIK_QUIZZES = [
+    { id:'teknik-maskiner', tag:'TEKNIK · MASKINER', icon:'⚙️', title:'Maskiner och konstruktion', color:'#5f6b7a', desc:'Enkla maskiner, verktyg och prototyper', make:function(){ return fromBank('teknik_maskiner'); } },
+    { id:'teknik-el', tag:'TEKNIK · ELEKTRICITET', icon:'🔌', title:'Elektricitet och tekniska system', color:'#5f6b7a', desc:'Kretsar, energi, sensorer och säkerhet', make:function(){ return fromBank('teknik_el'); } },
+    { id:'teknik-design', tag:'TEKNIK · DESIGN', icon:'💡', title:'Design, programmering och hållbarhet', color:'#5f6b7a', desc:'Algoritmer, material och att förbättra lösningar', make:function(){ return fromBank('teknik_design'); } }
+  ];
+
+  var SUBJECTS = [
+    { id:'matte', tag:'MATTE', icon:'🔢', title:'Math quizzes', color:'#6c4cf1', desc:'The four operations, procent, bråk, geometry, statistics and national test practice', children: MATTE_QUIZZES },
+    { id:'no',       tag:'NO',       icon:'🔬', title:'Naturorienterande ämnen', color:'#1c9c5b', desc:'Biologi, fysik, kemi och NO för åk 6', children: NO_QUIZZES },
+    { id:'so',       tag:'SO',       icon:'🌍', title:'Samhällsorienterande ämnen', color:'#d9822b', desc:'Geografi, religion, hållbar utveckling och SO för åk 6', children: SO_QUIZZES },
+    { id:'svenska',  tag:'SVENSKA',  icon:'📖', title:'Svenska',   color:'#2b7bd9', desc:'Läsförståelse, ordklasser, stavning och språk', children: SVENSKA_QUIZZES },
+    { id:'engelska', tag:'ENGELSKA', icon:'🇬🇧', title:'Engelska', color:'#c93c6e', desc:'Ord, grammatik, läsförståelse och skrivande', children: ENGLISH_QUIZZES },
+    { id:'teknik',   tag:'TEKNIK',   icon:'⚙️', title:'Teknik',   color:'#5f6b7a', desc:'Maskiner, elektricitet, design och programmering', children: TEKNIK_QUIZZES }
+  ];
+
+  // ---------- accounts (many can be saved on this device) ----------
+  var GENERIC_AVATAR = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%2230%22 fill=%22%23e8e5ff%22/%3E%3Ccircle cx=%2230%22 cy=%2222%22 r=%2210%22 fill=%22%238477c8%22/%3E%3Cpath d=%22M10 54 Q10 34 30 34 Q50 34 50 54%22 fill=%22%238477c8%22/%3E%3C/svg%3E';
+  var accounts = [], profile = null;
+  function saveAccounts(){
+    var ok = true;
+    try { localStorage.setItem('atharvaQuizAccounts', JSON.stringify(accounts)); }
+    catch(e) { ok = false; }
+    syncOnline();
+    return ok;
+  }
+
+  // ---------- shared online list (works on the published Claude page; plain file just skips it) ----------
+  // Shares ONLY: username, level, XP, number of quizzes and best score. No photo, no gender.
+  var onlineDb = null, onlineUid = null, onlineReadOnly = false, onlinePlayers = [], syncing = false, syncAgain = false;
+  function setOnlineNote(){
+    var n = $('onlineNote');
+    if (!onlineDb) n.textContent = 'The shared player list works on the Claude page when you are signed in to Claude. On this copy only this device is shown.';
+    else if (onlineReadOnly) n.textContent = 'You can see the other players, but you cannot add yourself yet. Ask the owner to give you Contributor access.';
+    else n.textContent = 'Everyone who opens this page can see these usernames, levels and XP. Please do not use your full name.';
+  }
+  function syncOnline(){
+    if (!onlineDb || !onlineUid || onlineReadOnly) return;
+    if (syncing) { syncAgain = true; return; }
+    syncing = true;
+    var all = getAllHistory();
+    var summary = accounts.map(function(acc){
+      var mine = all.filter(function(x){ return x.accountId === acc.id; });
+      var best = 0; mine.forEach(function(x){ best = Math.max(best, Number(x.score) || 0); });
+      return { id: acc.id, name: acc.name, xp: xpTotal(mine), quizzes: mine.length, best: best };
+    });
+    onlineDb.doc('players/' + onlineUid).set({ accounts: summary, updated: Date.now() })
+      .catch(function(e){ if (e && e.code === 'invalid_argument') { onlineReadOnly = true; setOnlineNote(); } })
+      .then(function(){ syncing = false; if (syncAgain) { syncAgain = false; syncOnline(); } });
+  }
+  function onlineRows(){
+    var rows = [];
+    onlinePlayers.forEach(function(d){
+      (d.accounts || []).forEach(function(a){
+        rows.push({ name: a.name, xp: Number(a.xp) || 0, quizzes: Number(a.quizzes) || 0, best: Number(a.best) || 0, mine: d.uid === onlineUid });
+      });
+    });
+    return rows.sort(function(a, b){ return b.xp - a.xp; });
+  }
+  function onlineTableHTML(){
+    var rows = onlineRows();
+    var h = '<h3>🌍 All players</h3>';
+    if (!onlineDb) return h + '<p class="small">Sign in to Claude and open the shared page to see other players.</p>';
+    if (!rows.length) return h + '<p>No players yet.</p>';
+    h += '<table class="data-table"><thead><tr><th>#</th><th>Player</th><th>Level</th><th>XP</th><th>Quizzes</th></tr></thead><tbody>';
+    rows.slice(0, 30).forEach(function(r, i){
+      h += '<tr><td>' + (i + 1) + '</td><td>' + escapeHTML(r.name) + (r.mine ? ' (you)' : '') + '</td><td>' + (Math.floor(r.xp / 100) + 1) + '</td><td>' + r.xp + '</td><td>' + r.quizzes + '</td></tr>';
+    });
+    return h + '</tbody></table>';
+  }
+  function renderOnlineList(){
+    var box = $('onlineList');
+    if (!box) return;
+    setOnlineNote();
+    var rows = onlineRows();
+    box.innerHTML = '';
+    rows.slice(0, 30).forEach(function(r){
+      var row = document.createElement('div');
+      row.className = 'acct' + (r.mine ? ' now' : '');
+      var img = document.createElement('img'); img.alt = ''; img.src = GENERIC_AVATAR;
+      var info = document.createElement('div'); info.className = 'grow';
+      info.innerHTML = '<strong>' + escapeHTML(r.name) + (r.mine ? ' (you)' : '') + '</strong><div class="small">⭐ ' + r.xp + ' XP · Level ' + (Math.floor(r.xp / 100) + 1) + ' · ' + r.quizzes + ' quizzes</div>';
+      row.appendChild(img); row.appendChild(info);
+      box.appendChild(row);
+    });
+  }
+  (function initOnline(){
+    try {
+      if (!window.claude || !window.claude.use) { setOnlineNote(); return; }
+      Promise.all([window.claude.use('db'), window.claude.use('user')]).then(function(r){
+        var d = r[0], u = r[1];
+        if (!d || !u) { setOnlineNote(); return; }
+        return u.id().then(function(id){
+          if (!id) { setOnlineNote(); return; }
+          onlineDb = d; onlineUid = id;
+          d.collection('players').onSnapshot(function(snap){
+            onlinePlayers = snap.docs.map(function(doc){ var x = doc.data() || {}; x.uid = doc.id; return x; });
+            renderOnlineList();
+            if (!$('dashboardPanel').classList.contains('hidden') && $('panelTitle').textContent.indexOf('Leaderboard') > -1) showDashboard('leaderboardPanel');
+          }, function(){ setOnlineNote(); });
+          syncOnline();
+          setOnlineNote();
+        });
+      }).catch(function(){ setOnlineNote(); });
+    } catch(e) { setOnlineNote(); }
+  })();
+  (function loadAccounts(){
+    try {
+      var list = JSON.parse(localStorage.getItem('atharvaQuizAccounts') || 'null');
+      if (Array.isArray(list)) {
+        accounts = list.filter(function(x){ return x && x.id && x.name; });
+      } else {
+        // First time with accounts: keep the single profile that was saved before.
+        var old = JSON.parse(localStorage.getItem('atharvaQuizProfile') || 'null');
+        if (old && old.name) {
+          old.id = 'acc-' + Date.now();
+          accounts = [old];
+          var hist = JSON.parse(localStorage.getItem('atharvaQuizHistory') || '[]');
+          hist.forEach(function(x){ if (!x.accountId) x.accountId = old.id; });
+          localStorage.setItem('atharvaQuizHistory', JSON.stringify(hist));
+          saveAccounts();
+        }
+      }
+    } catch(e) { accounts = []; }
+  })();
+
+  function playerName(){ return nameInput.value.trim(); }
+  $('welcomeGender').addEventListener('change', function(){
+    $('selfGenderWrap').classList.toggle('hidden', $('welcomeGender').value !== 'Self-describe');
+  });
+
+  function enterApp(acc, goProfile){
+    profile = acc;
+    try { localStorage.setItem('atharvaQuizCurrent', acc.id); localStorage.setItem('atharvaQuizPlayer', acc.name); } catch(e) {}
+    nameInput.value = acc.name;
+    group = null; renderMenu();
+    $('welcome').classList.add('hidden');
+    $('dashboardPanel').classList.add('hidden');
+    $('quiz').classList.add('hidden');
+    $('menu').classList.remove('hidden');
+    $('appContent').classList.remove('hidden');
+    $('headerPlayer').classList.remove('hidden');
+    updateGreeting();
+    if (goProfile) showDashboard('profilePanel');
+    window.scrollTo(0, 0);
+  }
+
+  function renderAccounts(){
+    var box = $('accountsList');
+    renderOnlineList();
+    box.innerHTML = '';
+    if (!accounts.length) {
+      box.innerHTML = '<p>No accounts saved on this device yet. Create one above!</p>';
+      return;
+    }
+    var all = getAllHistory();
+    accounts.forEach(function(acc){
+      var xp = xpTotal(all.filter(function(x){ return x.accountId === acc.id; }));
+      var isNow = profile && profile.id === acc.id;
+      var row = document.createElement('div');
+      row.className = 'acct' + (isNow ? ' now' : '');
+      var img = document.createElement('img');
+      img.alt = ''; img.src = acc.avatar || GENERIC_AVATAR;
+      var info = document.createElement('div');
+      info.className = 'grow';
+      info.innerHTML = '<strong>' + escapeHTML(acc.name) + '</strong><div class="small">⭐ ' + xp + ' XP · Level ' +
+                       (Math.floor(xp / 100) + 1) + (isNow ? ' · signed in' : '') + '</div>';
+      var open = document.createElement('button');
+      open.type = 'button'; open.className = 'primary'; open.textContent = 'Open';
+      open.style.padding = '8px 16px';
+      open.addEventListener('click', function(){ enterApp(acc, true); });
+      row.appendChild(img); row.appendChild(info); row.appendChild(open);
+      box.appendChild(row);
+    });
+  }
+  $('haveAccountBtn').addEventListener('click', function(){
+    renderAccounts();
+    $('accountsBox').classList.remove('hidden');
+    $('accountsBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  $('switchAccountBtn').addEventListener('click', function(){
+    $('appContent').classList.add('hidden');
+    $('headerPlayer').classList.add('hidden');
+    $('welcome').classList.remove('hidden');
+    renderAccounts();
+    $('accountsBox').classList.remove('hidden');
+    window.scrollTo(0, 0);
+  });
+
+  // Making a new account ADDS it; the accounts saved before stay as they are.
+  function continueToQuizzes(e){
+    if (e) e.preventDefault();
+    if (!$('welcome') || $('welcome').classList.contains('hidden')) return;
+    var name = $('welcomeName').value.trim();
+    if (!name) { $('welcomeName').focus(); return; }
+    var acc = { id:'acc-' + Date.now() + '-' + rnd(100, 999), name:name,
+                gender:$('welcomeGender').value, selfGender:$('selfGender').value.trim() };
+    accounts.push(acc);
+    if (!saveAccounts()) alert('Could not save the account on this device.');
+    $('welcomeName').value = ''; $('welcomeGender').value = ''; $('selfGender').value = '';
+    $('selfGenderWrap').classList.add('hidden');
+    $('accountsBox').classList.add('hidden');
+    enterApp(acc, false);
+  }
+  // Handle both the form submit and the button click so Continue works reliably.
+  $('profileForm').addEventListener('submit', continueToQuizzes);
+  $('continueBtn').addEventListener('click', continueToQuizzes);
+  var group = null; // the subject whose quizzes are shown in the menu (e.g. MATTE), or null for the main menu
+  function updateGreeting(){
+    var n = playerName();
+    if (group) {
+      $('greeting').textContent = group.icon + ' ' + group.title;
+      $('menuSub').textContent = 'Pick a quiz. 10 questions, no timer – take your time!';
+    } else {
+      $('greeting').textContent = n ? 'Hi ' + n + '! Choose a subject' : 'Choose a subject';
+      $('menuSub').textContent = 'Pick a subject to start. 10 questions, no timer – take your time!';
+    }
+    $('subjectsBtn').classList.toggle('hidden', !group);
+  }
+  nameInput.addEventListener('input', function(){
+    try {
+      localStorage.setItem('atharvaQuizPlayer', nameInput.value);
+      if (profile && nameInput.value.trim()) { profile.name = nameInput.value.trim(); saveAccounts(); }
+    } catch(e){}
+    updateGreeting();
+  });
+  updateGreeting();
+
+  // ---------- player dashboard: local browser data ----------
+  function getAllHistory(){
+    try { var h = JSON.parse(localStorage.getItem('atharvaQuizHistory') || '[]'); return Array.isArray(h) ? h : []; }
+    catch(e) { return []; }
+  }
+  function getHistory(){
+    var id = profile && profile.id;
+    return getAllHistory().filter(function(x){ return x.accountId === id; });
+  }
+  function xpTotal(h){ return h.reduce(function(sum, item){ return sum + (Number(item.score)||0)*10 + 10; }, 0); }
+  function showDashboard(panel){
+    $('menu').classList.add('hidden'); $('quiz').classList.add('hidden'); $('dashboardPanel').classList.remove('hidden');
+    var h = getHistory(), xp = xpTotal(h), level = Math.floor(xp/100)+1, next = 100-(xp%100);
+    var title = 'My dashboard', sub = 'Your learning information is saved in this browser on this device.', html = '';
+    if(panel === 'xpPanel'){
+      title = '⭐ XP & Levels'; sub = 'Earn 10 XP for each correct answer and 10 bonus XP for finishing a quiz.';
+      html = '<div class="stat-grid"><div class="stat">⭐ Total XP<strong>'+xp+'</strong></div><div class="stat">🏅 Level<strong>'+level+'</strong></div><div class="stat">🎯 XP to next level<strong>'+next+'</strong></div></div><div class="bar"><span style="width:'+(xp%100)+'%"></span></div><p>Level '+level+' · '+(xp%100)+' / 100 XP toward the next level</p>';
+    } else if(panel === 'profilePanel'){
+      title = '👤 My Profile'; sub = 'Your profile is stored on this device.';
+      var g = profile ? (profile.gender === 'Self-describe' ? (profile.selfGender || 'Self-described') : (profile.gender || 'Prefer not to say')) : 'Prefer not to say';
+      html = '<div class="profile-avatar-wrap"><img class="profile-avatar" alt="Profile picture" src="'+escapeHTML(profile&&profile.avatar || 'data:image/jpeg;base64,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')+'"><div><strong>'+escapeHTML(playerName() || 'Atharva')+'</strong><p class="small">Your leaderboard profile picture</p></div></div><div class="stat-grid"><div class="stat">👤 Username<strong>'+escapeHTML(playerName() || 'Player')+'</strong></div><div class="stat">Gender<strong>'+escapeHTML(g)+'</strong></div><div class="stat">⭐ Total XP<strong>'+xp+'</strong></div></div><h3>Edit profile</h3><form id="editProfileForm"><label for="editAvatar">Upload profile picture</label><input id="editAvatar" type="file" accept="image/*" style="width:100%;padding:10px;margin:6px 0 12px"><p class="small">Image stays in this browser. Other people on other devices cannot see it unless the website gets an online server.</p><label for="editName">Username</label><input id="editName" maxlength="30" required value="'+escapeHTML(playerName())+'" style="width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit"><label for="editGender" style="display:block;margin-top:10px">Gender (optional)</label><select id="editGender" style="width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit"><option value="">Prefer not to say</option><option value="Girl">Girl</option><option value="Boy">Boy</option><option value="Non-binary">Non-binary</option><option value="Self-describe">Self-describe</option></select><div id="editSelfWrap" class="'+((profile&&profile.gender==='Self-describe')?'':'hidden')+'"><label for="editSelf" style="display:block;margin-top:10px">Your description (optional)</label><input id="editSelf" maxlength="30" value="'+escapeHTML(profile&&profile.selfGender||'')+'" style="width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit"></div><button class="primary" type="submit" style="margin-top:12px">Save profile</button></form><hr style="border:0;border-top:1px solid var(--line);margin:22px 0 16px"><button class="danger" id="deleteProfileBtn" type="button">🗑 Delete profile</button><div id="deleteConfirm" class="hidden" style="margin-top:12px"><p><strong>Delete this profile?</strong> Its quiz scores and XP will be erased. This cannot be undone.</p><button class="danger" id="deleteYes" type="button">Yes, delete it</button> <button class="ghost" id="deleteNo" type="button">Cancel</button></div>';
+    } else if(panel === 'progressPanel'){
+      title = '📊 My Progress'; sub = 'A summary of the quizzes you have completed.';
+      var correct = h.reduce(function(sum,item){return sum+(Number(item.score)||0);},0), total = h.reduce(function(sum,item){return sum+(Number(item.total)||10);},0), pct = total ? Math.round(correct/total*100) : 0;
+      var subjects = {}; h.forEach(function(item){ var k=item.subject||'Other'; if(!subjects[k]) subjects[k]={n:0,score:0,total:0}; subjects[k].n++; subjects[k].score+=Number(item.score)||0; subjects[k].total+=Number(item.total)||10; });
+      html = '<div class="stat-grid"><div class="stat">📝 Quizzes completed<strong>'+h.length+'</strong></div><div class="stat">✅ Correct answers<strong>'+correct+' / '+total+'</strong></div><div class="stat">📈 Overall accuracy<strong>'+pct+'%</strong></div></div><h3>By subject</h3>';
+      var keys=Object.keys(subjects); if(!keys.length) html += '<p>No quiz results yet. Complete a quiz to see your progress here!</p>'; else { html += '<table class="data-table"><thead><tr><th>Subject</th><th>Quizzes</th><th>Accuracy</th></tr></thead><tbody>'; keys.forEach(function(k){var a=subjects[k], pc=a.total?Math.round(a.score/a.total*100):0; html+='<tr><td>'+escapeHTML(k)+'</td><td>'+a.n+'</td><td>'+pc+'%</td></tr>';}); html+='</tbody></table>'; }
+      html += '<h3>Recent quizzes</h3>';
+      if(h.length){html+='<table class="data-table"><thead><tr><th>Quiz</th><th>Score</th><th>Date</th></tr></thead><tbody>';h.slice().reverse().slice(0,10).forEach(function(a){html+='<tr><td>'+escapeHTML(a.quiz||'Quiz')+'</td><td>'+Number(a.score||0)+' / '+Number(a.total||10)+'</td><td>'+escapeHTML((a.date||'').slice(0,10))+'</td></tr>';});html+='</tbody></table>'; } else html+='<p>Finish your first quiz to start tracking progress.</p>';
+    } else {
+      title = '🏆 Leaderboard'; sub = 'Best results from all accounts on this device. This is a local leaderboard, not an online ranking.';
+      var best = getAllHistory().slice().sort(function(a,b){return (Number(b.score)||0)-(Number(a.score)||0);}).slice(0,10);
+      var myAvatar = profile && profile.avatar ? profile.avatar : 'data:image/jpeg;base64,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';
+      html = '<div class="profile-avatar-wrap"><img class="profile-avatar" alt="Atharva profile picture" src="'+escapeHTML(myAvatar)+'"><div><strong>'+escapeHTML(playerName()||'Atharva')+'</strong><p class="small">Your player profile · '+xpTotal(h)+' XP · Level '+(Math.floor(xpTotal(h)/100)+1)+'</p></div></div><h3>Best quiz scores</h3>';
+      if(!best.length) html+='<p>No quiz scores yet. You are on the leaderboard! Complete a quiz to add your first score.</p>'; else { html+='<table class="data-table"><thead><tr><th>#</th><th>Picture</th><th>Player</th><th>Quiz</th><th>Score</th></tr></thead><tbody>'; best.forEach(function(a,i){var isMe=a.accountId===(profile&&profile.id); var accA=accounts.filter(function(x){return x.id===a.accountId;})[0]; var av=isMe?myAvatar:(accA&&accA.avatar)||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%2230%22 fill=%22%23e8e5ff%22/%3E%3Ccircle cx=%2230%22 cy=%2222%22 r=%2210%22 fill=%22%238477c8%22/%3E%3Cpath d=%22M10 54 Q10 34 30 34 Q50 34 50 54%22 fill=%22%238477c8%22/%3E%3C/svg%3E'; html+='<tr><td>'+(i+1)+'</td><td><img class="leader-avatar" alt="" src="'+escapeHTML(av)+'"></td><td>'+escapeHTML((accA&&accA.name)||a.name||'Player')+(isMe?' (You)':'')+'</td><td>'+escapeHTML(a.quiz||'Quiz')+'</td><td>'+Number(a.score||0)+' / '+Number(a.total||10)+'</td></tr>';}); html+='</tbody></table>'; }
+      html += onlineTableHTML();
+    }
+    $('panelTitle').textContent=title; $('panelSub').textContent=sub; $('panelContent').innerHTML=html;
+    if(panel==='profilePanel'){
+      $('deleteProfileBtn').addEventListener('click',function(){$('deleteProfileBtn').classList.add('hidden');$('deleteConfirm').classList.remove('hidden');});
+      $('deleteNo').addEventListener('click',function(){$('deleteConfirm').classList.add('hidden');$('deleteProfileBtn').classList.remove('hidden');});
+      $('deleteYes').addEventListener('click',deleteProfile);
+      $('editGender').value=profile&&profile.gender||'';
+      $('editGender').addEventListener('change',function(){$('editSelfWrap').classList.toggle('hidden',this.value!=='Self-describe');});
+      $('editProfileForm').addEventListener('submit',function(e){e.preventDefault();var nm=$('editName').value.trim();if(!nm)return;profile=profile||{};profile.name=nm;profile.gender=$('editGender').value;profile.selfGender=$('editSelf').value.trim();var file=$('editAvatar').files&&$('editAvatar').files[0];function saveProfile(){nameInput.value=nm;if(!saveAccounts()){alert('Could not save profile. Try a smaller image.');}try{localStorage.setItem('atharvaQuizPlayer',nm);}catch(err){}updateGreeting();showDashboard('profilePanel');}if(file){if(!file.type.match(/^image\//)){alert('Please choose an image file.');return;}if(file.size>1200000){alert('Please choose an image smaller than 1.2 MB.');return;}var reader=new FileReader();reader.onload=function(){profile.avatar=reader.result;saveProfile();};reader.onerror=function(){alert('Could not read that image.');};reader.readAsDataURL(file);}else saveProfile();});
+    }
+    window.scrollTo(0,0);
+  }
+  function deleteProfile(){
+    if (!profile) return;
+    var id = profile.id;
+    accounts = accounts.filter(function(a){ return a.id !== id; });
+    try {
+      var keep = getAllHistory().filter(function(x){ return x.accountId !== id; });
+      localStorage.setItem('atharvaQuizHistory', JSON.stringify(keep));
+      localStorage.removeItem('atharvaQuizPlayer');
+      if (localStorage.getItem('atharvaQuizCurrent') === id) localStorage.removeItem('atharvaQuizCurrent');
+    } catch(e) {}
+    saveAccounts();            // also updates the shared player list
+    profile = null; nameInput.value = '';
+    $('appContent').classList.add('hidden'); $('headerPlayer').classList.add('hidden');
+    $('dashboardPanel').classList.add('hidden'); $('quiz').classList.add('hidden');
+    $('welcome').classList.remove('hidden');
+    renderAccounts();
+    $('accountsBox').classList.remove('hidden');
+    window.scrollTo(0, 0);
+  }
+  function escapeHTML(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  document.querySelectorAll('[data-panel]').forEach(function(btn){btn.addEventListener('click',function(){showDashboard(btn.getAttribute('data-panel'));});});
+  $('dashboardBack').addEventListener('click',function(){$('dashboardPanel').classList.add('hidden');$('quiz').classList.add('hidden');$('menu').classList.remove('hidden');window.scrollTo(0,0);});
+
+  // ---------- menu ----------
+  function renderMenu(){
+    var grid = $('menuGrid');
+    grid.innerHTML = '';
+    (group ? group.children : SUBJECTS).forEach(function(s){
+      var b = document.createElement('button');
+      b.className = 'menu-item';
+      b.style.setProperty('--c', s.color);
+      b.innerHTML = '<span class="tag">' + s.tag + '</span><strong>' + s.icon + ' ' + s.title +
+                    '</strong><span class="d">' + s.desc + (s.children ? '' : (s.reading ? '' : ' · 10 questions')) + '</span>';
+      b.addEventListener('click', function(){
+        if (s.children) { group = s; renderMenu(); updateGreeting(); window.scrollTo(0, 0); }
+        else startQuiz(s);
+      });
+      grid.appendChild(b);
+    });
+  }
+  $('subjectsBtn').addEventListener('click', function(){
+    group = null; renderMenu(); updateGreeting(); window.scrollTo(0, 0);
+  });
+  renderMenu();
+  updateGreeting();
+
+  // ---------- quiz ----------
+  function answeredCount(){
+    return questions.filter(function(q){ return q.picked !== null; }).length;
+  }
+  var idx = 0;
+  function updateProgress(){
+    if (checked) { $('progress').textContent = ''; return; }
+    var last = idx === TOTAL - 1;
+    var answered = questions[idx] && questions[idx].picked !== null;
+    $('backBtn').classList.toggle('hidden', idx === 0);
+    $('nextBtn').classList.toggle('hidden', last);
+    $('checkBtn').classList.toggle('hidden', !last);
+    $('nextBtn').disabled = !answered;
+    $('checkBtn').disabled = answeredCount() < TOTAL;
+    $('progress').textContent = 'Question ' + (idx + 1) + ' of ' + TOTAL +
+      (answered ? '' : ' – pick an answer');
+  }
+  function showQuestion(i){
+    idx = i;
+    for (var k = 0; k < questions.length; k++) {
+      $('q' + k).classList.toggle('hidden', k !== idx);
+    }
+    updateProgress();
+    window.scrollTo(0, 0);
+  }
+
+  function render(){
+    var form = $('quizForm');
+    form.innerHTML = '';
+    questions.forEach(function(q, i){
+      var box = document.createElement('div');
+      box.className = 'q'; box.id = 'q' + i;
+      var title = document.createElement('div');
+      title.className = 'q-title';
+      var small = document.createElement('small');
+      small.textContent = 'Question ' + (i + 1);
+      title.appendChild(small);
+      title.appendChild(document.createTextNode(q.text));
+      box.appendChild(title);
+      var opts = document.createElement('div');
+      opts.className = 'opts';
+      q.options.forEach(function(val){
+        var lab = document.createElement('label');
+        lab.className = 'opt';
+        var inp = document.createElement('input');
+        inp.type = 'radio'; inp.name = 'q' + i; inp.value = val;
+        inp.addEventListener('change', function(){
+          if (checked) return;
+          q.picked = val;
+          var all = opts.querySelectorAll('.opt');
+          for (var k = 0; k < all.length; k++) all[k].classList.remove('selected');
+          lab.classList.add('selected');
+          updateProgress();
+        });
+        lab.appendChild(inp);
+        lab.appendChild(document.createTextNode(val));
+        opts.appendChild(lab);
+      });
+      box.appendChild(opts);
+      var fb = document.createElement('div');
+      fb.className = 'fb hidden'; fb.id = 'fb' + i;
+      box.appendChild(fb);
+      form.appendChild(box);
+    });
+    showQuestion(0);
+  }
+
+  function startQuiz(subject){
+    if (subject) current = subject;
+    TOTAL = current.reading ? 7 : 10;
+    currentReadingPassage = null;
+    questions = current.make();
+    var passageBox = $('readingPassage');
+    if (currentReadingPassage) {
+      $('readingTitle').textContent = currentReadingPassage.title;
+      $('readingText').textContent = currentReadingPassage.text;
+      passageBox.classList.remove('hidden');
+    } else { passageBox.classList.add('hidden'); } 
+    checked = false;
+    $('menu').classList.add('hidden');
+    $('dashboardPanel').classList.add('hidden');
+    $('quiz').classList.remove('hidden');
+    $('result').classList.add('hidden');
+    $('reviewBox').classList.add('hidden');
+    $('againBtn').classList.add('hidden');
+    $('checkBtn').classList.remove('hidden');
+    $('quizForm').classList.remove('locked');
+    $('quizTitle').textContent = current.icon + ' ' + current.tag + ': ' + current.title;
+    // Sketch pad is only for MATTE quizzes
+    var isMatte = current.tag === 'MATTE';
+    $('padBtn').classList.toggle('hidden', !isMatte);
+    if (!isMatte) {
+      $('padCard').classList.add('hidden');
+      $('padBtn').textContent = '✏️ Sketch pad';
+    }
+    var n = playerName();
+    $('quizIntro').textContent = (n ? n + ', answer' : 'Answer') +
+      ' all 10 questions, then press “Check answers”. Nothing is marked until you do!';
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  function toMenu(){
+    $('quiz').classList.add('hidden');
+    $('menu').classList.remove('hidden');
+    updateGreeting();
+    window.scrollTo(0, 0);
+  }
+
+  function checkAnswers(){
+    if (checked || answeredCount() < TOTAL) return;
+    checked = true;
+    var score = 0, mistakes = [];
+    questions.forEach(function(q, i){
+      var box = $('q' + i), fb = $('fb' + i);
+      var labels = box.querySelectorAll('.opt');
+      for (var k = 0; k < labels.length; k++) {
+        var inp = labels[k].querySelector('input');
+        inp.disabled = true;
+        if (inp.value === q.correct) labels[k].classList.add('correct');
+        else if (inp.value === q.picked) labels[k].classList.add('incorrect');
+      }
+      fb.classList.remove('hidden');
+      if (q.picked === q.correct) {
+        score++;
+        box.classList.add('right');
+        fb.className = 'fb good'; fb.textContent = '✅ Correct!';
+      } else {
+        box.classList.add('wrong');
+        fb.className = 'fb bad';
+        fb.textContent = '❌ Not quite. Correct answer: ' + q.correct;
+        mistakes.push(q);
+      }
+    });
+    $('quizForm').classList.add('locked');
+    for (var qi = 0; qi < questions.length; qi++) $('q' + qi).classList.remove('hidden');
+    $('backBtn').classList.add('hidden');
+    $('nextBtn').classList.add('hidden');
+
+    var n = playerName();
+    $('resultName').textContent = n ? 'Player: ' + n + ' · ' + current.tag : current.tag;
+    $('resultScore').textContent = '🏆 ' + score + ' / ' + TOTAL;
+    try {
+      var history = JSON.parse(localStorage.getItem('atharvaQuizHistory') || '[]');
+      history.push({ accountId:(profile && profile.id) || '', name:n, quiz:current.title, subject:current.tag, score:score, total:TOTAL, date:new Date().toISOString() });
+      if (history.length > 500) history = history.slice(-500);
+      localStorage.setItem('atharvaQuizHistory', JSON.stringify(history));
+    } catch(e) {}
+    syncOnline();
+    var msg;
+    if (score === TOTAL) msg = 'Perfect score! Amazing work! 🌟';
+    else if (score >= 8) msg = 'Great job! Almost perfect! 👏';
+    else if (score >= 5) msg = 'Good effort! Look at the mistakes below and try again. 💪';
+    else msg = 'Keep practising – you can do it! Try a new quiz. 🙂';
+    $('resultMsg').textContent = msg;
+
+    var list = $('reviewList');
+    list.innerHTML = '';
+    mistakes.forEach(function(q){
+      var li = document.createElement('li');
+      li.textContent = q.text + '  →  ' + q.correct + '   (you answered: ' + q.picked + ')';
+      list.appendChild(li);
+    });
+    $('reviewBox').classList.toggle('hidden', mistakes.length === 0);
+
+    $('result').classList.remove('hidden');
+    $('checkBtn').classList.add('hidden');
+    $('againBtn').classList.remove('hidden');
+    $('progress').textContent = '';
+    $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ---------- sketch pad ----------
+  var cv = $('padCanvas'), ctx = cv.getContext('2d');
+  var pen = { color: '#26224a', size: 3, erase: false }, drawing = false, lastPt = null;
+
+  function sizeCanvas(){
+    var r = cv.getBoundingClientRect();
+    if (!r.width) return;
+    var dpr = window.devicePixelRatio || 1;
+    var w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
+    if (cv.width === w && cv.height === h) return;
+    var tmp = document.createElement('canvas');
+    tmp.width = cv.width; tmp.height = cv.height;
+    tmp.getContext('2d').drawImage(cv, 0, 0);
+    cv.width = w; cv.height = h;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.drawImage(tmp, 0, 0);
+  }
+  function ptFrom(e){
+    var r = cv.getBoundingClientRect();
+    return { x: (e.clientX - r.left) * (cv.width / r.width), y: (e.clientY - r.top) * (cv.height / r.height) };
+  }
+  function strokeLine(a, b){
+    var dpr = window.devicePixelRatio || 1;
+    ctx.globalCompositeOperation = pen.erase ? 'destination-out' : 'source-over';
+    ctx.strokeStyle = pen.color;
+    ctx.lineWidth = (pen.erase ? pen.size * 3 : pen.size) * dpr;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+  }
+  cv.addEventListener('pointerdown', function(e){
+    e.preventDefault();
+    try { cv.setPointerCapture(e.pointerId); } catch(err){}
+    drawing = true; lastPt = ptFrom(e);
+    strokeLine(lastPt, lastPt);
+  });
+  cv.addEventListener('pointermove', function(e){
+    if (!drawing) return;
+    e.preventDefault();
+    var p = ptFrom(e);
+    strokeLine(lastPt, p);
+    lastPt = p;
+  });
+  function stopDraw(){ drawing = false; lastPt = null; }
+  function savePad(){ try { localStorage.setItem('atharvaQuizSketch', cv.toDataURL('image/png')); } catch(e) {} }
+  function restorePad(){
+    try {
+      var savedDrawing = localStorage.getItem('atharvaQuizSketch');
+      if (!savedDrawing) return;
+      var img = new Image();
+      img.onload = function(){ ctx.drawImage(img, 0, 0, cv.width, cv.height); };
+      img.src = savedDrawing;
+    } catch(e) {}
+  }
+  cv.addEventListener('pointerup', function(){ stopDraw(); savePad(); });
+  cv.addEventListener('pointercancel', function(){ stopDraw(); savePad(); });
+  cv.addEventListener('pointerleave', function(){ if (drawing) { stopDraw(); savePad(); } });
+
+  var swatches = $('padCard').querySelectorAll('.sw'), sizes = $('padCard').querySelectorAll('[data-size]');
+  function setActive(list, el){
+    for (var i = 0; i < list.length; i++) list[i].classList.toggle('active', list[i] === el);
+  }
+  Array.prototype.forEach.call(swatches, function(b){
+    b.addEventListener('click', function(){
+      pen.color = b.getAttribute('data-color'); pen.erase = false;
+      setActive(swatches, b); $('padErase').classList.remove('active');
+    });
+  });
+  Array.prototype.forEach.call(sizes, function(b){
+    b.addEventListener('click', function(){
+      pen.size = parseInt(b.getAttribute('data-size'), 10);
+      setActive(sizes, b);
+    });
+  });
+  $('padErase').addEventListener('click', function(){
+    pen.erase = !pen.erase;
+    $('padErase').classList.toggle('active', pen.erase);
+    if (pen.erase) setActive(swatches, null);
+    else setActive(swatches, swatches[0]), pen.color = swatches[0].getAttribute('data-color');
+  });
+  $('padClear').addEventListener('click', function(){
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    try { localStorage.removeItem('atharvaQuizSketch'); } catch(e) {}
+  });
+  $('padBtn').addEventListener('click', function(){
+    var open = $('padCard').classList.toggle('hidden') === false;
+    $('padBtn').textContent = open ? '✏️ Hide sketch pad' : '✏️ Sketch pad';
+    if (open) { sizeCanvas(); restorePad(); $('padCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+  window.addEventListener('resize', function(){ if (!$('padCard').classList.contains('hidden')) sizeCanvas(); });
+
+  $('nextBtn').addEventListener('click', function(){ if (idx < TOTAL - 1) showQuestion(idx + 1); });
+  $('backBtn').addEventListener('click', function(){ if (idx > 0) showQuestion(idx - 1); });
+  $('checkBtn').addEventListener('click', checkAnswers);
+  $('againBtn').addEventListener('click', function(){ startQuiz(); });
+  $('menuBtn').addEventListener('click', toMenu);
+})();
+</script>
+</body>
+</html>
+
+</body></html>
