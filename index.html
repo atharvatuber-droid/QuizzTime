@@ -47,6 +47,10 @@
   #homeTitle{cursor:pointer}
   .fb{margin-top:10px;font-weight:600}
   .fb.good{color:var(--good)} .fb.bad{color:var(--bad)}
+  .locked .q.fixing .opt:not(.incorrect){cursor:pointer}
+  .locked .q.fixing .opt.typein{cursor:text}
+  .fix-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .fix-row button.ghost{padding:8px 14px;font-size:.95rem}
   button.primary{background:var(--brand);color:#fff;border:0;border-radius:12px;padding:12px 22px;font-size:1.05rem;font-weight:700;cursor:pointer}
   button.primary:hover{background:var(--brand-dark)}
   button.primary:disabled{opacity:.5;cursor:not-allowed}
@@ -190,13 +194,14 @@
       <button class="primary hidden" id="checkBtn" type="button" disabled>✅ Check answers</button>
       <button class="ghost hidden" id="againBtn" type="button">🔄 New quiz</button>
       <button class="ghost" id="padBtn" type="button">✏️ Sketch pad</button>
-      <button class="ghost" id="menuBtn" type="button">⬅ Menu</button>
       <span class="hint" id="progress"></span>
+      <button class="ghost" id="menuBtn" type="button">Menu</button>
     </div>
     <div class="card hidden" id="result">
       <div class="hint" id="resultName"></div>
       <div class="score" id="resultScore"></div>
       <p id="resultMsg"></p>
+      <p class="hint hidden" id="fixNote"></p>
       <div id="reviewBox" class="hidden">
         <h3>Correct answers for your mistakes</h3>
         <ul class="review" id="reviewList"></ul>
@@ -2020,9 +2025,9 @@
   }
   var DEC = [decAdd, decSub, decMul, decShift,
     function(){   // largest / smallest
-      var x = rnd(3, 8), big = x / 10, opts = [x / 10, (x - 1) / 10 + rnd(51, 99) / 1000, (x * 10 - rnd(1, 9)) / 100, x / 100];
+      var x = rnd(3, 8), big = x / 10, mid = [(x - 1) / 10 + rnd(51, 99) / 1000, (x * 10 - rnd(1, 9)) / 100, (x - 1) / 10 + pick([5, 8, 12, 23, 34, 47]) / 1000];
       var most = Math.random() < 0.5;
-      return choiceQ('Vilket decimaltal är ' + (most ? 'störst' : 'minst') + '?', sv(most ? big : x / 100), opts.map(sv));
+      return choiceQ('Vilket decimaltal är ' + (most ? 'störst' : 'minst') + '?', sv(most ? big : x / 100), mid.concat(most ? x / 100 : big).map(sv));
     },
     function(){   // rounding
       var h = rnd(1001, 9999); if (h % 10 === 5) h++;
@@ -2779,6 +2784,7 @@
         field.addEventListener('keydown', function(e){
           if (e.key !== 'Enter') return;
           e.preventDefault();
+          if (checked) { if (q.retry) q.retry(); return; }
           if (q.picked !== null && idx < TOTAL - 1) showQuestion(idx + 1);
         });
         wrap.appendChild(field);
@@ -2855,7 +2861,7 @@
   function checkAnswers(){
     if (checked || answeredCount() < TOTAL) return;
     checked = true;
-    var score = 0, mistakes = [];
+    var score = 0, mistakes = [], fixable = current.tag === 'MATTE';
     questions.forEach(function(q, i){
       var box = $('q' + i), fb = $('fb' + i);
       var labels = box.querySelectorAll('.opt'), right = answerIsRight(q);
@@ -2874,8 +2880,9 @@
       } else {
         box.classList.add('wrong');
         fb.className = 'fb bad';
-        fb.textContent = '❌ Not quite. Correct answer: ' + q.correct;
         mistakes.push(q);
+        if (fixable) allowFix(q, i);
+        else fb.textContent = '❌ Not quite. Correct answer: ' + q.correct;
       }
     });
     $('quizForm').classList.add('locked');
@@ -2905,15 +2912,92 @@
     mistakes.forEach(function(q){
       var li = document.createElement('li');
       li.textContent = q.text + '  →  ' + q.correct + '   (you answered: ' + q.picked + ')';
+      if (fixable) { li.textContent = q.text + '  →  ✏️ try to fix it above'; q.reviewItem = li; }
       list.appendChild(li);
     });
     $('reviewBox').classList.toggle('hidden', mistakes.length === 0);
+    fixCount = 0; fixTotal = fixable ? mistakes.length : 0;
+    updateFixNote();
 
     $('result').classList.remove('hidden');
     $('checkBtn').classList.add('hidden');
     $('againBtn').classList.remove('hidden');
     $('progress').textContent = '';
     $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Maths: after the result, wrong answers can be corrected. The saved score and XP stay as they were.
+  var fixCount = 0, fixTotal = 0;
+  function updateFixNote(){
+    var note = $('fixNote');
+    note.classList.toggle('hidden', !fixTotal);
+    if (!fixTotal) return;
+    note.textContent = fixCount === fixTotal
+      ? '✅ You corrected all ' + fixTotal + ' mistakes – well done! (Corrections give no XP.)'
+      : '✏️ Fix your mistakes in the questions above. Corrected: ' + fixCount + ' of ' + fixTotal + ' (no XP for corrections).';
+  }
+  function allowFix(q, i){
+    var box = $('q' + i), fb = $('fb' + i), done = false;
+    var labels = box.querySelectorAll('.opt');
+    box.classList.add('fixing');
+    fb.textContent = '❌ Not quite. Try to correct it!';
+    var row = document.createElement('div');
+    row.className = 'fix-row';
+    var showBtn = document.createElement('button');
+    showBtn.type = 'button'; showBtn.className = 'ghost'; showBtn.textContent = '👀 Show answer';
+    function finish(fixed){
+      done = true;
+      box.classList.remove('fixing');
+      for (var k = 0; k < labels.length; k++) labels[k].querySelector('input').disabled = true;
+      row.remove();
+      if (fixed) {
+        fixCount++;
+        box.classList.remove('wrong'); box.classList.add('right');
+        fb.className = 'fb good'; fb.textContent = '✅ Corrected! (no XP for corrections)';
+      } else {
+        fb.textContent = '❌ Correct answer: ' + q.correct;
+        for (var j = 0; j < labels.length; j++) {
+          if (!q.input && labels[j].querySelector('input').value === q.correct) labels[j].classList.add('correct');
+        }
+      }
+      if (q.reviewItem) q.reviewItem.textContent = q.text + '  →  ' + q.correct + (fixed ? '   (you corrected it ✅)' : '   (you answered: ' + q.picked + ')');
+      updateFixNote();
+    }
+    showBtn.addEventListener('click', function(){ if (!done) finish(false); });
+    if (q.input) {
+      var field = labels[0].querySelector('input');
+      field.disabled = false;
+      var tryBtn = document.createElement('button');
+      tryBtn.type = 'button'; tryBtn.className = 'ghost'; tryBtn.textContent = '✅ Check again';
+      q.retry = function(){
+        var val = field.value.trim();
+        if (done || !val) return;
+        if (answerIsRight({ input: true, accept: q.accept, picked: val })) {
+          labels[0].classList.remove('incorrect'); labels[0].classList.add('correct');
+          finish(true);
+        } else {
+          fb.textContent = '❌ “' + val + '” is not right either. Try again!';
+        }
+      };
+      tryBtn.addEventListener('click', q.retry);
+      row.appendChild(tryBtn);
+    } else {
+      for (var k = 0; k < labels.length; k++) (function(lab){
+        var inp = lab.querySelector('input');
+        if (inp.value === q.picked) return;
+        inp.disabled = false;
+        inp.addEventListener('change', function(){
+          if (done) return;
+          if (inp.value === q.correct) { lab.classList.add('correct'); finish(true); }
+          else {
+            lab.classList.add('incorrect'); inp.disabled = true;
+            fb.textContent = '❌ Not that one either. Try again!';
+          }
+        });
+      })(labels[k]);
+    }
+    row.appendChild(showBtn);
+    fb.after(row);
   }
 
   // ---------- sketch pad ----------
