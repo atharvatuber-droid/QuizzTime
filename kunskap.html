@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kunskapsbanken · Åk 6</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  main{max-width:900px}
+  .top{max-width:900px}
+  .kb-nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .kb-nav button{border:0;border-radius:16px;padding:14px 12px;font:inherit;cursor:pointer;color:#fff;text-align:left;
+    background:var(--g);box-shadow:0 3px 10px rgba(40,20,120,.15);transition:transform .15s,box-shadow .15s;opacity:.85}
+  .kb-nav button:hover{transform:translateY(-3px);opacity:1}
+  .kb-nav button[aria-selected="true"]{opacity:1;outline:4px solid #fff;box-shadow:0 0 0 7px var(--c),0 6px 16px rgba(40,20,120,.25)}
+  .kb-nav .e{font-size:1.8rem;display:block;line-height:1.1}
+  .kb-nav b{font-size:1.05rem}
+  .kb-nav small{display:block;opacity:.9;font-size:.78rem}
+  .hero{border-radius:20px;padding:26px 24px;color:#fff;background:var(--g);margin:18px 0 16px;position:relative;overflow:hidden}
+  .hero .big{position:absolute;right:-10px;bottom:-30px;font-size:9rem;opacity:.22;transform:rotate(-12deg)}
+  .hero h2{font-size:2rem;margin:0 0 6px}
+  .hero p{margin:0 0 14px;max-width:560px;font-size:1.05rem}
+  .toc{display:flex;flex-wrap:wrap;gap:6px;position:relative}
+  .toc a{font-size:.88rem;background:rgba(255,255,255,.22);color:#fff;border-radius:99px;padding:5px 11px;text-decoration:none;font-weight:600}
+  .toc a:hover{background:rgba(255,255,255,.4)}
+  .chapter{padding:0;overflow:hidden;scroll-margin-top:14px}
+  .ch-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:3px solid var(--c);background:linear-gradient(90deg,color-mix(in srgb,var(--c) 14%,#fff),#fff)}
+  .ch-num{flex:none;width:38px;height:38px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-weight:800}
+  .ch-head h3{margin:0;font-size:1.35rem;color:var(--ink)}
+  .ch-body{padding:18px 20px 20px}
+  .lead{font-size:1.08rem;font-weight:500;margin:0 0 14px}
+  .pic{background:linear-gradient(180deg,#faf9ff,#eef6f2);border:2px solid var(--line);border-radius:16px;padding:10px;margin:0 0 16px;text-align:center}
+  .pic svg{width:100%;max-width:460px;height:auto}
+  .part{margin:0 0 14px;padding-left:14px;border-left:4px solid color-mix(in srgb,var(--c) 40%,#fff)}
+  .part h4{margin:0 0 4px;color:var(--c);font-size:1.05rem}
+  .part p{margin:0}
+  .box{border-radius:14px;padding:12px 16px;margin:14px 0 0}
+  .box h5{margin:0 0 6px;font-size:.95rem;text-transform:uppercase;letter-spacing:.04em}
+  .know{background:#fff6d6;border:2px solid #ffd966}
+  .know h5{color:#8a6400}
+  .facts{background:var(--bg);border:2px solid var(--line)}
+  .facts ul{margin:0;padding-left:20px}
+  .facts li{margin:3px 0}
+  .words{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:14px}
+  .words div{border-radius:12px;padding:8px 12px;font-size:.92rem;background:color-mix(in srgb,var(--c) 9%,#fff);border:1px solid color-mix(in srgb,var(--c) 30%,#fff)}
+  .words b{color:var(--c);display:block}
+  .test{background:#eef4ff;border:2px solid #c6d8ff}
+  .test h5{color:#2b5bb5}
+  .test details{background:#fff;border-radius:10px;padding:8px 12px;margin:6px 0;cursor:pointer}
+  .test summary{font-weight:600}
+  .test details p{margin:6px 0 0;color:var(--good);font-weight:600}
+  .foot{display:flex;justify-content:space-between;margin-top:14px;font-size:.88rem}
+  .foot a{color:var(--muted)}
+  .pager{display:flex;justify-content:space-between;gap:10px;margin-top:8px}
+  .pager button{border:0;border-radius:12px;padding:12px 16px;font:inherit;font-weight:700;cursor:pointer;color:#fff;background:var(--g)}
+  @media (prefers-reduced-motion:reduce){.kb-nav button{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1>📚 Kunskapsbanken <span style="font-weight:400;font-size:1rem">· Åk 6</span></h1>
+    <a href="index.html" style="color:#fff;font-weight:700;text-decoration:none;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.2)">🎮 Till quizzen</a>
+  </div>
+</header>
+<main id="top">
+  <section class="card">
+    <h2 style="margin-bottom:4px">Välj ett ämne</h2>
+    <p class="sub">Läs kapitlen, titta på bilderna och testa dig själv. Öva sedan med quizzen!</p>
+    <div class="kb-nav" id="tabs" role="tablist"></div>
+  </section>
+  <div id="subject"></div>
+</main>
+
+<script src="kunskap-pics.js"></script>
+<script src="kunskap-data.js"></script>
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function pic(k){ return k && P[k] ? '<div class="pic" aria-hidden="true">' + P[k] + '</div>' : ''; }
+
+  function chapterHTML(s, c, i){
+    var h = '<section class="card chapter" id="' + s.id + '-' + i + '">';
+    h += '<div class="ch-head"><span class="ch-num">' + (i + 1) + '</span><h3>' + esc(c.t) + '</h3></div><div class="ch-body">';
+    if (c.intro) h += '<p class="lead">' + esc(c.intro) + '</p>';
+    h += pic(c.pic);
+    (c.parts || []).forEach(function(p){ h += '<div class="part"><h4>' + esc(p[0]) + '</h4><p>' + esc(p[1]) + '</p></div>'; });
+    h += pic(c.pic2);
+    if (c.words) h += '<div class="words">' + c.words.map(function(w){ return '<div><b>' + esc(w[0]) + '</b>' + esc(w[1]) + '</div>'; }).join('') + '</div>';
+    if (c.facts) h += '<div class="box facts"><h5>📌 Bra att komma ihåg</h5><ul>' + c.facts.map(function(f){ return '<li>' + esc(f) + '</li>'; }).join('') + '</ul></div>';
+    if (c.know) h += '<div class="box know"><h5>💡 Visste du?</h5>' + esc(c.know) + '</div>';
+    if (c.test) h += '<div class="box test"><h5>🧠 Testa dig själv</h5>' + c.test.map(function(q){ return '<details><summary>' + esc(q[0]) + '</summary><p>✔ ' + esc(q[1]) + '</p></details>'; }).join('') + '</div>';
+    return h + '<div class="foot"><a href="#top">↑ Till början</a></div></div></section>';
+  }
+
+  function show(id, scroll){
+    var idx = 0;
+    SUBJECTS.forEach(function(x, i){ if (x.id === id) idx = i; });
+    var s = SUBJECTS[idx];
+    var root = document.documentElement.style;
+    root.setProperty('--c', s.color); root.setProperty('--g', s.grad);
+    [].forEach.call($('tabs').children, function(b){ b.setAttribute('aria-selected', b.dataset.id === s.id); });
+    var prev = SUBJECTS[(idx + SUBJECTS.length - 1) % SUBJECTS.length], next = SUBJECTS[(idx + 1) % SUBJECTS.length];
+    $('subject').innerHTML =
+      '<div class="hero"><span class="big" aria-hidden="true">' + s.emoji + '</span><h2>' + s.emoji + ' ' + esc(s.name) + '</h2><p>' + esc(s.intro) + '</p>' +
+      '<div class="toc">' + s.chapters.map(function(c, i){ return '<a href="#' + s.id + '-' + i + '">' + (i + 1) + '. ' + esc(c.t) + '</a>'; }).join('') + '</div></div>' +
+      s.chapters.map(function(c, i){ return chapterHTML(s, c, i); }).join('') +
+      '<div class="pager"><button type="button" data-id="' + prev.id + '">← ' + prev.emoji + ' ' + esc(prev.name) + '</button>' +
+      '<button type="button" data-id="' + next.id + '">' + next.emoji + ' ' + esc(next.name) + ' →</button></div>';
+    try { history.replaceState(null, '', '#' + s.id); } catch(e) {}
+    if (scroll) $('subject').scrollIntoView({ behavior:'smooth' });
+  }
+
+  $('tabs').innerHTML = SUBJECTS.map(function(s){
+    return '<button type="button" role="tab" data-id="' + s.id + '" style="--g:' + s.grad + ';--c:' + s.color + '"><span class="e">' + s.emoji + '</span><b>' + esc(s.name) + '</b><small>' + s.chapters.length + ' kapitel</small></button>';
+  }).join('');
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('#tabs button, .pager button'); if (b) show(b.dataset.id, true);
+  });
+  function fromHash(){
+    var id = (location.hash || '').slice(1).split('-')[0];
+    var cur = document.querySelector('#tabs [aria-selected="true"]');
+    if (!cur || (id && cur.dataset.id !== id && SUBJECTS.some(function(s){ return s.id === id; }))) show(id);
+  }
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+})();
+</script>
+</body>
+</html>
