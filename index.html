@@ -32,6 +32,7 @@
   .speak-btn{float:right;margin-left:8px;border:2px solid var(--line);background:#fff;border-radius:99px;width:40px;height:40px;font-size:1.15rem;line-height:1;cursor:pointer;padding:0}
   .speak-btn:hover{border-color:var(--brand)}
   .q-title{white-space:pre-line}
+  .done-mark{display:inline-block;background:#1c9c5b;color:#fff;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:99px;margin:0 0 6px 6px}
   /* celebrations */
   #confetti{position:fixed;inset:0;pointer-events:none;z-index:9999}
   .cheer{font-size:1.6rem;font-weight:800;text-align:center;margin:6px 0 4px;animation:cheerPop .7s cubic-bezier(.2,1.6,.4,1) both}
@@ -3452,6 +3453,19 @@
     });
   }
 
+  // A quiz the current player has already done shows a green ✅ and the best score so far.
+  function quizDone(s){
+    if (s.children || !s.title) return null;
+    var h, me = playerName(), best = null;
+    try { h = JSON.parse(localStorage.getItem('atharvaQuizHistory') || '[]'); } catch(e) { return null; }
+    h.forEach(function(x){
+      if (x.quiz !== s.title || x.subject !== s.tag) return;
+      if (me && x.name && x.name !== me) return;
+      if (!best || x.score > best.score) best = x;
+    });
+    return best;
+  }
+
   function renderMenu(){
     var grid = $('menuGrid');
     grid.innerHTML = '';
@@ -3459,7 +3473,9 @@
       var b = document.createElement('button');
       b.className = 'menu-item';
       b.style.setProperty('--c', s.color);
-      b.innerHTML = '<span class="tag">' + s.tag + '</span>' + (isNewQuiz(s) ? '<span class="new-badge">🆕 NYTT</span>' : '') + '<strong>' + s.icon + ' ' + s.title +
+      var done = quizDone(s);
+      b.innerHTML = '<span class="tag">' + s.tag + '</span>' + (isNewQuiz(s) ? '<span class="new-badge">🆕 NYTT</span>' : '') +
+                    (done ? '<span class="done-mark" title="Du har gjort detta quiz">✅ ' + done.score + ' / ' + done.total + '</span>' : '') + '<strong>' + s.icon + ' ' + s.title +
                     '</strong><span class="d">' + s.desc + (s.children ? '' : (s.reading ? '' : ' · 10 questions')) + '</span>';
       b.addEventListener('click', function(){
         if (s.children) { group = s; renderMenu(); updateGreeting(); window.scrollTo(0, 0); }
