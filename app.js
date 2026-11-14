@@ -1285,17 +1285,19 @@
     });
   }
 
-  // A quiz the current player has already done shows a green ✅ and the best score so far.
+  // Show the latest attempt, while keeping every attempt in history.
   function quizDone(s){
     if (s.children || !s.title) return null;
-    var h, me = playerName(), best = null;
+    var h, me = playerName(), latest = null;
     try { h = JSON.parse(localStorage.getItem('atharvaQuizHistory') || '[]'); } catch(e) { return null; }
     h.forEach(function(x){
       if (x.quiz !== s.title || x.subject !== s.tag) return;
-      if (me && x.name && x.name !== me) return;
-      if (!best || x.score > best.score) best = x;
+      if (profile && profile.id && x.accountId) {
+        if (x.accountId !== profile.id) return;
+      } else if (me && x.name && x.name !== me) return;
+      if (!latest || String(x.date || '') >= String(latest.date || '')) latest = x;
     });
-    return best;
+    return latest;
   }
 
   function renderMenu(){
@@ -1465,6 +1467,7 @@
   }
 
   function toMenu(){
+    renderMenu();
     $('quiz').classList.add('hidden');
     $('menu').classList.remove('hidden');
     updateGreeting();

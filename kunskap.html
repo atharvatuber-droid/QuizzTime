@@ -30,7 +30,7 @@
   .ch-body{padding:18px 20px 20px}
   .lead{font-size:1.08rem;font-weight:500;margin:0 0 14px}
   .pic{background:linear-gradient(180deg,#faf9ff,#eef6f2);border:2px solid var(--line);border-radius:16px;padding:10px;margin:0 0 16px;text-align:center}
-  .pic svg{width:100%;max-width:460px;height:auto}
+  .pic svg{width:100%;max-width:720px;height:auto;display:block;margin:auto}
   .part{margin:0 0 14px;padding-left:14px;border-left:4px solid color-mix(in srgb,var(--c) 40%,#fff)}
   .part h4{margin:0 0 4px;color:var(--c);font-size:1.05rem}
   .part p{margin:0}
@@ -78,13 +78,13 @@
 (function(){
   var $ = function(id){ return document.getElementById(id); };
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-  function pic(k){ return k && P[k] ? '<div class="pic" aria-hidden="true">' + P[k] + '</div>' : ''; }
+  function pic(k){ return k && P[k] ? '<div class="pic"' + (k === 'solar' ? '' : ' aria-hidden="true"') + '>' + P[k] + '</div>' : ''; }
 
   function chapterHTML(s, c, i){
     var h = '<section class="card chapter" id="' + s.id + '-' + i + '">';
     h += '<div class="ch-head"><span class="ch-num">' + (i + 1) + '</span><h3>' + esc(c.t) + '</h3></div><div class="ch-body">';
     if (c.intro) h += '<p class="lead">' + esc(c.intro) + '</p>';
-    h += pic(c.pic);
+    if (c.pic !== 'evolution') h += pic(c.pic);
     (c.parts || []).forEach(function(p){ h += '<div class="part"><h4>' + esc(p[0]) + '</h4><p>' + esc(p[1]) + '</p></div>'; });
     h += pic(c.pic2);
     if (c.words) h += '<div class="words">' + c.words.map(function(w){ return '<div><b>' + esc(w[0]) + '</b>' + esc(w[1]) + '</div>'; }).join('') + '</div>';

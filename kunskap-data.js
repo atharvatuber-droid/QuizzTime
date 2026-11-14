@@ -1,6 +1,73 @@
 // Content for Kunskapsbanken (kunskap.html).
 // Chapter: { t, pic, intro, parts:[[rubrik, text]], words:[[ord, förklaring]], facts:[...], know:'Visste du?', test:[[fråga, svar]] }
 var SUBJECTS = [
+  { id:'ma', name:'Matematik', emoji:'➗', color:'#176b87', grad:'linear-gradient(135deg,#176b87,#36a5b8)',
+    intro:'Förbered dig före quizzen. Här finns metoder, exempel och viktiga ord från matematik i årskurs 6.',
+    chapters:[
+    { t:'Tal, platsvärde och negativa tal', pic:'math-number',
+      intro:'Tal berättar både hur mycket något är och var på tallinjen det ligger. Platsvärdet visar vad varje siffra betyder.',
+      parts:[
+        ['Platsvärde','I talet 4 582 betyder 4 fyra tusental, 5 fem hundratal, 8 åtta tiotal och 2 två ental. I 4,582 betyder siffrorna efter kommat tiondelar, hundradelar och tusendelar. Nollor kan vara viktiga: 3,05 är tre hela och fem hundradelar.'],
+        ['Jämför tal','Titta först på entalen, sedan tiondelarna och så vidare. Skriv gärna talen med lika många decimaler: 1,9 = 1,90. Då ser du att 1,90 är större än 1,19.'],
+        ['Negativa tal','På tallinjen ligger negativa tal till vänster om noll. -8 är mindre än -3, precis som att 8 minusgrader är kallare än 3 minusgrader. Avståndet till noll kallas talets absoluta värde.'] ],
+      words:[['Platsvärde','vad en siffra är värd på sin plats'],['Decimaltecken','kommat som skiljer heltal och delar'],['Negativt tal','ett tal mindre än noll'],['Tallinje','en linje där talen ligger i ordning']],
+      facts:['1 000 = 10 hundratal.','0,1 = en tiondel.','-5 + 8 = 3.'],
+      test:[['Vilket tal är störst: 2,08 eller 2,8?','2,8, eftersom 2,80 är större än 2,08.'],['Vilket är kallast: -2 °C eller -7 °C?','-7 °C. Det ligger längst till vänster på tallinjen.']] },
+    { t:'Bråk, decimaler och procent', pic:'math-fraction',
+      intro:'Bråk, decimaler och procent kan beskriva samma del av en helhet. Att kunna växla mellan dem gör många uppgifter enklare.',
+      parts:[
+        ['Bråk','Täljaren står över strecket och visar hur många delar du har. Nämnaren står under strecket och visar hur många lika stora delar helheten är delad i. I 3/4 är 3 täljare och 4 nämnare.'],
+        ['Likvärdiga bråk','Du får ett likvärdigt bråk om du multiplicerar eller dividerar både täljaren och nämnaren med samma tal. 1/2 = 2/4 = 50/100. Det hjälper när du ska jämföra eller addera bråk.'],
+        ['Procent','Procent betyder hundradelar. 25 % = 25/100 = 0,25 = 1/4. För att hitta 10 % delar du med 10. För att hitta 1 % delar du med 100. Bygg sedan upp det du behöver.'] ],
+      words:[['Täljare','talet över bråkstrecket'],['Nämnare','talet under bråkstrecket'],['Procent','delar av hundra'],['Förkorta','göra ett bråk enklare utan att ändra värdet']],
+      facts:['50 % = 1/2 = 0,5.','25 % = 1/4 = 0,25.','75 % = 3/4 = 0,75.'],
+      test:[['Skriv 0,6 som procent och bråk.','60 % och 6/10, som kan förkortas till 3/5.'],['En tröja kostar 240 kr och har 25 % rabatt. Hur stor är rabatten?','60 kr, eftersom en fjärdedel av 240 är 60.']] },
+    { t:'Räknesätt och rimlighet', pic:'math-operations',
+      intro:'Välj en metod som passar talet. Visa hur du tänker och kontrollera om svaret verkar rimligt.',
+      parts:[
+        ['De fyra räknesätten','Addition lägger ihop, subtraktion tar bort eller jämför, multiplikation är upprepad addition och division delar upp i lika stora grupper. Räknesätten hör ihop: kontrollera 84 ÷ 7 = 12 med 12 × 7 = 84.'],
+        ['Beräkningsordning','Räkna först i parenteser, sedan multiplikation och division, och sist addition och subtraktion. I 3 + 4 × 5 blir svaret 23, inte 35.'],
+        ['Överslag','Runda av för att snabbt se om ett svar är rimligt. 398 + 207 är ungefär 400 + 200 = 600. Om miniräknaren säger 6 050 har något troligen blivit fel.'] ],
+      words:[['Summa','svaret i en addition'],['Differens','svaret i en subtraktion'],['Produkt','svaret i en multiplikation'],['Kvot','svaret i en division']],
+      facts:['Multiplikation och division räknas före addition och subtraktion.','Ett överslag behöver inte vara exakt, men ska vara nära.'],
+      test:[['Vad blir 18 + 6 × 4?','42, eftersom 6 × 4 = 24 och 18 + 24 = 42.'],['Hur kontrollerar du 156 ÷ 12 = 13?','Multiplicera 13 × 12. Svaret ska bli 156.']] },
+    { t:'Algebra, mönster och ekvationer', pic:'math-algebra',
+      intro:'Algebra är ett sätt att beskriva samband med symboler. Bokstaven kan stå för ett tal som ännu är okänt.',
+      parts:[
+        ['Likhetstecknet','Likhetstecknet betyder att båda sidor har samma värde. I 7 + 5 = 8 + □ ska rutan vara 4, eftersom båda sidor då blir 12.'],
+        ['Ekvationer','Lös en ekvation genom att göra samma sak på båda sidor. x + 6 = 14. Ta bort 6 från båda sidor: x = 8. Kontrollera alltid genom att sätta in svaret.'],
+        ['Mönster och formler','Titta på hur mycket mönstret förändras för varje steg. Om en figur har 3, 5, 7, 9 stickor ökar den med 2 varje gång. En tabell kan hjälpa dig att hitta en regel.'] ],
+      words:[['Variabel','en bokstav eller symbol som står för ett tal'],['Ekvation','en matematisk mening med ett likhetstecken'],['Uttryck','tal och symboler utan likhetstecken'],['Mönster','något som följer en regel']],
+      facts:['Samma sak måste göras på båda sidor av likhetstecknet.','x kan vara vilket okänt tal som helst.'],
+      test:[['Lös 4x = 28.','x = 7, eftersom 28 ÷ 4 = 7.'],['Vilket tal saknas: 3 + □ = 2 × 5?','7, eftersom 2 × 5 = 10 och 10 - 3 = 7.']] },
+    { t:'Geometri, mått och skala', pic:'math-geometry',
+      intro:'Geometri handlar om former, längd, area, volym och vinklar. Rita gärna en bild och skriv ut enheterna i ditt svar.',
+      parts:[
+        ['Omkrets och area','Omkrets är sträckan runt en figur. Area är ytan inuti. En rektangel med längd 8 cm och bredd 3 cm har omkrets 8 + 3 + 8 + 3 = 22 cm och area 8 × 3 = 24 cm².'],
+        ['Volym','Volym visar hur mycket som ryms. För ett rätblock gäller längd × bredd × höjd. Enheterna kan vara cm³, dm³ eller liter. 1 dm³ = 1 liter.'],
+        ['Vinklar och skala','En rät vinkel är 90°. En rak vinkel är 180°. Skala jämför bild och verklighet. På skalan 1:50 000 är 1 cm på kartan 50 000 cm i verkligheten, alltså 500 m.'] ],
+      words:[['Omkrets','sträckan runt en figur'],['Area','ytan inuti en figur'],['Volym','hur mycket som ryms'],['Skala','förhållandet mellan bild och verklighet']],
+      facts:['Triangelns vinklar är tillsammans 180°.','1 m = 100 cm.','1 liter = 1 dm³.'],
+      test:[['En rektangel är 6 cm lång och 4 cm bred. Vad är arean?','24 cm². Multiplicera 6 med 4.'],['Vad betyder skalan 1:100?','1 cm på ritningen motsvarar 100 cm, alltså 1 m, i verkligheten.']] },
+    { t:'Statistik, diagram och sannolikhet', pic:'math-statistics',
+      intro:'Statistik hjälper oss att samla och tolka information. Sannolikhet handlar om hur troligt något är att hända.',
+      parts:[
+        ['Läs diagram noga','Börja med rubriken, vad axlarna visar och vilken enhet som används. Kontrollera om skalan börjar på noll och om varje steg är lika stort.'],
+        ['Medelvärde och median','Medelvärde är summan delat med antal värden. För 3, 5 och 7 blir det 15 ÷ 3 = 5. Median är talet i mitten när talen ligger i storleksordning.'],
+        ['Sannolikhet','Sannolikhet kan skrivas som bråk, decimal eller procent. När du kastar en vanlig tärning är chansen att få en sexa 1/6. Chansen att få ett jämnt tal är 3/6 = 1/2 = 50 %.'] ],
+      words:[['Medelvärde','summan delat med antal värden'],['Median','värdet i mitten'],['Frekvens','hur många gånger något förekommer'],['Sannolikhet','hur troligt något är']],
+      facts:['Ett stapeldiagram passar för grupper.','Ett linjediagram passar för förändring över tid.','Sannolikheten är mellan 0 och 1, eller mellan 0 % och 100 %.'],
+      test:[['Vad är medelvärdet av 4, 6 och 11?','7, eftersom 4 + 6 + 11 = 21 och 21 ÷ 3 = 7.'],['I en påse finns 3 röda och 1 blå kula. Hur stor är sannolikheten för röd?','3/4 = 0,75 = 75 %.']] },
+    { t:'Problemlösning - en säker metod', pic:'math-problem',
+      intro:'Många matteproblem blir lätta när du tar dem steg för steg. Målet är inte bara ett svar, utan ett svar som går att förstå.',
+      parts:[
+        ['1. Förstå','Läs frågan långsamt. Vad ska du ta reda på? Ring in viktiga tal och enheter. Skriv med egna ord vad problemet handlar om.'],
+        ['2. Planera och räkna','Rita en bild, gör en tabell eller skriv ett uttryck. Välj räknesätt och visa dina mellanled. I uppgifter med flera steg kan svaret från första steget behövas i nästa.'],
+        ['3. Kontrollera och svara','Gör ett överslag. Är svaret rimligt? Svara med en hel mening och rätt enhet: ”Resan är 3,5 km lång.”'] ],
+      words:[['Strategi','en genomtänkt väg till lösningen'],['Mellanled','steg mellan start och svar'],['Enhet','till exempel kr, cm, kg eller minuter'],['Rimlighetsbedömning','att kontrollera att svaret verkar vettigt']],
+      facts:['En skiss kan göra en textuppgift tydligare.','Skriv alltid enhet när uppgiften handlar om mått, pengar eller tid.'],
+      test:[['En bussbiljett kostar 18 kr. Vad kostar 4 biljetter?','72 kr. Beräkna 4 × 18.'],['Varför är ett överslag bra?','Det hjälper dig upptäcka om ett svar verkar orimligt.']] }
+  ]},
   { id:'bio', name:'Biologi', emoji:'🌱', color:'#1c9c5b', grad:'linear-gradient(135deg,#1c9c5b,#5fd39a)',
     intro:'Biologi är läran om livet – allt från de minsta cellerna till hela ekosystem och vår egen kropp.',
     chapters:[
@@ -65,9 +132,10 @@ var SUBJECTS = [
     { t:'Evolution – livets utveckling', pic:'evolution',
       intro:'Evolution är en långsam förändring av levande organismer över många generationer. Den förklarar varför det finns så många olika arter på jorden.',
       parts:[
-        ['Hur det började','Livet började i vattnet för miljarder år sedan med enkla urceller. Cyanobakterier blev först med fotosyntes och fyllde haven och luften med syre. Sedan kom flercelliga organismer, fiskar, djur på land, dinosaurier, däggdjur – och till sist människor.'],
-        ['Mutation och variation','Ibland sker ett ”stavfel” i generna – en mutation. Det kan ge en ny egenskap. Därför är individer inom samma art lite olika varandra – det kallas variation.'],
-        ['Naturligt urval','Individer med egenskaper som passar miljön bättre överlever oftare och får fler ungar. De för vidare sina gener, så egenskapen blir vanligare för varje generation. Charles Darwin beskrev detta efter sin resa till Galápagosöarna.'],
+        ['Livets historia','De äldsta spåren av liv är flera miljarder år gamla. Tidiga organismer levde i vatten. Cyanobakterier utvecklade fotosyntes som frigör syre, vilket förändrade jordens atmosfär. Livets historia liknar ett förgrenat släktträd, inte en rak stege mot människan.'],
+        ['Mutation och variation','En mutation är en förändring i DNA. Mutationer och blandning av gener vid fortplantning bidrar till ärftlig variation. En mutation kan vara fördelaktig, skadlig eller inte göra någon märkbar skillnad.'],
+        ['Naturligt urval','Individer i en population varierar. Om en ärftlig egenskap gör att individer i en viss miljö oftare överlever och får ungar kan egenskapen bli vanligare över många generationer. Miljön skapar inte egenskapen för att den behövs. Charles Darwin beskrev naturligt urval.'],
+        ['Exempel: olika näbbar','I en population finkar varierar näbbarnas form. Om hårda frön dominerar kan fåglar med kraftigare näbb ha lättare att få föda och ungar. Om förhållandena ändras kan andra näbbar vara fördelaktiga.'],
         ['Nya arter','Om två grupper av en art lever åtskilda länge, till exempel på olika öar, anpassar de sig till olika miljöer. Till slut är de så olika att de inte kan få ungar tillsammans – då har det bildats två nya arter.'] ],
       words:[['Mutation','förändring i arvsmassan'],['Anpassning','egenskap som hjälper i miljön'],['Art','kan få ungar tillsammans'],['Artbildning','en art delas i nya arter'],['Sexuellt urval','egenskaper som lockar partner']],
       know:'Darwins finkar på Galápagos har olika näbbar: stora och kraftiga för att knäcka frön, smala för att fånga insekter.',
@@ -201,7 +269,7 @@ var SUBJECTS = [
       parts:[
         ['Solen','Solen är en stjärna – ett gigantiskt klot av het gas. I dess kärna är det 15 miljoner grader. Över en miljon jordklot skulle få plats i solen.'],
         ['De inre planeterna','Merkurius, Venus, Jorden och Mars är stenplaneter med fast yta. Venus är hetast på grund av sin tjocka atmosfär. Mars kallas den röda planeten på grund av rost i marken.'],
-        ['De yttre planeterna','Jupiter, Saturnus, Uranus och Neptunus är gasjättar. Jupiter är störst och har en storm som är större än jorden. Saturnus har tydliga ringar av is och sten.'],
+        ['De yttre planeterna','Jupiter och Saturnus är gasjättar. Uranus och Neptunus kallas isjättar eftersom de innehåller större andelar ämnen som vatten, ammoniak och metan. Jupiter är störst. Saturnus har tydliga ringar av is och sten.'],
         ['Asteroider och kometer','Mellan Mars och Jupiter finns asteroidbältet. Kometer är ”smutsiga snöbollar” av is och damm som får en lysande svans när de kommer nära solen.'] ],
       facts:['Minnesregel: ”Min Väldigt Jättefina Mamma Jobbar Som Undersköterska Nu”.','Pluto räknas sedan 2006 som dvärgplanet.','Ett år = jorden ett varv runt solen.'],
       know:'På Venus är ett dygn längre än ett år – planeten snurrar så långsamt kring sig själv.',
@@ -445,3 +513,48 @@ var SUBJECTS = [
         ['Om något går sönder','Eftersom allt hänger ihop kan ett fel på ett ställe påverka många. Därför har viktiga system reserver, som reservkraft på sjukhus.'] ] }
   ]}
 ];
+
+// Fördjupningar kompletterar de ursprungliga kapitlen och kan byggas ut ämne för ämne.
+var FORDJUPNING = {
+  ma:{t:'Procent i vardagen',intro:'Procent beskriver en andel av en helhet. Börja alltid med att identifiera vad som är 100 %.',parts:[
+    ['Från andel till antal','Om 15 % av 200 elever cyklar är 10 % = 20 elever och 5 % = 10 elever. Alltså cyklar 30 elever. Samma beräkning kan skrivas 0,15 × 200 = 30.'],
+    ['Förändring och jämförelse','En jacka kostar 400 kr och sänks med 20 %. Rabatten är 80 kr och det nya priset är 320 kr. En höjning med 20 % efteråt ger 384 kr, inte 400 kr, eftersom den nya procenten räknas på 320.'],
+    ['Andel och procentenheter','Om andelen stiger från 20 % till 30 % har den ökat med 10 procentenheter. Ökningen jämfört med den ursprungliga andelen är 50 %.'] ],test:[['Vad är 15 % av 200?','30.'],['Varför tar 20 % rabatt och 20 % höjning inte ut varandra?','Procenten räknas på olika belopp.']]},
+  bio:{t:'Arv, variation och naturligt urval',intro:'Evolution handlar om förändringar i ärftliga egenskaper i populationer över generationer.',parts:[
+    ['Gener och miljö','Gener är delar av DNA som påverkar egenskaper. Miljön spelar också roll: längd påverkas till exempel av både arv och näring. En individ får inte automatiskt en ärftlig egenskap för att den behöver den.'],
+    ['Ett urval i flera steg','Tänk dig skalbaggar med ärftligt olika färg. På mörk mark kan ljusa skalbaggar vara lättare för fåglar att upptäcka. Om mörka skalbaggar oftare får ungar kan mörk färg bli vanligare i populationen. Om miljön ändras kan en annan färg bli fördelaktig.'],
+    ['Artbildning och belägg','Populationer som hålls åtskilda kan förändras olika över lång tid. Om de till slut inte längre får fertil avkomma tillsammans kan de räknas som olika arter. Fossil, jämförelser av kroppsbyggnad och DNA ger olika slags belägg för evolution.'] ],test:[['Är det individen eller populationen som utvecklas över generationer?','Populationen: ärftliga egenskapers förekomst kan förändras mellan generationer.'],['Kan samma egenskap vara fördelaktig i en miljö men inte i en annan?','Ja, urvalet beror på miljön.']]},
+  fys:{t:'Krafter, rörelse och energi i vardagen',intro:'För att förklara en rörelse behöver du tänka på vilka krafter som verkar och hur energin omvandlas.',parts:[
+    ['Krafter tillsammans','När du cyklar framåt driver däcken mot vägen medan luftmotstånd och friktion bromsar. Om krafterna är i balans kan farten vara konstant. Om de inte är i balans ändras farten eller riktningen.'],
+    ['Energi i kedja','När en cyklist trampar omvandlas kemisk energi i kroppen till rörelse och värme. Med en dynamo kan rörelseenergi omvandlas till elektrisk energi och sedan ljus och värme i lampan. Energi försvinner inte, men sprids ofta som värme.'],
+    ['Undersök själv','Rulla samma leksaksbil från samma höjd på olika underlag. Ändra bara underlaget och mät sträckan flera gånger. Jämför resultaten och resonera om mätosäkerhet.'] ],test:[['Varför kan en cykel hålla jämn fart trots luftmotstånd?','Drivkraften kan balansera de bromsande krafterna.'],['Varför upprepas en mätning?','För att se variation och göra resultatet mer tillförlitligt.']]},
+  kem:{t:'Partiklar, blandningar och reaktioner',intro:'Partikelmodellen hjälper dig att förklara vad som händer även när förändringen inte syns.',parts:[
+    ['Lösning eller reaktion?','När socker löses i vatten sprids sockerpartiklarna mellan vattenpartiklarna. Sockret finns kvar. Om vatten avdunstar kan sockret bli kvar. Vid en kemisk reaktion bildas däremot nya ämnen med andra egenskaper.'],
+    ['Atomer bevaras','Vid förbränning reagerar ett bränsle med syre. Atomerna försvinner inte: de sätts ihop på nya sätt och bildar bland annat koldioxid och vatten. Om även gaserna fångas upp är den totala massan oförändrad.'],
+    ['Surt och basiskt','pH-skalan används för att jämföra sura och basiska lösningar. Under 7 är surt, 7 neutralt och över 7 basiskt. Använd indikatorer och följ lärarens säkerhetsinstruktioner vid experiment.'] ],test:[['Är socker som lösts i vatten borta?','Nej, sockret är fördelat i lösningen.'],['Vad händer med atomerna vid en kemisk reaktion?','De omgrupperas och bildar nya ämnen.']]},
+  rymd:{t:'Avstånd, ljus och modeller',intro:'Rymden är så stor att vi ofta använder modeller och särskilda måttenheter.',parts:[
+    ['Ljusets resa','Ljuset från solen når jorden på ungefär åtta minuter. Ljuset från månen tar drygt en sekund. Ett ljusår är en sträcka, den sträcka ljuset färdas på ett år, inte en tid.'],
+    ['Skalmodeller','Planeterna i en läroboksbild visas ofta större och närmare varandra än i verkligheten. En användbar modell visar ett samband tydligt men kan inte alltid visa både storlek och avstånd i rätt skala.'],
+    ['Månens faser','Månen lyser genom att reflektera solljus. När månen rör sig runt jorden ser vi olika delar av dess belysta halva. Faserna orsakas alltså inte vanligtvis av jordens skugga; det sker vid månförmörkelse.'] ],test:[['Är ett ljusår en tid eller en sträcka?','En sträcka.'],['Varför syns olika månfaser?','Vi ser olika delar av månens solbelysta sida.']]},
+  geo:{t:'Klimat, landskap och människans val',intro:'Geografi undersöker hur natur och människor påverkar varandra på olika platser.',parts:[
+    ['Väder och klimat','Väder beskriver tillståndet just nu. Klimat beskriver vädrets mönster under lång tid. Temperatur och nederbörd påverkas bland annat av breddgrad, höjd, hav och vindar.'],
+    ['Landskapet förändras','Inre krafter kan bygga berg och orsaka jordbävningar. Yttre krafter som rinnande vatten, is och vind bryter ner och transporterar material. En älv kan både erodera en strand och avsätta sediment längre bort.'],
+    ['Resurser och konsekvenser','En skog ger virke, livsmiljöer och möjligheter till friluftsliv. Olika sätt att använda den kan gynna olika intressen. Jämför konsekvenser på kort och lång sikt och för olika grupper.'] ],test:[['Vad är skillnaden mellan väder och klimat?','Väder är förhållanden på kort sikt; klimat är mönster under lång tid.'],['Vad betyder erosion?','Att material nöts bort och transporteras, exempelvis av vatten eller is.']]},
+  hist:{t:'Historiska källor och perspektiv',intro:'Historia bygger på spår från det förflutna och på hur vi tolkar dem.',parts:[
+    ['Ställ frågor till en källa','Ett brev kan visa vad en person tänkte, men avsändaren kan ha utelämnat saker. Fråga vem som skapade källan, när den kom till, varför och vem som skulle läsa den.'],
+    ['Jämför perspektiv','En kung, en bonde och ett barn kunde uppleva samma tid på olika sätt. Jämför flera slags källor, till exempel lagar, föremål och berättelser. Tystnad i källorna betyder inte att människor saknades.'],
+    ['Orsak och konsekvens','En historisk förändring har ofta flera orsaker. Beskriv både vad som bidrog till förändringen och vilka följder den fick för olika människor. Skilj på det en källa visar och det du själv drar som slutsats.'] ],test:[['Varför räcker inte alltid en källa?','Den kan visa bara ett perspektiv eller ha ett särskilt syfte.'],['Vad är skillnaden mellan orsak och konsekvens?','Orsaker bidrar till att något händer; konsekvenser är följderna.']]},
+  sam:{t:'Demokrati, rättigheter och påverkan',intro:'Demokrati handlar både om hur beslut fattas och om människors rättigheter.',parts:[
+    ['Från förslag till beslut','Riksdagen beslutar om lagar och statens budget. Regeringen styr landet och genomför riksdagens beslut. Kommuner ansvarar bland annat för skola och regioner för sjukvård.'],
+    ['Fler sätt att påverka','Förutom att rösta kan människor diskutera, organisera sig, kontakta politiker eller delta i elevråd. Majoriteten kan fatta beslut, men grundläggande rättigheter skyddar också individer och minoriteter.'],
+    ['Granska information','Skilj på fakta, åsikter och reklam. Kontrollera avsändare, datum och syfte och jämför med andra källor. En stark rubrik är inte i sig bevis för ett påstående.'] ],test:[['Vem beslutar om lagar i Sverige?','Riksdagen.'],['Ge två sätt att påverka mellan valen.','Till exempel delta i elevråd, organisera sig eller kontakta politiker.']]},
+  rel:{t:'Religion, livsåskådning och etik',intro:'Människor kan tolka traditioner och livsfrågor på många olika sätt, även inom samma religion.',parts:[
+    ['Jämför med respekt','Undersök till exempel heliga texter, platser, högtider och ritualer inom kristendom, islam och judendom. Jämför också huvuddrag i hinduism och buddhism. Undvik att anta att alla troende gör eller tänker likadant.'],
+    ['Livsåskådning','En livsåskådning innehåller tankar om livet och vad som är viktigt. Den kan vara religiös eller icke-religiös. En människas identitet kan påverkas av många saker samtidigt.'],
+    ['Etiska frågor','När du diskuterar ett dilemma kan du fråga vilka som påverkas, vilka konsekvenser olika val får och vilka regler eller värden som står på spel. Motivera din åsikt och lyssna på andras skäl.'] ],test:[['Har alla inom en religion samma uppfattning?','Nej, det finns variation inom religioner.'],['Vad kan hjälpa dig att resonera om ett etiskt dilemma?','Jämför konsekvenser, värden och olika personers perspektiv.']]},
+  tek:{t:'Från behov till hållbar lösning',intro:'Teknikutveckling innebär att undersöka ett problem, pröva lösningar och förbättra dem.',parts:[
+    ['Krav och idéer','Börja med vem lösningen är till för och vad den ska klara. En bro kan behöva bära en viss last, vara stabil och använda lite material. Skissa flera idéer innan du väljer en.'],
+    ['Testa och förbättra','Bygg en modell, prova den på ett jämförbart sätt och dokumentera vad som händer. Om bron böjer sig kan du ändra konstruktionen och testa igen. En triangel kan göra en ram mer formstabil.'],
+    ['Hela livscykeln','Jämför råmaterial, tillverkning, transport, användning, reparation och återvinning. En produkt som håller länge och går att reparera kan minska behovet av att tillverka en ny.'] ],test:[['Varför testar man en modell mer än en gång?','För att jämföra resultat och förbättra lösningen.'],['Vad ingår i en produkts livscykel?','Bland annat råmaterial, tillverkning, användning och vad som händer efteråt.']]}
+};
+SUBJECTS.forEach(function(subject){ if (FORDJUPNING[subject.id]) subject.chapters.push(FORDJUPNING[subject.id]); });
