@@ -2556,6 +2556,129 @@
   }
 
   // ---------- subjects shown in the menu ----------
+  // ---------- Nationella provet åk 6 – the four kinds of delprov (original questions, new numbers every time) ----------
+  // Delprov B: no calculator – quick calculations, decimals, equations, percent, probability.
+  var DELB = [
+    function(){ var a = rnd(11, 99); return mathQ('100 · ' + a + ' = ?', 100 * a, [10 * a, 1000 * a, a + 100], '', 0.5); },
+    function(){ var a = rnd(101, 899), b = rnd(101, 899); return mathQ(sv(a / 100) + ' + ' + sv(b / 100) + ' = ?', (a + b) / 100, [(a + b) / 10, (a + b) / 1000, (a + b) / 100 + 0.1], '', 0.5); },
+    function(){ var m = rnd(2, 9), k = rnd(2, 9); return mathQ(m + ' · 0,' + k + ' = ?', m * k / 10, [m * k, m * k / 100, m + k / 10], '', 0.5); },
+    function(){ var b = pick([2, 3, 4, 5, 6, 8, 10]), a = rnd(1, b - 1), n = b * rnd(2, 12); return mathQ('Hur mycket är ' + a + '/' + b + ' av ' + n + '?', n / b * a, [n / b, n * a, n - a], '', 0.4); },
+    function(){ var a = rnd(500, 999), b = rnd(120, a - 120); return mathQ(a + ' − ' + b + ' = ?', a - b, [a - b + 10, a - b - 10, a - b + 100], '', 0.5); },
+    function(){ var a = rnd(1000, 2500), b = rnd(300, 999), c = rnd(300, 999); return mathQ(sv(a) + ' + ' + b + ' + ' + c + ' = ?', a + b + c, [a + b + c + 100, a + b + c - 100, a + b + c + 10], '', 0.5); },
+    function(){ var a = rnd(120, 499), b = rnd(3, 9); return mathQ(a + ' · ' + b + ' = ?', a * b, [a * b + 100, a * b - 100, (a + b) * 10], '', 0.5); },
+    function(){ var d = rnd(3, 9), q = rnd(120, 399); return mathQ(sv(d * q) + ' ÷ ' + d + ' = ?', q, [q + 10, q - 10, q * 10], '', 0.5); },
+    function(){
+      var n = pick(NAMES), a = pick([25, 40, 50, 75, 80]), m = rnd(4, 8);
+      return mathQ(n + ' sparar ' + a + ' kr varje månad till ett nytt spel. Efter ' + m + ' månader har ' + n + ' sparat ihop hälften av vad spelet kostar. Vad kostar spelet?', 2 * a * m, [a * m, 3 * a * m, a * m + a], 'kr');
+    },
+    function(){
+      var r = rnd(2, 6), y = rnd(3, 8), g = rnd(2, 6), t = r + y + g + 1;
+      return choiceQ('I en påse finns ' + r + ' röda, ' + y + ' gula, ' + g + ' gröna och 1 rosa kula. Du drar en kula utan att titta. Hur stor är sannolikheten att få en grön kula?',
+        g + ' av ' + t, [(t - g) + ' av ' + t, g + ' av ' + (t - g), '1 av ' + t]);
+    },
+    function(){
+      if (Math.random() < 0.5) { var t = rnd(11, 19); return choiceQ('Skriv ' + t + ' tiondelar i decimalform.', sv(t / 10), [sv(t / 100), sv(t), sv(t / 1000)]); }
+      var k = rnd(2, 9); return choiceQ('Skriv ”en hel och ' + k + ' hundradelar” i decimalform.', sv(1 + k / 100), [sv(1 + k / 10), sv(1 + k / 1000), sv(10 + k / 100)]);
+    },
+    function(){
+      if (Math.random() < 0.5) { var x = rnd(2, 12), a = rnd(2, 9), b = rnd(2, 20); return mathQ('Lös ekvationen: ' + (a * x + b) + ' = ' + a + ' · x + ' + b + '. Vad är x?', x, [(a * x + b) / a, a * x, x + 1], '', 0.5); }
+      var d = rnd(2, 9), k = rnd(2, 12), e = rnd(1, 9); return mathQ('Lös ekvationen: x ÷ ' + d + ' + ' + e + ' = ' + (k + e) + '. Vad är x?', d * k, [k, (k + e) * d, d * k + e], '', 0.5);
+    },
+    function(){ var p = pick([10, 20, 25, 30, 40, 50, 75]); return choiceQ('Vilket tal har samma värde som ' + p + ' %?', sv(p / 100), [sv(p / 10), sv(p / 1000), sv(p)]); }
+  ];
+
+  // Delprov C & D: calculator allowed – longer problems in several steps (money, time, scale, average).
+  var DELC = [
+    function(){
+      var P = pick([120, 160, 200, 240, 300]), a = rnd(1, 2), y = rnd(1, 2);
+      return mathQ('En familj med ' + (a === 1 ? '1 vuxen' : '2 vuxna') + ', 1 tonåring (13 år) och ' + y + (y === 1 ? ' barn (8 år)' : ' barn (8 och 10 år)') + ' ska åka tåg. En biljett kostar ' + P + ' kr. Barn som inte har fyllt 12 år betalar halva priset. Vad kostar resan för hela familjen?',
+        (a + 1) * P + y * P / 2, [(a + 1 + y) * P, (a + 1 + y) * P / 2, a * P + (1 + y) * P / 2], 'kr', 0.4);
+    },
+    function(){
+      var r = pick([10, 11, 12]), p1 = rnd(3, 9), p2 = rnd(10, 25), p3 = rnd(2, 8), s = p1 + p2 + p3;
+      return mathQ('I en butik i Spanien kostar en t-shirt ' + p1 + ' €, en keps ' + p2 + ' € och ett par strumpor ' + p3 + ' €. 1 € = ' + r + ' kr. Vad kostar allt tillsammans i svenska kronor?', s * r, [s, s + r, p2 * r], 'kr', 0.4);
+    },
+    function(){
+      var a = rnd(5, 30), b = pick([50, 100, 200, 500]);
+      return mathQ('Modellen av ett torn är ' + a + ' cm hög och gjord i skala 1:' + b + '. Hur högt är tornet i verkligheten? Svara i meter.', a * b / 100, [a * b, a * b / 10, a * b / 1000], 'm', 0.4);
+    },
+    function(){
+      var a = rnd(60, 120), b = rnd(60, 120), c = pick([20, 25, 30, 40]);
+      return mathQ('På lördagen säljs ' + a + ' biljetter till en utställning och på söndagen ' + b + ' biljetter. En biljett kostar ' + c + ' kr. Hur mycket pengar får de in sammanlagt?', (a + b) * c, [a * c, (a + b) + c, (a + b) * c + c], 'kr', 0.4);
+    },
+    function(){
+      var t = rnd(3, 15), d = rnd(18, 34);
+      return mathQ('En termometer visar −' + t + ' °C ute. Inne i huset är det ' + d + ' grader varmare. Hur varmt är det inne?', d - t, [d + t, t - d, d], '°C', 0.4);
+    },
+    function(){
+      var c = pick([4, 5, 10, 20, 25]), m = rnd(2, 12);
+      return mathQ('Man behöver ' + c + ' cm ståltråd för att göra ett gem. Hur många gem kan man göra av ' + m + ' m ståltråd?', m * 100 / c, [m * c, m * 10 / c, m * 1000 / c], 'gem', 0.4);
+    },
+    function(){
+      var a = pick([50, 100, 150, 200, 250]);
+      return mathQ('Under 1 minut skickas det ungefär ' + a + ' miljoner mejl i världen. Hur många mejl skickas under en timme? Svara i miljarder.', a * 60 / 1000, [a * 60, a / 60, a * 6], 'miljarder', 0.4);
+    },
+    function(){
+      var c = pick([80, 120, 150, 200]), n = pick([50, 100, 200]);
+      return mathQ('Ett cykelhjul har omkretsen ' + c + ' cm. Hur långt rullar cykeln när hjulet snurrar ' + n + ' varv? Svara i meter.', c * n / 100, [c * n, c * n / 10, c + n], 'm', 0.4);
+    },
+    function(){
+      var P = rnd(5, 40) * 20, r = pick([10, 20, 25, 50]), k = rnd(2, 4), n = pick(NAMES);
+      return mathQ(n + ' köper ' + k + ' likadana jackor. Priset är ' + P + ' kr per jacka, men priset sänks med ' + r + ' %. Hur mycket betalar ' + n + ' för alla jackorna?', k * P * (100 - r) / 100, [k * P, k * P * r / 100, k * (P - r)], 'kr', 0.4);
+    },
+    function(){
+      var m = rnd(8, 14), v = [], s = 0, i;
+      for (i = 0; i < 4; i++) { v.push(m + rnd(-2, 2)); s += v[i]; }
+      v.push(5 * m - s);
+      return mathQ('Fem kompisar fick poängen ' + v.join(', ') + ' i ett spel. Vilket är medelvärdet?', m, [Math.max.apply(null, v), Math.min.apply(null, v), m + 1], 'poäng', 0.4);
+    },
+    function(){
+      var d = pick([2, 3, 5]), p = pick([2, 6, 8, 12]);
+      return mathQ('Ett recept för 4 personer behöver ' + d + ' dl mjölk. Hur många dl behövs för ' + p + ' personer?', d * p / 4, [d * p, d + p, p / 4], 'dl', 0.4);
+    }
+  ];
+
+  // Delprov E: patterns, area and reasoning.
+  BANKS.ma_resonemang = [
+    ["Sofia säger: ”Om man multiplicerar ett tal med 0,5 blir svaret alltid större än talet.” Stämmer det?", "Nej, svaret blir hälften så stort, alltså mindre", "Ja, alltid", "Ja, men bara för jämna tal", "Nej, svaret blir alltid 0"],
+    ["Summan av två udda tal är alltid …", "ett jämnt tal", "ett udda tal", "ett primtal", "delbar med 5"],
+    ["Vilket påstående är sant?", "Alla kvadrater är rektanglar", "Alla rektanglar är kvadrater", "En kvadrat har olika långa sidor", "En rektangel har aldrig räta vinklar"],
+    ["Vilket tal ligger mitt emellan 0,3 och 0,4?", "0,35", "0,7", "0,03", "0,45"],
+    ["Ett djur väger 3,5 kg. Ett annat väger 3 500 g. Vad stämmer?", "De väger lika mycket", "Det första väger mest", "Det andra väger mest", "Det går inte att avgöra"],
+    ["Om man dubblar sidan på en kvadrat, vad händer med arean?", "Arean blir fyra gånger så stor", "Arean blir dubbelt så stor", "Arean blir hälften så stor", "Arean ändras inte"],
+    ["Vilket tal är störst?", "0,6", "0,59", "0,075", "0,5999"],
+    ["Vilket av följande är INTE lika med 50 %?", "0,05", "1/2", "0,5", "5 av 10"],
+    ["En cirkel har radien 5 cm. Hur lång är diametern?", "10 cm", "5 cm", "2,5 cm", "25 cm"],
+    ["Elsa säger: ”Ett tal som är delbart med 10 är alltid delbart med 5.” Stämmer det?", "Ja, eftersom 10 = 2 · 5", "Nej, aldrig", "Bara om talet är större än 100", "Bara om talet är jämnt och udda"]
+  ];
+  var DELE = [
+    function(){ var n = rnd(5, 15); return mathQ('Figur 1 består av 1 ruta (1 cm²), figur 2 av 2 · 2 rutor, figur 3 av 3 · 3 rutor och så vidare. Hur stor area har figur ' + n + '? Svara i cm².', n * n, [2 * n, n + n * 2, n * n + n], 'cm²', 0.4); },
+    function(){ var n = rnd(6, 25); return mathQ('Figur 1 är 1 ruta (1 cm²), figur 2 är 2 · 2 rutor, figur 3 är 3 · 3 rutor och så vidare. Vilket nummer har den figur som har arean ' + sv(n * n) + ' cm²?', n, [n * n / 2, n * 2, n * n - n], '', 0.4); },
+    function(){
+      var s = rnd(3, 8), d = rnd(2, 5), k = rnd(8, 20);
+      return mathQ('Figur 1 byggs av ' + s + ' stickor. Varje ny figur får ' + d + ' stickor fler än den förra. Hur många stickor behövs till figur ' + k + '?', s + (k - 1) * d, [s + k * d, k * d, s * k], 'stickor', 0.4);
+    },
+    function(){
+      var s = rnd(3, 8), d = rnd(2, 5), c = s - d;
+      return choiceQ('Figur 1 har ' + s + ' stickor, figur 2 har ' + (s + d) + ' stickor och figur 3 har ' + (s + 2 * d) + ' stickor. Vilken formel visar antalet stickor S i figur n?',
+        'S = ' + d + ' · n' + (c > 0 ? ' + ' + c : c < 0 ? ' − ' + (-c) : ''), ['S = ' + s + ' · n', 'S = n + ' + d, 'S = ' + (s + d) + ' · n']);
+    },
+    function(){
+      var w = rnd(3, 9), l = rnd(w + 2, 14);
+      return mathQ('En rektangel har omkretsen ' + 2 * (l + w) + ' cm och längden ' + l + ' cm. Hur stor är arean?', l * w, [2 * (l + w), l * w + l, (l + w) * (l + w)], 'cm²', 0.4);
+    },
+    function(){
+      var a = rnd(4, 9), b = rnd(3, 8), c = rnd(2, 5), d = rnd(2, 6);
+      return mathQ('En figur består av en rektangel som är ' + a + ' cm × ' + b + ' cm och en mindre rektangel som är ' + c + ' cm × ' + d + ' cm. De två delarna överlappar inte. Hur stor är figurens area?', a * b + c * d, [a * b, (a + c) * (b + d), 2 * (a + b + c + d)], 'cm²', 0.4);
+    },
+    function(){
+      var k = rnd(2, 5), x = rnd(20, 90), pay = x * k < 200 ? 200 : 500;
+      return choiceQ('En bok kostar ' + x + ' kr. Du köper ' + k + ' böcker och betalar med en ' + pay + '-lapp. Vilket uttryck visar hur mycket du får tillbaka?', pay + ' − ' + k + ' · ' + x, [k + ' · ' + x + ' − ' + pay, pay + ' − ' + x, '(' + pay + ' − ' + k + ') · ' + x]);
+    },
+    function(){ return fromBank('ma_resonemang', 1)[0]; },
+    function(){ return fromBank('ma_resonemang', 1)[0]; }
+  ];
+
   var MATTE_QUIZZES = [
     { id:'matte-add', tag:'MATTE', icon:'➕', title:'Addition',  color:'#6c4cf1', desc:'Big numbers, decimals, missing numbers and word problems', make: function(){ return quizFrom([genAdd]); } },
     { id:'matte-sub', tag:'MATTE', icon:'➖', title:'Subtraction', color:'#6c4cf1', desc:'Big numbers, negative numbers, decimals and word problems', make: function(){ return quizFrom([genSub]); } },
@@ -2567,6 +2690,10 @@
     { id:'matte-algebra', tag:'MATTE', icon:'🧩', title:'Ekvationer och mönster', color:'#6c4cf1', desc:'Lös x, räkna ut uttryck och hitta mönster i talföljder', make:function(){ return quizFrom(ALG); } },
     { id:'matte-tal', tag:'MATTE', icon:'🧠', title:'Tal och räkneregler', color:'#6c4cf1', desc:'Primtal, delbarhet, avrundning, prioriteringsregler och negativa tal', make:function(){ return quizFrom(TAL); } },
     { id:'matte-sannolikhet', tag:'MATTE', icon:'🎲', title:'Sannolikhet och kombinatorik', color:'#6c4cf1', desc:'Tärningar, kulor i påsar och hur många sätt det finns', make:function(){ return fromBank('ma_sannolikhet'); } },
+    { id:'matte-delprov-b', tag:'MATTE · DELPROV B', icon:'🧠', title:'Delprov B – utan miniräknare', color:'#6c4cf1', desc:'Huvudräkning, decimaler, bråk, ekvationer, procent och sannolikhet – som nationella provet', added:'2026-11-14', make:function(){ return quizFrom(DELB); } },
+    { id:'matte-delprov-cd', tag:'MATTE · DELPROV C/D', icon:'🧾', title:'Delprov C/D – problem i flera steg', color:'#6c4cf1', desc:'Pengar, valuta, skala, tid, medelvärde och recept – med miniräknare', added:'2026-11-14', make:function(){ return quizFrom(DELC); } },
+    { id:'matte-delprov-e', tag:'MATTE · DELPROV E', icon:'🔍', title:'Delprov E – mönster och resonemang', color:'#6c4cf1', desc:'Mönster, area, formler och att avgöra om ett påstående stämmer', added:'2026-11-14', make:function(){ return quizFrom(DELE); } },
+    { id:'matte-delprov-alla', tag:'MATTE · NATIONELLA PROVET', icon:'🏆', title:'Nationella provet – alla delprov', color:'#6c4cf1', desc:'En blandning av delprov B, C/D och E', added:'2026-11-14', make:function(){ return quizFrom(DELB.concat(DELC, DELE)); } },
     { id:'matte-procent', tag:'MATTE', icon:'💯', title:'Procent – Läxa 8 & 9', color:'#6c4cf1', desc:'Percent, fractions and decimals, like the school homework', make:function(){ return fromBank('ma_procent'); } },
     { id:'matte-brak', tag:'MATTE', icon:'🍕', title:'Bråk – fractions', color:'#6c4cf1', desc:'Täljare, nämnare and parts of a whole', make:function(){ return fromBank('ma_brak'); } },
     { id:'matte-geometri', tag:'MATTE', icon:'📐', title:'Vinklar & symmetri', color:'#6c4cf1', desc:'Angles, triangles and lines of symmetry', make:function(){ return fromBank('ma_geometri'); } },
