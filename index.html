@@ -85,6 +85,7 @@
 
   <section id="quiz" class="hidden">
     <div class="card">
+      <button class="ghost" id="menuBtn" type="button" style="float:right;margin-left:8px">☰ Menu</button>
       <button type="button" class="speak-btn" id="soundBtn" title="Ljudeffekter på/av" aria-label="Sound effects on or off">🔔</button>
       <h2 id="quizTitle"></h2>
       <p class="sub" id="quizIntro"></p>
@@ -122,14 +123,12 @@
     </div>
     <div class="card actions">
       <button class="ghost hidden" id="backBtn" type="button">⬅ Back</button>
-      <button class="primary" id="nextBtn" type="button" disabled>Next ➡</button>
-      <button class="primary hidden" id="checkBtn" type="button" disabled>✅ Check answers</button>
-      <button class="ghost hidden" id="againBtn" type="button">🔄 New quiz</button>
       <button class="ghost" id="padBtn" type="button">✏️ Sketch pad</button>
-      <div class="progress-row">
-        <span class="hint" id="progress"></span>
-        <button class="ghost" id="menuBtn" type="button">Menu</button>
-      </div>
+      <span class="hint" id="progress" style="flex:1"></span>
+      <!-- Forward buttons sit on the right, where children expect "next" to be. -->
+      <button class="ghost hidden" id="againBtn" type="button">🔄 New quiz</button>
+      <button class="primary hidden" id="checkBtn" type="button" disabled>✅ Check answers</button>
+      <button class="primary" id="nextBtn" type="button" disabled>Next ➡</button>
     </div>
   </section>
   </div>
