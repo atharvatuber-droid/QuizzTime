@@ -28,6 +28,13 @@
   .menu-item .tag{display:inline-block;background:var(--c,var(--brand));color:#fff;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:99px;margin-bottom:6px}
   .menu-item strong{display:block;font-size:1.1rem}
   .menu-item span.d{color:var(--muted);font-size:.9rem}
+  .new-badge{display:inline-block;background:#ffcf33;color:#5a3d00;font-size:.75rem;font-weight:800;padding:2px 8px;border-radius:99px;margin:0 0 6px 6px;transform:rotate(-3deg);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .speak-btn{float:right;margin-left:8px;border:2px solid var(--line);background:#fff;border-radius:99px;width:40px;height:40px;font-size:1.15rem;line-height:1;cursor:pointer;padding:0}
+  .speak-btn:hover{border-color:var(--brand)}
+  .q-title{white-space:pre-line}
+  .q-pic{display:flex;justify-content:center;margin:0 0 12px}
+  .q-pic svg{width:100%;max-width:220px;height:auto;background:#f6f8ff;border-radius:12px}
+  .speak-btn.speaking{background:#efeaff;border-color:var(--brand)}
   .q{border:2px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
   .q.right{border-color:var(--good);background:var(--good-bg)}
   .q.wrong{border-color:var(--bad);background:var(--bad-bg)}
@@ -231,7 +238,7 @@
       <h2 id="quizTitle"></h2>
       <p class="sub" id="quizIntro"></p>
     </div>
-    <div id="readingPassage" class="card hidden" style="margin-bottom:14px"><h3 id="readingTitle" style="margin-top:0"></h3><p id="readingText" style="white-space:pre-line;line-height:1.75;margin-bottom:0"></p></div>
+    <div id="readingPassage" class="card hidden" style="margin-bottom:14px"><button type="button" class="speak-btn" id="readingSpeak" title="Läs upp texten / Read the text aloud" aria-label="Read the text aloud">🔊</button><h3 id="readingTitle" style="margin-top:0"></h3><p id="readingText" style="white-space:pre-line;line-height:1.75;margin-bottom:0"></p></div>
     <div class="card hidden" id="result">
       <div class="hint" id="resultName"></div>
       <div class="score" id="resultScore"></div>
@@ -1827,6 +1834,295 @@
   ENGLISH_READING_PASSAGES.push({"title": "The Night Train", "text": "Maya had never travelled alone before. Her mum hugged her on the platform and pushed a paper bag into her hands. \"Sandwiches, an apple and your phone charger,\" she said. \"Text me when you get to Grandpa's.\"\n\nThe night train left at exactly 9 p.m. Maya's seat was next to a window, and she watched the city lights disappear one by one until there was only darkness and her own reflection in the glass.\n\nAt midnight the train stopped suddenly in the middle of a forest. The lights flickered and went out. Some passengers groaned, and a baby started to cry. Maya's heart was pounding, but she remembered what Grandpa always said: \"When you're scared, find something useful to do.\"\n\nShe took out her phone and switched on the torch. Then she noticed an old man across the aisle who was trying to read a map in the dark. \"Would you like some light?\" she asked. He smiled gratefully. They spent the next hour talking about his travels in Norway and her plans to become a pilot.\n\nWhen the lights came back on and the train started moving again, the old man shook her hand. \"You are a very calm young lady,\" he said.\n\nAt 7 a.m. Grandpa was waiting on the platform. \"How was the trip?\" he asked.\n\nMaya grinned. \"Longer than expected,\" she said, \"but I made a new friend.\"", "questions": [["Why was this trip special for Maya?", "It was the first time she travelled alone", "It was her birthday", "She was moving to a new country", "She was going to fly a plane"], ["What was in the paper bag?", "Sandwiches, an apple and a phone charger", "A map and a torch", "Books and sweets", "A ticket and money"], ["What happened at midnight?", "The train stopped and the lights went out", "Maya fell asleep", "They arrived at Grandpa's", "The baby got off the train"], ["How did Maya feel when the lights went out?", "Scared, but she tried to stay calm", "Bored", "Angry with the driver", "Very happy"], ["What does \"gratefully\" mean in the text?", "thankfully", "angrily", "sadly", "quickly"], ["Which advice from Grandpa helped Maya?", "When you're scared, find something useful to do.", "Never talk to strangers.", "Always bring a map.", "Try to sleep on the train."], ["What did the old man think of Maya?", "That she was very calm", "That she was too young to travel alone", "That she talked too much", "That she was lost"], ["True or false? The train arrived earlier than planned.", "False", "True"]]},
     {"title": "The Amazing Octopus", "text": "The octopus is one of the most unusual animals in the ocean. It has eight arms covered in suckers, which it uses to touch, taste and grab things. Even more surprising, an octopus has three hearts and blue blood.\n\nOctopuses are masters of disguise. Special cells in their skin allow them to change colour in less than a second, so they can blend in with rocks, sand or coral. If a predator still finds them, they can squirt a cloud of dark ink and escape while the enemy is confused.\n\nScientists consider the octopus to be very intelligent. In experiments, octopuses have learned to open jars to get the food inside, and some have even escaped from their tanks at night. Because they have no bones, they can squeeze through any gap that is bigger than their beak, the only hard part of their body.\n\nSadly, most octopuses live short lives. Many species live for only one or two years. A mother octopus guards her eggs for weeks or even months without eating, and she usually dies soon after the eggs hatch.\n\nSo next time you see an octopus in a picture or an aquarium, remember: you are looking at one of the cleverest creatures in the sea.", "questions": [["What kind of text is this?", "A fact text", "A story", "A poem", "A letter"], ["How many hearts does an octopus have?", "three", "one", "two", "eight"], ["How does an octopus hide from enemies?", "It changes colour to blend in", "It digs a hole", "It grows a shell", "It swims to the surface"], ["Why can an octopus squeeze through very small gaps?", "It has no bones", "It is very small", "It uses its ink", "It has short arms"], ["What is the only hard part of an octopus's body?", "its beak", "its suckers", "its hearts", "its eyes"], ["What does \"disguise\" mean in the text?", "hiding by looking like something else", "a kind of food", "a fast way to swim", "a dangerous fish"], ["What happens to a mother octopus?", "She guards her eggs without eating and usually dies after they hatch", "She leaves the eggs at once", "She lives for many years with her babies", "She eats the eggs"], ["True or false? Most octopuses live for more than ten years.", "False", "True"]]});
 
+  // Livets utveckling – evolution (from the school's study sheets, "Viktiga begrepp inför provet om evolutionen").
+  BANKS.evolution = [
+    ["Vad är en egenskap hos en organism?", "Ett kännetecken, till exempel ögonfärg, längd eller blodgrupp", "Ett slags näring som kroppen använder", "En cell som bara finns i växter", "En plats där djur lever"],
+    ["Vad kallas en plötslig förändring i arvsmassan (generna) som leder till en ny egenskap?", "Mutation", "Selektion", "Anpassning", "Artbildning"],
+    ["Vad kan orsaka en mutation?", "Strålning som påverkar celler när de delar sig", "Att man äter för mycket godis", "Att man sover för lite", "Att man tvättar händerna"],
+    ["Hur kan man tänka på generna och en mutation?", "Generna är som en ritning och en mutation är som ett stavfel i ritningen", "Generna är som ett hus och en mutation är ett fönster", "Generna är som vatten och en mutation är en sten", "Generna är som en film och en mutation är ljudet"],
+    ["Vad är variation?", "Att individer inom samma art är lite olika varandra", "Att alla individer är exakt lika", "Att en art delas upp i två arter", "Att en organism flyttar till en ny miljö"],
+    ["Vad kallas det när naturen ”väljer” vilka individer som får överleva och skaffa ungar?", "Naturligt urval (selektion)", "Mutation", "Ärftlighet", "Fotosyntes"],
+    ["Vad är sexuellt urval?", "Ett slags urval där individer lyckas få en partner för att kunna få ungar", "Att djur väljer vilken mat de äter", "Att två arter bor på samma ställe", "Att en art dör ut"],
+    ["Vilket av följande är ett exempel på sexuellt urval?", "En påfågel med vacker fjäderdräkt", "En tjock päls som skyddar mot kyla", "En lång näbb för att nå mat", "En kamouflagefärg för att gömma sig"],
+    ["Vad är anpassning?", "En egenskap som gör att en organism klarar sig bättre i sin miljö", "Att ett djur flyttas till en djurpark", "Att man byter mat en dag", "Att ett djur somnar"],
+    ["Vilket av följande är ett exempel på anpassning?", "En tjock päls som skyddar mot kyla", "Att en person lär sig cykla", "Att en flicka målar en tavla", "Att en hund får ett nytt namn"],
+    ["Vad är ärftlighet?", "Att egenskaper förs vidare från föräldrar till deras ungar via generna", "Att man får pengar efter släktingar", "Att en art delas i två", "Att man lär sig något av sina föräldrar"],
+    ["Var finns arvsmassan (DNA)?", "I generna i cellerna", "I blodet", "I skelettet", "I magen"],
+    ["Vilka egenskaper kan föras vidare till nästa generation?", "Bara ärftliga egenskaper", "Alla egenskaper man lärt sig", "Bara kläder och frisyr", "Bara vilken mat man äter"],
+    ["Vad betyder evolution?", "En långsam förändring av levande organismer över många generationer", "En snabb förändring under ett år", "Att en individ förändras under sitt liv", "Att månen flyttar sig"],
+    ["Vad är en population?", "En grupp individer av samma art som lever i samma område vid samma tid", "En enskild individ", "Alla arter i världen", "En art som har dött ut"],
+    ["Vad kallas en grupp organismer som är så lika varandra att de kan få ungar tillsammans?", "Art", "Population", "Individ", "Familj"],
+    ["Vad är naturligt urval?", "Mekanismen som driver evolutionen: individer med egenskaper som passar miljön bättre överlever och får fler ungar", "Att djur väljer en partner efter utseende", "Att alla individer får lika många ungar", "Att nya gener skapas av solljus"],
+    ["Vad händer med individer som har sämre anpassade egenskaper i naturligt urval?", "De får färre ungar och deras egenskaper blir mindre vanliga", "De får fler ungar än andra", "De blir större", "Deras egenskaper blir vanligare"],
+    ["Vem formulerade evolutionsteorin genom naturligt urval?", "Charles Darwin", "Carl von Linné", "Alfred Nobel", "Anders Celsius"],
+    ["Vart reste Charles Darwin, där han studerade djur och växter?", "Till Galápagosöarna", "Till Island", "Till Australien", "Till Japan"],
+    ["Vad är artbildning?", "När en art så småningom delas upp i två eller flera nya arter", "När en ny art flyttar till en annan ö", "När två arter äter samma mat", "När en art dör ut"],
+    ["Vad är resultatet av evolution över lång tid?", "Nya arter", "Färre gener", "Mindre variation", "Samma art som förut"],
+    ["Hur kan två populationer av samma art bli två olika arter?", "De lever åtskilda, anpassar sig till olika miljöer och kan till slut inte längre få ungar tillsammans", "De byter gener varje dag", "De flyttar till samma ö", "De äter samma mat"],
+    ["Vad är rätt ordning i kedjan för hur en egenskap blir vanligare?", "Mutation → ny egenskap → variation → selektion → egenskapen blir vanligare eller försvinner", "Selektion → mutation → variation → ny egenskap", "Variation → artbildning → mutation → selektion", "Anpassning → fossil → mutation → Darwin"],
+    ["Vad är ett fossil?", "Förstenade rester eller spår av urgamla djur och växter", "Ett nytt djur som just upptäckts", "En ny sorts sten från havet", "En växt som kan bli 100 år gammal"],
+    ["Vad är bärnsten?", "Fossiliserad kåda där man ibland kan hitta insekter", "En sorts sten från bergen", "Ett grönt färgämne i växter", "En fisk som lever i havet"],
+    ["Vad kallas de allra första enkla levande cellerna, som bildades i vattnet?", "Urceller", "Cyanobakterier", "Fossil", "Toffeldjur"],
+    ["Vilka var de första organismerna som kunde göra fotosyntes?", "Cyanobakterier", "Fiskar", "Däggdjur", "Svampar"],
+    ["Vad kallas det när cyanobakterier blir synliga i vattnet, ofta under varma somrar?", "Algblomning", "Fotosyntes", "Mutation", "Artbildning"],
+    ["Vad är klorofyll?", "Det gröna färgämnet som gör fotosyntes möjlig", "Ett fossil", "Ett djur med många armar", "En typ av bärnsten"],
+    ["Vad kallas en organism som bara består av en enda cell?", "Encellig", "Flercellig", "Broskfisk", "Toffeldjur"],
+    ["Vad är ett toffeldjur?", "Ett litet encelligt djur som simmar med små trådar (cilier) och äter bakterier", "Ett stort havsdjur med åtta armar", "En fisk med brosk i stället för ben", "En växt som gör fotosyntes"],
+    ["Vad kännetecknar en broskfisk?", "Skelettet är gjort av brosk i stället för hårda ben, till exempel hajar", "Den har lungor", "Den lever på land", "Den saknar fenor"],
+    ["Vad är en kvastfenad fisk ofta kallad?", "Ett levande fossil", "Ett rovdjur på land", "En insekt", "Ett växtätande däggdjur"],
+    ["Vilket av följande kom först i livets utveckling på jorden?", "Enkla encelliga organismer i havet", "Fåglar", "Dinosaurier", "Däggdjur"],
+    ["Vad hände med många djur när en meteorit träffade jorden?", "Många djur dog ut", "Alla växter blev större", "Nya djurarter uppstod direkt", "Inget förändrades"],
+    ["Vad är livets byggstenar?", "Celler", "Atomer av guld", "Stenar", "Fossil"],
+    ["Sant eller falskt? Evolution sker hos en enskild individ under dess livstid.", "Falskt", "Sant"],
+    ["Sant eller falskt? Evolution sker över många generationer av en grupp organismer.", "Sant", "Falskt"],
+    ["Sant eller falskt? Det finns både encelliga och flercelliga organismer.", "Sant", "Falskt"]
+  ];
+
+  // ---------- pictures for questions ----------
+  // Simple drawings with no words in them. Rule: a picture only shows what the question text
+  // already says, so it helps the student understand the question without giving away the answer.
+  var PICS = {
+    cell: '<svg viewBox="0 0 220 120"><ellipse cx="110" cy="60" rx="70" ry="42" fill="#d8f3dc" stroke="#2d6a4f" stroke-width="4"/><circle cx="122" cy="56" r="15" fill="#95d5b2" stroke="#2d6a4f" stroke-width="3"/><circle cx="85" cy="72" r="4" fill="#52b788"/><circle cx="95" cy="44" r="3" fill="#52b788"/><circle cx="150" cy="74" r="4" fill="#52b788"/></svg>',
+    dna: '<svg viewBox="0 0 220 120" fill="none" stroke-width="5"><path d="M20 30 C60 30 60 90 100 90 S140 30 180 30 S200 60 200 60" stroke="#4361ee"/><path d="M20 90 C60 90 60 30 100 30 S140 90 180 90 S200 60 200 60" stroke="#f72585"/><g stroke="#adb5bd" stroke-width="3"><line x1="40" y1="34" x2="40" y2="86"/><line x1="60" y1="48" x2="60" y2="72"/><line x1="120" y1="40" x2="120" y2="80"/><line x1="140" y1="34" x2="140" y2="86"/><line x1="160" y1="40" x2="160" y2="80"/></g></svg>',
+    mutation: '<svg viewBox="0 0 220 120" fill="none" stroke-width="5"><path d="M20 30 C60 30 60 90 100 90 S140 30 180 30 S200 60 200 60" stroke="#4361ee"/><path d="M20 90 C60 90 60 30 100 30 S140 90 180 90 S200 60 200 60" stroke="#f72585"/><g stroke="#adb5bd" stroke-width="3"><line x1="40" y1="34" x2="40" y2="86"/><line x1="60" y1="48" x2="60" y2="72"/><line x1="140" y1="34" x2="140" y2="86"/><line x1="160" y1="40" x2="160" y2="80"/></g><line x1="120" y1="40" x2="120" y2="80" stroke="#ffb703" stroke-width="7"/><circle cx="120" cy="60" r="18" stroke="#e63946" stroke-width="3"/></svg>',
+    fossil: '<svg viewBox="0 0 220 120"><rect x="20" y="15" width="180" height="90" rx="20" fill="#d6ccc2" stroke="#9c8a7a" stroke-width="3"/><path d="M110 60 m0 0 a6 6 0 1 1 6 6 a12 12 0 1 1 -12 -12 a20 20 0 1 1 20 20 a30 30 0 1 1 -30 -30" fill="none" stroke="#7f5539" stroke-width="4"/></svg>',
+    amber: '<svg viewBox="0 0 220 120"><path d="M110 12 C150 40 170 70 150 98 C135 116 85 116 70 98 C50 70 70 40 110 12Z" fill="#f4a261" stroke="#e76f51" stroke-width="3" opacity=".9"/><ellipse cx="110" cy="75" rx="9" ry="5" fill="#3d2c1e"/><circle cx="101" cy="73" r="4" fill="#3d2c1e"/><ellipse cx="114" cy="68" rx="9" ry="4" fill="#fff" opacity=".6" transform="rotate(-30 114 68)"/><ellipse cx="120" cy="70" rx="9" ry="4" fill="#fff" opacity=".6" transform="rotate(20 120 70)"/><path d="M95 40 q8 -10 18 -6" stroke="#fff" stroke-width="4" fill="none" opacity=".6"/></svg>',
+    paramecium: '<svg viewBox="0 0 220 120"><ellipse cx="110" cy="60" rx="72" ry="30" fill="#cdb4db" stroke="#7b2cbf" stroke-width="3" transform="rotate(-8 110 60)"/><g stroke="#7b2cbf" stroke-width="2"><line x1="45" y1="45" x2="35" y2="38"/><line x1="65" y1="33" x2="60" y2="22"/><line x1="90" y1="27" x2="88" y2="15"/><line x1="115" y1="24" x2="116" y2="12"/><line x1="140" y1="25" x2="145" y2="13"/><line x1="165" y1="32" x2="173" y2="22"/><line x1="182" y1="47" x2="194" y2="42"/><line x1="55" y1="85" x2="47" y2="95"/><line x1="85" y1="93" x2="82" y2="105"/><line x1="115" y1="94" x2="117" y2="106"/><line x1="145" y1="88" x2="150" y2="99"/><line x1="172" y1="76" x2="182" y2="85"/></g><circle cx="115" cy="58" r="10" fill="#9d4edd"/></svg>',
+    cluster: '<svg viewBox="0 0 220 120" stroke="#2d6a4f" stroke-width="3" fill="#d8f3dc"><circle cx="80" cy="45" r="22"/><circle cx="122" cy="40" r="22"/><circle cx="100" cy="80" r="22"/><circle cx="142" cy="80" r="22"/><circle cx="60" cy="85" r="18"/><g fill="#95d5b2"><circle cx="80" cy="45" r="6"/><circle cx="122" cy="40" r="6"/><circle cx="100" cy="80" r="6"/><circle cx="142" cy="80" r="6"/><circle cx="60" cy="85" r="5"/></g></svg>',
+    meteor: '<svg viewBox="0 0 220 120"><rect width="220" height="120" rx="12" fill="#14213d"/><circle cx="160" cy="125" r="60" fill="#2a9d8f"/><path d="M20 10 L95 62" stroke="#ffb703" stroke-width="14" stroke-linecap="round" opacity=".7"/><path d="M35 20 L95 62" stroke="#fb8500" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="66" r="11" fill="#6c584c"/><circle cx="30" cy="80" r="2" fill="#fff"/><circle cx="190" cy="20" r="2" fill="#fff"/><circle cx="140" cy="35" r="1.5" fill="#fff"/></svg>',
+    coelacanth: '<svg viewBox="0 0 220 120"><rect width="220" height="120" rx="12" fill="#caf0f8"/><path d="M40 60 C70 25 150 25 175 60 C150 95 70 95 40 60Z" fill="#457b9d" stroke="#1d3557" stroke-width="3"/><path d="M175 60 L205 38 L200 60 L205 82Z" fill="#457b9d" stroke="#1d3557" stroke-width="3"/><g fill="#1d3557"><ellipse cx="95" cy="90" rx="10" ry="6" transform="rotate(30 95 90)"/><ellipse cx="135" cy="90" rx="10" ry="6" transform="rotate(30 135 90)"/><ellipse cx="100" cy="30" rx="10" ry="6" transform="rotate(-30 100 30)"/><ellipse cx="140" cy="31" rx="10" ry="6" transform="rotate(-30 140 31)"/></g><circle cx="62" cy="55" r="5" fill="#fff"/><circle cx="62" cy="55" r="2.5" fill="#000"/><g fill="#a8dadc"><circle cx="110" cy="55" r="3"/><circle cx="130" cy="65" r="3"/><circle cx="90" cy="68" r="3"/></g></svg>',
+    sunwater: '<svg viewBox="0 0 220 120"><rect width="220" height="120" rx="12" fill="#e0f4ff"/><circle cx="175" cy="30" r="16" fill="#ffd166"/><g stroke="#ffd166" stroke-width="3"><line x1="175" y1="6" x2="175" y2="0"/><line x1="150" y1="30" x2="143" y2="30"/><line x1="158" y1="13" x2="153" y2="8"/></g><path d="M0 70 q27 -12 55 0 t55 0 t55 0 t55 0 V120 H0Z" fill="#48cae4"/><path d="M0 85 q27 -10 55 0 t55 0 t55 0 t55 0" stroke="#0096c7" stroke-width="3" fill="none"/></svg>',
+    greenwater: '<svg viewBox="0 0 220 120"><rect width="220" height="120" rx="12" fill="#e0f4ff"/><circle cx="175" cy="30" r="16" fill="#ffb703"/><path d="M0 65 q27 -12 55 0 t55 0 t55 0 t55 0 V120 H0Z" fill="#74a57f"/><g fill="#2d6a4f" opacity=".7"><circle cx="30" cy="85" r="4"/><circle cx="70" cy="95" r="5"/><circle cx="110" cy="82" r="4"/><circle cx="150" cy="100" r="6"/><circle cx="190" cy="88" r="4"/><circle cx="90" cy="108" r="3"/></g></svg>',
+    volcano: '<svg viewBox="0 0 220 120"><rect width="220" height="120" rx="12" fill="#3d1f1f"/><circle cx="185" cy="25" r="12" fill="#ffba08"/><path d="M50 110 L95 45 L125 45 L170 110Z" fill="#6c584c"/><path d="M95 45 Q110 60 125 45" fill="#e85d04"/><g fill="#adb5bd" opacity=".8"><circle cx="105" cy="30" r="10"/><circle cx="120" cy="20" r="8"/><circle cx="95" cy="15" r="7"/></g><rect y="105" width="220" height="15" fill="#2b2b2b"/></svg>',
+    explorer: '<svg viewBox="0 0 220 120"><rect width="220" height="120" rx="12" fill="#fefae0"/><circle cx="90" cy="55" r="28" fill="none" stroke="#6c584c" stroke-width="7"/><line x1="110" y1="75" x2="140" y2="105" stroke="#6c584c" stroke-width="9" stroke-linecap="round"/><path d="M80 55 q10 -14 22 0 q-8 6 -22 0Z" fill="#bc6c25"/><circle cx="97" cy="52" r="2" fill="#000"/><path d="M160 30 l20 0 l-4 40 l-12 0Z" fill="#dda15e"/><line x1="170" y1="30" x2="170" y2="20" stroke="#606c38" stroke-width="3"/></svg>'
+  };
+  var QPICS = {
+    "Vad kallas en organism som bara består av en enda cell?": 'cell',
+    "Vad är ett toffeldjur?": 'paramecium',
+    "Vad är bärnsten?": 'amber',
+    "Vad är ett fossil?": 'fossil',
+    "Var finns arvsmassan (DNA)?": 'dna',
+    "Vad kallas en plötslig förändring i arvsmassan (generna) som leder till en ny egenskap?": 'mutation',
+    "Hur kan man tänka på generna och en mutation?": 'dna',
+    "Vad hände med många djur när en meteorit träffade jorden?": 'meteor',
+    "Vad är en kvastfenad fisk ofta kallad?": 'coelacanth',
+    "Vilka var de första organismerna som kunde göra fotosyntes?": 'sunwater',
+    "Vad kallas det när cyanobakterier blir synliga i vattnet, ofta under varma somrar?": 'greenwater',
+    "Vad kallas de allra första enkla levande cellerna, som bildades i vattnet?": 'sunwater',
+    "Vilket av följande kom först i livets utveckling på jorden?": 'volcano',
+    "Vem formulerade evolutionsteorin genom naturligt urval?": 'explorer',
+    "Sant eller falskt? Det finns både encelliga och flercelliga organismer.": 'cluster'
+  };
+
+  // ---------- English oral test (muntligt nationellt prov, åk 6) ----------
+  // Practice cards in the style of the national test's elevkort: the student reads the card
+  // (or listens with 🔊) and answers questions about what a good speaker does.
+  var ENGLISH_SPEAKING_CARDS = [
+    {title:"Card 1 – Likes and dislikes", text:"🗣️ PART 1 – Talk about yourself\n\nOn your card there are six pictures:\n🎮 playing video games   📚 reading books   🌶️ eating spicy food\n⛷️ winter sports   🎧 listening to music   ⏰ waking up early\n\nTask: Tell your partner which TWO things you like the most and ONE thing you dislike. Explain why. Then ask your partner what they think.\n\nExample: \"I really like playing video games because it's fun to play with my friends after school. I also love winter sports like skiing. However, I really dislike waking up early because I always feel tired in the morning. What about you?\"\n\nRemember: the teacher listens for how well you keep the conversation going and make yourself understood – not for perfect grammar.", questions:[
+      ["What are you asked to do with this card?", "Tell your partner two things you like, one thing you dislike, and explain why", "Read the card silently and say nothing", "Translate every word into Swedish", "Wait for the teacher to speak for you"],
+      ["Which answer is the BEST, because it gives a reason?", "I like reading books because I can imagine other worlds.", "I like books.", "Books.", "Yes, reading."],
+      ["In the example, which word shows a contrast between likes and dislikes?", "However", "Because", "Also", "Really"],
+      ["Which question at the end keeps the conversation going?", "What about you?", "Okay, bye.", "I'm finished.", "Can I go now?"],
+      ["You forget the English word for 'väckarklocka'. What is the best thing to do?", "Explain it in English: the thing that rings to wake you up in the morning", "Say the word in Swedish", "Stop talking and wait", "Change the topic to something else"],
+      ["What does the teacher mostly listen for in the oral test?", "How well you keep the conversation going and make yourself understood", "Perfect grammar in every sentence", "How fast you can speak", "How many long words you know"],
+      ["Your partner says: 'I love spicy food!' What is a good follow-up question?", "Really? What is your favourite spicy dish?", "No.", "I don't care.", "That's wrong."],
+      ["True or false? You fail the test if you make a small grammar mistake.", "False", "True"]
+    ]},
+    {title:"Card 2 – Saturday plans", text:"🤝 PART 2 – Make a choice together\n\nYou and your friend want to do something fun on Saturday afternoon. You only have a small budget. Discuss the options and AGREE on one activity:\n\n🏊 Go to the swimming pool\n🍿 Watch a movie at home and make popcorn\n🚲 Go for a bike ride in the park\n🎲 Play board games\n\nThe teacher listens for:\n• Giving reasons – \"I think we should watch a movie because it might rain on Saturday.\"\n• Asking your partner – \"What do you think? Do you like board games?\"\n• Agreeing or compromising – \"Okay, let's go to the swimming pool first and watch a movie later!\"", questions:[
+      ["What do you and your partner have to do in this task?", "Discuss the options and agree on one activity", "Each choose a different activity and stop", "Tell the teacher which one is the cheapest", "Write a list of all activities"],
+      ["Which sentence gives a reason?", "I think we should watch a movie because it might rain on Saturday.", "Movie.", "Let's go.", "I like Saturdays."],
+      ["Which sentence asks for your partner's opinion?", "What do you think? Do you like board games?", "I want board games.", "Board games are boring.", "We are playing board games."],
+      ["Which sentence is a good compromise?", "Okay, let's go to the swimming pool first and watch a movie later!", "No, only my idea.", "I don't want to do anything.", "You decide, I don't care."],
+      ["Your partner says: 'I don't really like swimming.' What is a good reply?", "Okay, no problem! Would you rather go for a bike ride?", "You are wrong.", "Swimming is the best, end of discussion.", "Then I'll go alone."],
+      ["Why could a bike ride in the park be a good choice with a small budget?", "It is free if you already have bikes", "It is the most expensive option", "You need to buy tickets", "It only works in the winter"],
+      ["Which phrase shows that you agree?", "That's a great idea!", "No way.", "Whatever.", "I disagree."],
+      ["What should you do if your partner is quiet?", "Ask them a question, like 'Which one do you like best?'", "Keep talking without stopping", "Tell the teacher", "Stay quiet too"]
+    ]},
+    {title:"Card 3 – A place I like", text:"📍 Describe a place\n\nPictures on the card:\n🏞️ a park   🏖️ a beach   🏠 my room   🏟️ a sports arena\n\nTask: Choose one place and describe it to your partner. Say WHAT it looks like, WHAT you do there and WHY you like it. Your partner should ask at least one follow-up question.\n\nUseful phrases:\n• \"My favourite place is … because …\"\n• \"There is / there are …\"\n• \"Last summer I went there with …\"\n• \"Have you ever been to a place like that?\"", questions:[
+      ["What three things should you talk about when you describe the place?", "What it looks like, what you do there and why you like it", "Only its name", "How much it costs to get there", "The weather report for tomorrow"],
+      ["Which sentence describes the place with details?", "There is a big lake with a small wooden bridge, and lots of ducks.", "It is nice.", "A park.", "Yes."],
+      ["Which sentence correctly tells about something in the past?", "Last summer I went there with my cousins.", "Last summer I go there with my cousins.", "Last summer I going there with my cousins.", "Last summer I will go there with my cousins."],
+      ["Which is a good follow-up question from your partner?", "What do you usually do there?", "Can we stop now?", "Why are you talking?", "Is it my turn?"],
+      ["Which phrase is correct when you talk about many things?", "There are many trees.", "There is many trees.", "It are many trees.", "They is many trees."],
+      ["You can't remember the word for 'gungor' in a playground. What do you say?", "The things you sit on and go back and forth on", "Gungor", "I don't know, sorry, next", "Nothing – just skip it"],
+      ["Which word makes your description more interesting?", "amazing", "thing", "stuff", "okay"],
+      ["What is a good way to end your turn?", "Have you ever been to a place like that?", "That's all, finished.", "Now you must talk.", "Bye."]
+    ]},
+    {title:"Card 4 – School and free time", text:"💬 Share and discuss opinions\n\nStatements on the card:\n1. \"School should start one hour later.\"\n2. \"Every student should have homework every day.\"\n3. \"Mobile phones should be allowed during breaks.\"\n\nTask: Choose one statement. Say if you agree or disagree and why. Listen to your partner and react to what they say.\n\nUseful phrases:\n• \"In my opinion …\"  • \"I agree because …\"  • \"I see your point, but …\"\n• \"Do you agree?\"  • \"That's true, but on the other hand …\"", questions:[
+      ["What is the task on this card?", "Say if you agree or disagree with a statement and explain why", "Read all statements as fast as possible", "Agree with everything your partner says", "Only say yes or no"],
+      ["Which phrase do you use to give your opinion?", "In my opinion …", "Once upon a time …", "Dear Sir …", "The end."],
+      ["Your partner disagrees with you. Which reply is the most polite?", "I see your point, but I still think …", "You are stupid.", "No, no, no.", "Whatever you say."],
+      ["Which sentence gives a reason for statement 1?", "I agree, because many students are tired in the morning.", "I agree.", "School.", "One hour."],
+      ["Which phrase shows you are thinking about the other side?", "On the other hand …", "Never mind.", "I don't know.", "Anyway, bye."],
+      ["Which question invites your partner to speak?", "Do you agree?", "Are we done?", "Can I talk more?", "Why did you say that, stupid?"],
+      ["What is the best way to react when your partner says something?", "Listen and answer what they actually said", "Ignore it and start a new topic", "Repeat your own sentence", "Look at the teacher"],
+      ["True or false? It is okay to disagree with your partner in the test.", "True", "False"]
+    ]},
+    {title:"Card 5 – Plan a class party", text:"🎉 Plan together\n\nYour class is having an end-of-term party. You and your partner must decide:\n🍕 What food to have (pizza, tacos or sandwiches)\n🎵 What to do (music and dancing, games, or a film)\n\nTask: Suggest ideas, listen to each other and agree on a plan. Make sure both of you get to speak.\n\nUseful phrases:\n• \"How about …?\"  • \"Let's …\"  • \"I'd prefer … because …\"\n• \"What would you like?\"  • \"Okay, so we agree on …\"", questions:[
+      ["Which phrase is a good way to suggest something?", "How about having tacos?", "Tacos, end of story.", "I hate everything.", "Give me tacos."],
+      ["Which sentence says what you like better and why?", "I'd prefer pizza because everyone likes it.", "Pizza.", "I prefer.", "Because pizza."],
+      ["Which phrase summarizes what you have agreed on?", "Okay, so we agree on pizza and games.", "Let's start again.", "I'm not sure about anything.", "You choose everything."],
+      ["Why is it important that both of you speak?", "The teacher needs to hear how you both talk and interact", "It isn't important", "So the test ends faster", "Only one person is graded"],
+      ["Your partner suggests a film, but you want music. What is a good compromise?", "Let's dance first and watch a short film at the end!", "No film, ever.", "Fine, I will not come.", "You are wrong."],
+      ["Which question asks what your partner wants?", "What would you like to eat?", "Do you eat?", "Why pizza, really?", "Are you hungry or what?"],
+      ["What does 'Let's …' mean?", "Let us – a suggestion to do something together", "Stop doing something", "A question about the past", "A way to say goodbye"],
+      ["True or false? You should speak Swedish if you get stuck.", "False", "True"]
+    ]}
+  ];
+
+  // ---------- more English national-test styles (original texts, same task types as the åk 6 practice papers) ----------
+  // 1) Fill the gaps: a text with numbered gaps, four words to choose from for each gap.
+  var ENGLISH_CLOZE_PASSAGES = [
+    {title:"The Night Market", text:"Every Friday evening, the town square [1] into a busy night market. Families come to buy food, crafts and old books, and many people stay [2] late as ten o'clock.\n\nMy favourite stall sells hot chocolate [3] marshmallows on top. Last week I [4] my little brother with me, and he spent all his pocket money on [5] toy robot.\n\nThe sellers are always friendly, [6] they smile at everyone. If you have never been, you [7] really try it!", questions:[
+      ["Gap 1: Every Friday evening, the town square [1] into a busy night market.", "turns", "turn", "turning", "turned"],
+      ["Gap 2: Many people stay [2] late as ten o'clock.", "as", "so", "than", "like"],
+      ["Gap 3: Hot chocolate [3] marshmallows on top.", "with", "for", "by", "at"],
+      ["Gap 4: Last week I [4] my little brother with me.", "brought", "bring", "bringing", "brings"],
+      ["Gap 5: He spent all his pocket money on [5] toy robot.", "a", "an", "many", "much"],
+      ["Gap 6: The sellers are always friendly, [6] they smile at everyone.", "and", "or", "if", "than"],
+      ["Gap 7: If you have never been, you [7] really try it!", "should", "did", "are", "was"]
+    ]},
+    {title:"A Day at the Zoo", text:"Last Saturday our class went on a trip to the zoo. We [1] the bus at eight o'clock and the ride took about an hour.\n\nFirst we saw the monkeys, which were jumping from tree to tree. They were [2] funny that everybody laughed. Later, we had lunch outside. Maria had forgotten her sandwich, so I [3] her half of mine.\n\nIn the afternoon we visited the reptile house, [4] it was warm and a bit dark. The guide told us that some snakes can go for months [5] eating.\n\nI think it was the [6] day of the whole term, and I can't wait to [7] there again!", questions:[
+      ["Gap 1: We [1] the bus at eight o'clock.", "caught", "catch", "catches", "catching"],
+      ["Gap 2: They were [2] funny that everybody laughed.", "so", "such", "very", "too"],
+      ["Gap 3: I [3] her half of mine.", "gave", "give", "given", "gives"],
+      ["Gap 4: We visited the reptile house, [4] it was warm and a bit dark.", "where", "what", "who", "whose"],
+      ["Gap 5: Some snakes can go for months [5] eating.", "without", "with", "under", "between"],
+      ["Gap 6: I think it was the [6] day of the whole term.", "best", "good", "better", "most"],
+      ["Gap 7: I can't wait to [7] there again!", "go", "going", "went", "goes"]
+    ]},
+    {title:"Grandma's Garden", text:"My grandma has the most beautiful garden in our street. Every spring she plants flowers in [1] colours, so it looks like a rainbow. She says that gardening is not hard [2] you are patient.\n\nLast year she gave me my own small piece of land, and I [3] carrots there. At first nothing happened, but after three weeks I [4] tiny green leaves.\n\nNow I water the plants [5] morning before school. Grandma often tells me that vegetables taste much [6] when you have grown them yourself. In autumn we will [7] the carrots and make soup together.", questions:[
+      ["Gap 1: She plants flowers in [1] colours.", "different", "differently", "difference", "differ"],
+      ["Gap 2: Gardening is not hard [2] you are patient.", "if", "so", "than", "until"],
+      ["Gap 3: Last year I [3] carrots there.", "planted", "plant", "planting", "plants"],
+      ["Gap 4: After three weeks I [4] tiny green leaves.", "saw", "seen", "see", "seeing"],
+      ["Gap 5: I water the plants [5] morning before school.", "every", "ever", "many", "other"],
+      ["Gap 6: Vegetables taste much [6] when you have grown them yourself.", "better", "good", "best", "well"],
+      ["Gap 7: In autumn we will [7] the carrots and make soup.", "pick", "picking", "picked", "picks"]
+    ]}
+  ];
+
+  // 2) Dialogue completion: two people talk – how does the conversation end?
+  BANKS.engelska_dialog = [
+    ["How does the conversation end?\n\n— It's my birthday on Saturday!\n— Oh, how old will you be?\n— Twelve. Would you like to come to my party?", "I'd love to, thank you!", "Yes, it's on Monday.", "I was twelve last year.", "Happy birthday to me!"],
+    ["How does the conversation end?\n\n— Excuse me, where is the library?\n— Go straight on and turn left at the school.\n— Is it far?", "No, it's only five minutes.", "Yes, it's a book.", "I turned left.", "At the school."],
+    ["How does the conversation end?\n\n— I'm so tired today.\n— Did you go to bed late?\n— Yes, I watched a film until midnight.", "No wonder you're sleepy!", "I love the morning.", "It was in the cinema.", "Have a nice breakfast."],
+    ["How does the conversation end?\n\n— Can I help you?\n— I'd like a pair of black shoes, please.\n— What size are you?", "Size 37, I think.", "They are very black.", "Yes, I can.", "I like your shop."],
+    ["How does the conversation end?\n\n— What's the matter?\n— I've lost my phone.\n— When did you last have it?", "At lunch, I think.", "It is a red one.", "I phone my mum every day.", "Last Tuesday is nice."],
+    ["How does the conversation end?\n\n— Would you like some more soup?\n— No, thank you. It was delicious.\n— I'm glad you liked it.", "Can you give me the recipe?", "I am hungry again yesterday.", "It was cold.", "Let's go to the zoo."],
+    ["How does the conversation end?\n\n— Do you play any instruments?\n— Yes, the guitar.\n— How long have you played?", "For about three years.", "On Mondays.", "A black one.", "In my room."],
+    ["How does the conversation end?\n\n— The film starts at seven.\n— Then we should leave at half past six.\n— Okay. Shall I bring some snacks?", "Good idea, I'll bring the drinks.", "No, it was yesterday.", "I don't know him.", "It's a long film."],
+    ["How does the conversation end?\n\n— Hi! Are you new here?\n— Yes, I started today.\n— Welcome! What's your name?", "I'm Sofia. Nice to meet you!", "I'm twelve years old.", "At ten o'clock.", "Yes, I am new."],
+    ["How does the conversation end?\n\n— How was your holiday?\n— Great! We went to Spain.\n— Did you swim in the sea?", "Yes, every day!", "No, I will.", "It was in July.", "Yes, they were."],
+    ["How does the conversation end?\n\n— I can't find my jacket.\n— Is it the blue one?\n— Yes, I think I left it at school.", "Let's check there tomorrow.", "I like blue jackets.", "It's a nice jacket.", "I left it next week."],
+    ["How does the conversation end?\n\n— Would you like to go skating on Sunday?\n— I'd love to, but I have a piano lesson.\n— What about Saturday instead?", "That would be perfect!", "I play the piano.", "Yes, it was.", "Skating is cold."],
+    ["How does the conversation end?\n\n— That's a nice bag!\n— Thanks, my aunt gave it to me.\n— Where did she buy it?", "On a trip to London, I think.", "Because it's big.", "Yes, I can.", "She is my aunt."],
+    ["How does the conversation end?\n\n— Is anyone sitting here?\n— No, please sit down.\n— Thank you. It's very crowded today.", "Yes, there are so many people.", "I'm sitting here.", "No, it's not mine.", "Please stand up."],
+    ["How does the conversation end?\n\n— What do you want to be when you grow up?\n— A vet, I think.\n— Why a vet?", "Because I love animals.", "Because I am twelve.", "I will be.", "At the animal shop."],
+    ["How does the conversation end?\n\n— Look at the sky!\n— It's getting dark.\n— I think it's going to rain.", "Let's go inside, then.", "It rained last year.", "I don't have a sky.", "Yes, it's sunny."],
+    ["How does the conversation end?\n\n— Could you help me with my homework?\n— Sure, what is it about?\n— It's maths. I don't understand fractions.", "Let's look at an example together.", "I have no pencil case.", "Fractions are red.", "My homework is late."],
+    ["How does the conversation end?\n\n— Which sport do you like best?\n— Swimming. And you?\n— I prefer football.", "Really? Do you play in a team?", "At the sports hall.", "Last Sunday.", "It's very expensive."],
+    ["How does the conversation end?\n\n— Dinner is ready!\n— Wow, it smells good.\n— It's my grandmother's recipe.", "I can't wait to taste it!", "It was a long time ago.", "I have a recipe.", "Where is my dinner yesterday?"],
+    ["How does the conversation end?\n\n— I'm going to the shop. Do you need anything?\n— Could you buy some milk?\n— Sure. Anything else?", "No, that's all, thanks.", "Yes, it is milk.", "I bought it yesterday.", "The shop is closed."]
+  ];
+
+  // 3) Find the facts: read an information text and answer questions with short answers.
+  var ENGLISH_INFO_PASSAGES = [
+    {title:"Seaside Adventure Camp", text:"Seaside Adventure Camp – for kids aged 10–13\n\nWho can come?\nChildren aged 10 to 13. You do not have to be a great swimmer, but you must be able to swim 200 metres.\n\nWhere?\nThe camp is on the island of Orust, on the west coast. Take the ferry from Tjörn. It leaves every hour.\n\nWhen and how much?\nWeek 1: June 20–26 (SEK 4,200)\nWeek 2: July 4–10 (SEK 4,200)\nWeek 3: July 18–24 (SEK 3,800 – cheaper because the weather is less certain)\n\nWhat do we do?\nEvery day we sail, kayak and make campfires. On Wednesdays we visit a small fishing village and learn how to cook fish. On Fridays there is a talent show in the evening.\n\nWhere do we sleep?\nIn wooden cabins with six beds in each. Bring your own sleeping bag.\n\nWhat to bring\nWarm clothes, a raincoat, swimming things and a torch. Mobile phones are not allowed during the day.", questions:[
+      ["Who can join the camp?", "Children aged 10 to 13 who can swim 200 metres", "Anyone who can swim", "Teenagers aged 14 to 16", "Only very good swimmers"],
+      ["On which island is the camp? (Answer in English.)", "Orust"],
+      ["How much does week 3 cost in SEK? (Write the number.)", "3800 | 3 800 | 3,800"],
+      ["Why is week 3 cheaper?", "The weather is less certain", "There are fewer activities", "It is shorter", "The cabins are smaller"],
+      ["On which day is the talent show? (Answer in English.)", "Friday | Fridays | on Fridays"],
+      ["What do the campers learn in the fishing village?", "How to cook fish", "How to sail", "How to build cabins", "How to swim"],
+      ["What is NOT allowed during the day?", "Mobile phones", "Kayaks", "Sleeping bags", "Raincoats"]
+    ]},
+    {title:"Maple Hill Science Museum", text:"Welcome to Maple Hill Science Museum!\n\nOpening hours\nTuesday to Sunday, 10:00–17:00. The museum is closed on Mondays. On Thursdays we stay open until 20:00.\n\nTickets\nChildren under 6: free\nAges 6–15: £6\nAdults: £12\nSchool groups: £4 per student (book at least two weeks before your visit)\n\nExhibitions\nSpace Zone – try our rocket simulator (you must be 8 or older)\nDino Hall – see a 12-metre dinosaur skeleton\nWater Lab – bring a change of clothes!\nRobot Workshop – open on Saturdays only\n\nCafé\nOn the first floor. Hot lunches are served 11:30–14:00. You can also eat your own lunch in the picnic room.\n\nGetting here\nBus 14 stops outside. Parking costs £3 per day.", questions:[
+      ["On which day is the museum closed? (Answer in English.)", "Monday | Mondays | on Mondays"],
+      ["Until what time is the museum open on Thursdays?", "20:00 (8 pm)", "17:00", "19:00", "21:00"],
+      ["How much is a ticket for a 10-year-old in pounds? (Write the number.)", "6 | £6"],
+      ["What do school groups need to do?", "Book at least two weeks before", "Pay £12 each", "Come on Thursdays", "Bring a picnic"],
+      ["How long is the dinosaur skeleton? (Write the number of metres.)", "12"],
+      ["When can you visit the Robot Workshop?", "Only on Saturdays", "Every day", "On Mondays", "On Thursdays"],
+      ["Why should you bring a change of clothes to Water Lab?", "You might get wet", "It is very cold", "You must wear a uniform", "It is a dinosaur show"]
+    ]}
+  ];
+
+  // 4) Two more news reports (like "Reports"): read and choose the best answer.
+  ENGLISH_READING_PASSAGES.push(
+    {title:"Robot Helps Children Read", text:"A school in Manchester has a new helper in its library – a small robot called Robo-Ruby. Children who find reading difficult can read aloud to her, and she listens patiently without ever getting tired or laughing at mistakes.\n\nTeachers say the idea works well. \"Some pupils are shy when they read in front of other children,\" says the head teacher. \"But they don't mind reading to a robot.\" After three months, most of the children could read faster.\n\nNot everyone is happy, though. Some parents are worried that robots will take over the work of teachers. The school says this will never happen. Ruby can only listen and say \"well done\". Only a real teacher can explain a difficult word or choose a good book.\n\nThe school now plans to buy two more robots, if it can find the money.", questions:[
+      ["Where does Robo-Ruby work?", "In a school library", "In a hospital", "In a bookshop", "In a museum"],
+      ["Who reads to Robo-Ruby?", "Children who find reading hard", "Teachers", "Parents", "Other robots"],
+      ["Why do some pupils like reading to the robot?", "They are not afraid of being laughed at", "She gives them presents", "She reads faster than they do", "She tells funny stories"],
+      ["What happened after three months?", "Most children could read faster", "The robot broke", "Pupils stopped reading", "Teachers left the school"],
+      ["What are some parents worried about?", "Robots might replace teachers", "The robot is too expensive", "Children read too much", "The library is too small"],
+      ["What can only a real teacher do, according to the school?", "Explain difficult words", "Say \"well done\"", "Listen to pupils", "Be patient"],
+      ["What does the school want to do?", "Buy two more robots if it finds the money", "Close the library", "Sell Robo-Ruby", "Build a new school"]
+    ]},
+    {title:"The Boy Who Collects Plastic", text:"Twelve-year-old Leo from Australia has a very special hobby. Every Sunday morning, he walks along the beach near his home and picks up plastic. In the past year, he has collected more than 3,000 bottles, bags and straws.\n\nIt all started when Leo saw a turtle with a plastic bag around its neck. \"I felt so sad,\" he says. \"I knew I had to do something.\" First he went alone, but soon his friends joined in. Now there are 30 children in his \"Clean Beach Club\".\n\nThe club also visits schools to talk about how plastic hurts animals. \"If everyone picks up just one thing, the sea will be cleaner,\" says Leo.\n\nLast month the town gave Leo a prize. He used the money to buy gloves and bags for the club. His next plan is to open a plastic-free café on the beach.", questions:[
+      ["When does Leo clean the beach?", "On Sunday mornings", "Every evening", "On Saturdays", "Only in summer"],
+      ["How much plastic has he collected in a year?", "More than 3,000 things", "30 bottles", "One turtle", "Only straws"],
+      ["What made Leo start?", "He saw a turtle with a plastic bag", "His teacher asked him", "He won a prize", "His friends asked him"],
+      ["How many children are in the club now?", "30", "3", "300", "13"],
+      ["What does the club do at schools?", "Talks about how plastic hurts animals", "Sells plastic", "Teaches swimming", "Cleans the classrooms"],
+      ["What did Leo do with the prize money?", "Bought gloves and bags", "Went on holiday", "Bought a boat", "Saved it"],
+      ["Which sentence describes Leo best?", "He cares about nature and gets others involved", "He does not like school", "He only cares about money", "He is afraid of the sea"]
+    ]}
+  );
+
+  // 5) More oral-test cards in the style of the "What do you like best?" elevkort.
+  ENGLISH_SPEAKING_CARDS.push(
+    {title:"Card 6 – Holidays (likes card)", text:"🗣️ What do you like best?\n• Camping\n• Staying in a hotel\n• Staying at home\n\nExplain why!\n- - - - - - - - - - - - - - - - - -\nWhat don't you like? Why?\nAsk your friend.\nWhat about grown-ups (parents/grandparents)?", questions:[
+      ["What is the first thing you do with this card?", "Choose the one you like best and explain why", "Read only the first word", "Ask the teacher to choose for you", "Say nothing until your partner speaks"],
+      ["Which answer to 'Explain why!' is the best?", "I like camping best because we can sit by the fire and tell stories.", "Camping.", "Because yes.", "I do not know."],
+      ["How can you ask your friend the same question?", "What do you like best? Why?", "Camping is good, right or wrong?", "You like it too.", "Tell me nothing."],
+      ["What could you say about grown-ups?", "My parents prefer hotels because they like to relax.", "Grown-ups are old.", "I don't know them.", "Hotels."],
+      ["Your partner only says 'Hotel.' What should you do?", "Ask a follow-up question, like 'What do you like about hotels?'", "Say nothing", "Correct their grammar", "Ask for a new card"],
+      ["Which word gives a reason?", "because", "or", "then", "also"],
+      ["True or false? You must speak without stopping for the whole time.", "False", "True"]
+    ]},
+    {title:"Card 7 – Hobbies (likes card)", text:"🗣️ What do you like best?\n• Building models\n• Reading comics\n• Collecting things\n\nExplain why!\n- - - - - - - - - - - - - - - - - -\nWhat don't you like? Why?\nAsk your friend.\nWhat about grown-ups (parents/grandparents)?", questions:[
+      ["Which sentence is a good way to start?", "I like reading comics best because the pictures make the stories exciting.", "Comics.", "I read.", "Hobby."],
+      ["Which question keeps the conversation going?", "Do you have a favourite comic?", "Are we finished?", "Do you talk?", "Why are you here?"],
+      ["How can you say that you do NOT like something?", "I don't really like collecting things because it takes a lot of space.", "I don't like because.", "No like collecting.", "Collecting not."],
+      ["You can't remember the English word for 'serietidning'. What do you do?", "Explain it: a magazine with funny pictures and stories", "Say it in Swedish", "Stop talking", "Change the topic"],
+      ["Which question is about grown-ups?", "Which hobbies do your parents like?", "Do you like comics?", "What is your name?", "Where is the card?"],
+      ["Which answer shows that you listen to your partner?", "Oh, you build models? What kind of models?", "Anyway, I like comics.", "Hm.", "I don't care."],
+      ["True or false? Using other English words to explain a word you forgot is a good strategy.", "True", "False"]
+    ]},
+    {title:"Card 8 – School (likes card)", text:"🗣️ What do you like best?\n• Maths\n• Art\n• Sports\n\nExplain why!\n- - - - - - - - - - - - - - - - - -\nWhat don't you like? Why?\nAsk your friend.\nWhat about grown-ups (parents/grandparents)?", questions:[
+      ["Which answer gives the best explanation?", "I like art best because I can use my imagination.", "Art.", "Yes.", "It is good."],
+      ["How can you politely say you disagree?", "I see what you mean, but I prefer sports.", "You are wrong.", "That is stupid.", "No."],
+      ["Which sentence compares two things?", "Maths is harder than art, but I like it more.", "Maths and art.", "I have maths.", "Art is art."],
+      ["What could you ask about grown-ups?", "What did your parents like at school?", "How old is the school?", "Where is the teacher?", "Do you have homework?"],
+      ["Which phrase shows that you think about both sides?", "On the one hand it is difficult, but on the other hand it is fun.", "It is.", "Never mind.", "Whatever."],
+      ["What is more important in the oral test?", "Making yourself understood and keeping the conversation going", "Using only very long words", "Speaking as fast as possible", "Never making a mistake"],
+      ["True or false? It is okay to use a short pause to think.", "True", "False"]
+    ]}
+  );
+
+  // 6) Writing tips: read the task and a sample text, then answer questions about planning and checking.
+  var ENGLISH_WRITING_CARDS = [
+    {title:"Writing – My Hero", text:"✍️ THE TASK\nA school in Dublin is doing a project about heroes. On their website they ask you to write about a person you think is a hero.\n\nYou can write about:\n• who your hero is\n• why this person is special\n• things you do together\n• a special memory\n• the future\n\nWrite as much as possible! Use English all the time!\n\n📄 A SAMPLE TEXT\nMy hero is my grandad. He is seventy years old, but he is still very strong. He worked as a firefighter and he saved many people. Last summer, we went fishing together. We sat in a small boat for four hours, and he told me stories about his job. I will never forget that day because I felt so proud of him. In the future I want to be as kind as he is. What about you? Who is your hero?", questions:[
+      ["Which sentence tells about a special memory?", "Last summer, we went fishing together.", "He worked as a firefighter.", "My hero is my grandad.", "In the future I want to be as kind as he is."],
+      ["Which sentence tells who the hero is?", "My hero is my grandad.", "I felt so proud.", "We sat in a small boat.", "Who is your hero?"],
+      ["Which word gives a reason in the text?", "because", "but", "together", "still"],
+      ["Which sentence is about the future?", "In the future I want to be as kind as he is.", "He is seventy years old.", "He told me stories.", "We went fishing."],
+      ["Why is the last sentence a good ending?", "It speaks to the reader and invites an answer", "It is very long", "It changes the topic", "It has a mistake"],
+      ["Which sentence has NO mistake?", "We sat in a small boat for four hours.", "We sitted in a small boat for four hours.", "We sit in small boat four hours yesterday.", "We was sat in a small boat four hours."],
+      ["You forget an English word while writing. What should you do?", "Describe it with other English words", "Write it in Swedish", "Leave the sentence out", "Stop writing"]
+    ]},
+    {title:"Writing – A Perfect Weekend", text:"✍️ THE TASK\nAn English school wants to know how students spend their weekends. Write about your perfect weekend.\n\nYou can write about:\n• where you are\n• who you are with\n• what you do\n• what you eat\n• how you feel\n\nWrite as much as possible! Use English all the time!\n\n📄 A SAMPLE TEXT\nMy perfect weekend starts on Saturday morning. I wake up late and eat pancakes with strawberries. After that, my best friend Emma comes to my house, and we play board games. If the weather is nice, we go to the park and ride our bikes. In the evening my family watches a film and eats pizza. On Sunday we visit my cousins in the countryside. I feel happy and relaxed because I am with the people I love. That is why weekends are my favourite time of the week.", questions:[
+      ["Which sentence says what the writer eats?", "I wake up late and eat pancakes with strawberries.", "We play board games.", "We visit my cousins.", "I am with the people I love."],
+      ["Which words help the reader follow the ORDER of events?", "After that, In the evening, On Sunday", "pancakes, pizza, film", "happy, relaxed, nice", "Emma, cousins, family"],
+      ["Which sentence shows how the writer feels?", "I feel happy and relaxed because I am with the people I love.", "I wake up late.", "We go to the park.", "My family watches a film."],
+      ["Which part of a sentence shows a condition?", "If the weather is nice", "After that", "In the evening", "On Sunday"],
+      ["Which is the best last sentence for a text like this?", "That is why weekends are my favourite time of the week.", "The end.", "I don't know what to write.", "Bye."],
+      ["Which sentence is correct?", "My best friend Emma comes to my house.", "My best friend Emma come to my house.", "My best friend Emma coming to my house.", "My best friend Emma comes at my house."],
+      ["True or false? A longer text with more details can show more of what you can do.", "True", "False"]
+    ]}
+  ];
+
   // Mixed quizzes take questions from every bank in the subject (a question text is only used once).
   function mergeBanks(){
     var seen = {}, out = [];
@@ -1838,7 +2134,7 @@
     });
     return out;
   }
-  BANKS.noak6 = mergeBanks(BANKS.noak6, BANKS.biologi, BANKS.no_kropp, BANKS.fysik, BANKS.kemi, BANKS.no_rymden);
+  BANKS.noak6 = mergeBanks(BANKS.noak6, BANKS.biologi, BANKS.no_kropp, BANKS.fysik, BANKS.kemi, BANKS.no_rymden, BANKS.evolution);
   BANKS.ak6 = mergeBanks(BANKS.ak6, BANKS.geografi, BANKS.so_sverige, BANKS.so_historia, BANKS.so_samhalle, BANKS.religion, BANKS.hallbar);
   BANKS.engelska_mixed = mergeBanks(BANKS.engelska_mixed, BANKS.engelska_ord, BANKS.engelska_grammar);
   BANKS.teknik_alla = mergeBanks(BANKS.teknik_maskiner, BANKS.teknik_el, BANKS.teknik_design);
@@ -1846,9 +2142,9 @@
   BANKS.svenska_alla = mergeBanks(BANKS.svenska, BANKS.sv_grammatik, BANKS.sv_stavning, BANKS.sv_ord, BANKS.sv_texter);
 
   var currentReadingPassage = null;
-  function readingQuestions(list){
+  function readingQuestions(list, deckKey){
     list = list || READING_PASSAGES;
-    currentReadingPassage = list[deal(list === ENGLISH_READING_PASSAGES ? 'read_en' : 'read_sv', list.length, 1)[0]];
+    currentReadingPassage = list[deal(deckKey || (list === ENGLISH_READING_PASSAGES ? 'read_en' : 'read_sv'), list.length, 1)[0]];
     var qs = currentReadingPassage.questions;
     // Longer texts have more than 7 questions: pick 7 at random, keep them in text order.
     if (qs.length > 7) {
@@ -1890,7 +2186,7 @@
     var opts = item.slice(1);
     if (opts.length === 2) opts = /^(sant|true)$/i.test(opts[0]) ? opts : [opts[1], opts[0]];
     else opts = shuffle(opts);
-    return { text: item[0], correct: item[1], options: opts, picked: null };
+    return { text: item[0], correct: item[1], options: opts, picked: null, pic: QPICS[item[0]] };
   }
   function typeQ(text, answer){
     var accept = String(answer).split('|').map(function(x){ return x.trim(); });
@@ -2286,6 +2582,7 @@
     { id:'no-kemi', tag:'NO · KEMI', icon:'🧪', title:'Kemi', color:'#1c9c5b', desc:'Ämnen, blandningar, vatten och kemiska reaktioner', make:function(){ return fromBank('kemi'); } },
     { id:'no-kropp', tag:'NO · KROPPEN', icon:'🫀', title:'Människokroppen', color:'#1c9c5b', desc:'Organ, blod, skelett, sinnen och hälsa', make:function(){ return fromBank('no_kropp'); } },
     { id:'no-rymden', tag:'NO · RYMDEN', icon:'🪐', title:'Rymden', color:'#1c9c5b', desc:'Solsystemet, månen, stjärnor och rymdfärder', make:function(){ return fromBank('no_rymden'); } },
+    { id:'no-evolution', tag:'NO · EVOLUTION', icon:'🧬', title:'Livets utveckling', color:'#1c9c5b', added:'2026-11-14', desc:'Evolution, mutation, naturligt urval, Darwin, fossil och artbildning', make:function(){ return fromBank('evolution'); } },
     { id:'no-ak6', tag:'NO · ÅK 6', icon:'📚', title:'NO – blandat för åk 6', color:'#1c9c5b', desc:'Blandade frågor i biologi, fysik och kemi', make:function(){ return fromBank('noak6'); } }
   ];
 
@@ -2313,6 +2610,11 @@
     { id:'engelska-grammatik', tag:'ENGELSKA · GRAMMAR', icon:'✍️', title:'Grammar – grammatik', color:'#c93c6e', desc:'Verb, tempus, pronomen och meningsbyggnad', make:function(){ return fromBank('engelska_grammar'); } },
     { id:'engelska-mix', tag:'ENGELSKA · ÅK 6', icon:'📚', title:'English – mixed for Year 6', color:'#c93c6e', desc:'Blandade frågor i ord och grammatik', make:function(){ return fromBank('engelska_mixed'); } },
     { id:'engelska-las', tag:'ENGELSKA · READING', icon:'📖', title:'Reading – stories', color:'#c93c6e', desc:'Read a story and answer 7 questions', reading:true, make:function(){ return readingQuestions(ENGLISH_READING_PASSAGES); } },
+    { id:'engelska-muntlig', tag:'ENGELSKA · SPEAKING', icon:'🗣️', title:'Speaking – oral national test', color:'#c93c6e', desc:'Elevkort like the åk 6 muntliga prov: read or listen 🔊, then learn what the teacher listens for', reading:true, added:'2026-11-14', make:function(){ return readingQuestions(ENGLISH_SPEAKING_CARDS, 'read_speak'); } },
+    { id:'engelska-cloze', tag:'ENGELSKA · FILL THE GAPS', icon:'🧩', title:'Fill the gaps', color:'#c93c6e', desc:'Choose the best word for each gap in a text – like the national test', reading:true, added:'2026-11-14', make:function(){ return readingQuestions(ENGLISH_CLOZE_PASSAGES, 'read_cloze'); } },
+    { id:'engelska-dialog', tag:'ENGELSKA · DIALOGUE', icon:'💬', title:'How does it end? – dialogues', color:'#c93c6e', desc:'Two people talk – choose the best way to finish the conversation', added:'2026-11-14', make:function(){ return fromBank('engelska_dialog'); } },
+    { id:'engelska-info', tag:'ENGELSKA · FIND THE FACTS', icon:'🔎', title:'Find the facts', color:'#c93c6e', desc:'Read an information text (camps, museums…) and find the answers', reading:true, added:'2026-11-14', make:function(){ return readingQuestions(ENGLISH_INFO_PASSAGES, 'read_info'); } },
+    { id:'engelska-writing-tips', tag:'ENGELSKA · WRITING TIPS', icon:'✍️', title:'Writing – plan and check', color:'#c93c6e', desc:'Read a writing task and a sample text, then learn what makes a good text', reading:true, added:'2026-11-14', make:function(){ return readingQuestions(ENGLISH_WRITING_CARDS, 'read_writetips'); } },
     { id:'engelska-skriva', tag:'ENGELSKA · WRITING', icon:'📝', title:'Grammar, words & writing', color:'#c93c6e', desc:'Words in context, opinions, letters and grammar', make:function(){ return fromBank('engelska_quest'); } }
   ];
 
@@ -2792,6 +3094,51 @@
   $('dashboardBack').addEventListener('click',function(){$('dashboardPanel').classList.add('hidden');$('quiz').classList.add('hidden');$('menu').classList.remove('hidden');window.scrollTo(0,0);});
 
   // ---------- menu ----------
+  // A quiz with added:'YYYY-MM-DD' gets a "NYTT" sticker for 14 days; a subject gets one if any of its quizzes is new.
+  var NEW_DAYS = 14;
+  function isNewQuiz(s){
+    if (s.children) return s.children.some(isNewQuiz);
+    return !!s.added && (Date.now() - Date.parse(s.added)) < NEW_DAYS * 864e5;
+  }
+
+  // ---------- read aloud (Web Speech API, built into the browser) ----------
+  var SV_WORDS = /\b(vad|vilken|vilket|vilka|hur|varför|och|är|det|som|inte|eller|sant|falskt|betyder|översätt|ordet)\b/gi;
+  function speechLang(text){
+    if (!(current && /^ENGELSKA/.test(current.tag))) return 'sv-SE';
+    // In English quizzes a single Swedish word (e.g. 'väckarklocka') must not switch the voice:
+    // only a real Swedish sentence – a Swedish question word first, or several Swedish words – is read in Swedish.
+    var svCount = (text.match(SV_WORDS) || []).length;
+    return /^(vad|vilken|vilket|vilka|hur|varför|sant eller falskt|översätt|skriv)\b/i.test(text) || svCount >= 2 ? 'sv-SE' : 'en-GB';
+  }
+  function speak(parts, btn){
+    if (!('speechSynthesis' in window)) { toast('Your browser cannot read aloud', 'bad'); return; }
+    var synth = window.speechSynthesis;
+    if (synth.speaking) { synth.cancel(); return; }
+    var voices = synth.getVoices();
+    parts.forEach(function(text, i){
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = speechLang(text);
+      u.rate = 0.9;
+      var v = voices.filter(function(x){ return x.lang.replace('_', '-').indexOf(u.lang) === 0; })[0];
+      if (v) u.voice = v;
+      if (i === 0) u.onstart = function(){ btn.classList.add('speaking'); };
+      if (i === parts.length - 1) u.onend = u.onerror = function(){ btn.classList.remove('speaking'); };
+      synth.speak(u);
+    });
+  }
+
+  // Some browsers load voices late: ask once now so the first 🔊 click already has a Swedish voice.
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = function(){ window.speechSynthesis.getVoices(); };
+  }
+  // Read the reading-comprehension text paragraph by paragraph (long single utterances can cut off).
+  $('readingSpeak').addEventListener('click', function(){
+    if (!currentReadingPassage) return;
+    var parts = [currentReadingPassage.title].concat(currentReadingPassage.text.split(/\n+/));
+    speak(parts.filter(function(p){ return p.trim(); }), this);
+  });
+
   function renderMenu(){
     var grid = $('menuGrid');
     grid.innerHTML = '';
@@ -2799,7 +3146,7 @@
       var b = document.createElement('button');
       b.className = 'menu-item';
       b.style.setProperty('--c', s.color);
-      b.innerHTML = '<span class="tag">' + s.tag + '</span><strong>' + s.icon + ' ' + s.title +
+      b.innerHTML = '<span class="tag">' + s.tag + '</span>' + (isNewQuiz(s) ? '<span class="new-badge">🆕 NYTT</span>' : '') + '<strong>' + s.icon + ' ' + s.title +
                     '</strong><span class="d">' + s.desc + (s.children ? '' : (s.reading ? '' : ' · 10 questions')) + '</span>';
       b.addEventListener('click', function(){
         if (s.children) { group = s; renderMenu(); updateGreeting(); window.scrollTo(0, 0); }
@@ -2833,6 +3180,7 @@
   }
   function showQuestion(i){
     idx = i;
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     for (var k = 0; k < questions.length; k++) {
       $('q' + k).classList.toggle('hidden', k !== idx);
     }
@@ -2850,9 +3198,23 @@
       title.className = 'q-title';
       var small = document.createElement('small');
       small.textContent = 'Question ' + (i + 1);
+      var say = document.createElement('button');
+      say.type = 'button'; say.className = 'speak-btn'; say.textContent = '🔊';
+      say.title = 'Läs upp frågan / Read the question aloud';
+      say.setAttribute('aria-label', 'Read the question aloud');
+      say.addEventListener('click', function(){
+        speak([q.text].concat(q.input ? [] : (q.options || [])), say);
+      });
+      title.appendChild(say);
       title.appendChild(small);
       title.appendChild(document.createTextNode(q.text));
       box.appendChild(title);
+      if (q.pic && PICS[q.pic]) {
+        var pic = document.createElement('div');
+        pic.className = 'q-pic'; pic.setAttribute('aria-hidden', 'true');
+        pic.innerHTML = PICS[q.pic];
+        box.appendChild(pic);
+      }
       var opts = document.createElement('div');
       opts.className = 'opts';
       if (q.input) {
