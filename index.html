@@ -32,6 +32,18 @@
   .speak-btn{float:right;margin-left:8px;border:2px solid var(--line);background:#fff;border-radius:99px;width:40px;height:40px;font-size:1.15rem;line-height:1;cursor:pointer;padding:0}
   .speak-btn:hover{border-color:var(--brand)}
   .q-title{white-space:pre-line}
+  /* celebrations */
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:9999}
+  .cheer{font-size:1.6rem;font-weight:800;text-align:center;margin:6px 0 4px;animation:cheerPop .7s cubic-bezier(.2,1.6,.4,1) both}
+  .cheer.small{font-size:1.2rem}
+  @keyframes cheerPop{0%{transform:scale(.2) rotate(-8deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+  .score.bounce{animation:scoreBounce .9s ease both}
+  @keyframes scoreBounce{0%,100%{transform:scale(1)}30%{transform:scale(1.35)}60%{transform:scale(.95)}}
+  .q.wrong.shake{animation:shake .45s ease}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+  .q.right.pop{animation:popIn .5s ease}
+  @keyframes popIn{0%{transform:scale(1)}40%{transform:scale(1.03)}100%{transform:scale(1)}}
+  @media (prefers-reduced-motion: reduce){.cheer,.score.bounce,.q.wrong.shake,.q.right.pop{animation:none}}
   .q-pic{display:flex;justify-content:center;margin:0 0 12px}
   .q-pic svg{width:100%;max-width:220px;height:auto;background:#f6f8ff;border-radius:12px}
   .speak-btn.speaking{background:#efeaff;border-color:var(--brand)}
@@ -235,6 +247,7 @@
 
   <section id="quiz" class="hidden">
     <div class="card">
+      <button type="button" class="speak-btn" id="soundBtn" title="Ljudeffekter på/av" aria-label="Sound effects on or off">🔔</button>
       <h2 id="quizTitle"></h2>
       <p class="sub" id="quizIntro"></p>
     </div>
@@ -3367,6 +3380,78 @@
     speak(parts.filter(function(p){ return p.trim(); }), this);
   });
 
+  // ---------- sound effects and celebrations (Web Audio – no sound files needed) ----------
+  var soundOn = true;
+  try { soundOn = localStorage.getItem('atharvaQuizSound') !== 'off'; } catch(e) {}
+  function showSoundBtn(){ $('soundBtn').textContent = soundOn ? '🔔' : '🔕'; $('soundBtn').title = soundOn ? 'Ljudeffekter på (tryck för att stänga av)' : 'Ljudeffekter av (tryck för att sätta på)'; }
+  showSoundBtn();
+  $('soundBtn').addEventListener('click', function(){
+    soundOn = !soundOn; showSoundBtn();
+    try { localStorage.setItem('atharvaQuizSound', soundOn ? 'on' : 'off'); } catch(e) {}
+    if (soundOn) sfx('correct');
+  });
+  var audioCtx = null;
+  function tone(freq, start, dur, type, vol){
+    var o = audioCtx.createOscillator(), g = audioCtx.createGain(), t = audioCtx.currentTime + start;
+    o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol || 0.2, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t); o.stop(t + dur + 0.05);
+    return o;
+  }
+  function sfx(kind){
+    if (!soundOn) return;
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    } catch(e) { return; }
+    if (kind === 'correct') { tone(784, 0, 0.18); tone(1175, 0.1, 0.3); }
+    else if (kind === 'wrong') { var o = tone(220, 0, 0.35, 'square', 0.08); o.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.35); tone(160, 0.12, 0.3, 'square', 0.06); }
+    else if (kind === 'good') { [523, 659, 784].forEach(function(f, i){ tone(f, i * 0.12, 0.3, 'triangle'); }); }
+    else if (kind === 'fanfare') {
+      [523, 659, 784, 1047].forEach(function(f, i){ tone(f, i * 0.13, 0.28, 'triangle', 0.22); });
+      [523, 659, 784, 1047].forEach(function(f){ tone(f, 0.6, 0.9, 'triangle', 0.12); });
+      for (var i = 0; i < 8; i++) tone(1500 + Math.random() * 1500, 0.9 + i * 0.07, 0.08, 'sine', 0.05);   // sparkles
+    }
+  }
+  function confetti(count){
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var old = $('confetti'); if (old) old.remove();
+    var cv = document.createElement('canvas'); cv.id = 'confetti'; document.body.appendChild(cv);
+    var ctx = cv.getContext('2d'), W = cv.width = innerWidth, H = cv.height = innerHeight;
+    var colors = ['#6c4cf1', '#ffcf33', '#1c9c5b', '#c93c6e', '#2b7bd9', '#ff8a3d'], bits = [];
+    for (var i = 0; i < count; i++) bits.push({ x: W / 2 + (Math.random() - 0.5) * W * 0.3, y: H * 0.35, vx: (Math.random() - 0.5) * 14, vy: -Math.random() * 14 - 4,
+      s: 6 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.4, c: colors[i % colors.length], star: Math.random() < 0.25 });
+    var start = performance.now();
+    (function frame(now){
+      var t = now - start; ctx.clearRect(0, 0, W, H);
+      bits.forEach(function(b){
+        b.vy += 0.35; b.vx *= 0.99; b.x += b.vx; b.y += b.vy; b.r += b.vr;
+        ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.r); ctx.globalAlpha = Math.max(0, 1 - t / 3200); ctx.fillStyle = b.c;
+        if (b.star) { ctx.font = (b.s * 2.4) + 'px sans-serif'; ctx.fillText('⭐', -b.s, b.s); } else ctx.fillRect(-b.s / 2, -b.s / 4, b.s, b.s / 2);
+        ctx.restore();
+      });
+      if (t < 3200) requestAnimationFrame(frame); else cv.remove();
+    })(start);
+  }
+  var CHEERS = ['🎉 PERFEKT! Alla rätt! 🎉', '🌟 Fantastiskt! Full pott! 🌟', '🏆 Mästare! Alla rätt! 🏆', '🚀 Wow! Du klarade allt! 🚀'];
+  function celebrate(score, total){
+    var old = document.querySelector('#result .cheer'); if (old) old.remove();
+    var sc = $('resultScore'); sc.classList.remove('bounce'); void sc.offsetWidth;
+    var cheer = document.createElement('div'); cheer.className = 'cheer';
+    if (score === total) { cheer.textContent = pick(CHEERS); sfx('fanfare'); confetti(160); sc.classList.add('bounce'); }
+    else if (score / total >= 0.8) { cheer.className = 'cheer small'; cheer.textContent = '👏 Snyggt! Nästan alla rätt!'; sfx('good'); confetti(40); sc.classList.add('bounce'); }
+    else { sfx('wrong'); cheer = null; }
+    if (cheer) sc.after(cheer);
+    questions.forEach(function(q, i){
+      var box = $('q' + i);
+      box.classList.remove('shake', 'pop'); void box.offsetWidth;
+      box.classList.add(box.classList.contains('wrong') ? 'shake' : 'pop');
+    });
+  }
+
   function renderMenu(){
     var grid = $('menuGrid');
     grid.innerHTML = '';
@@ -3589,6 +3674,7 @@
     else if (score >= 5) msg = 'Good effort! Look at the mistakes below and try again. 💪';
     else msg = 'Keep practising – you can do it! Try a new quiz. 🙂';
     $('resultMsg').textContent = msg;
+    celebrate(score, TOTAL);
 
     var list = $('reviewList');
     list.innerHTML = '';
@@ -3656,8 +3742,10 @@
         if (done || !val) return;
         if (answerIsRight({ input: true, accept: q.accept, picked: val })) {
           labels[0].classList.remove('incorrect'); labels[0].classList.add('correct');
+          sfx('correct');
           finish(true);
         } else {
+          sfx('wrong');
           fb.textContent = '❌ “' + val + '” is not right either. Try again!';
         }
       };
@@ -3670,8 +3758,9 @@
         inp.disabled = false;
         inp.addEventListener('change', function(){
           if (done) return;
-          if (inp.value === q.correct) { lab.classList.add('correct'); finish(true); }
+          if (inp.value === q.correct) { lab.classList.add('correct'); sfx('correct'); finish(true); }
           else {
+            sfx('wrong');
             lab.classList.add('incorrect'); inp.disabled = true;
             fb.textContent = '❌ Not that one either. Try again!';
           }
