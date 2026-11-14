@@ -3045,6 +3045,7 @@
   var SV_WORDS = /\b(vad|vilken|vilket|vilka|hur|varför|och|är|det|som|inte|eller|sant|falskt|betyder|översätt|ordet)\b/gi;
   function speechLang(text){
     if (current && current.listening) return 'sv-SE';
+    if (current && current.id === 'engelska-muntlig') return 'en-GB';
     if (!(current && /^ENGELSKA/.test(current.tag))) return 'sv-SE';
     // In English quizzes a single Swedish word (e.g. 'väckarklocka') must not switch the voice:
     // only a real Swedish sentence – a Swedish question word first, or several Swedish words – is read in Swedish.
@@ -3056,11 +3057,29 @@
     var matching = voices.filter(function(voice){
       return String(voice.lang || '').toLowerCase().replace(/_/g, '-').split('-')[0] === target.split('-')[0];
     });
-    return matching.filter(function(voice){
+    var exact = matching.filter(function(voice){
       return String(voice.lang || '').toLowerCase().replace(/_/g, '-') === target;
-    })[0] || matching.filter(function(voice){
+    });
+    var regional = matching.filter(function(voice){
       return String(voice.lang || '').toLowerCase().replace(/_/g, '-').indexOf(target + '-') === 0;
-    })[0] || matching[0];
+    });
+    var preferred = ['serena', 'kate', 'martha', 'stephanie', 'samantha', 'karen', 'moira', 'fiona', 'tessa', 'victoria', 'allison', 'ava', 'zoe', 'susan', 'hazel'];
+    function femaleEnglish(list){
+      for (var i = 0; i < preferred.length; i++) {
+        var voice = list.filter(function(item){
+          return String(item.name || '').toLowerCase().split(/[ (]/)[0] === preferred[i];
+        })[0];
+        if (voice) return voice;
+      }
+      return null;
+    }
+    if (target.split('-')[0] === 'en') {
+      return femaleEnglish(exact) || femaleEnglish(regional) || femaleEnglish(matching) ||
+        femaleEnglish(voices.filter(function(voice){
+          return String(voice.lang || '').toLowerCase().replace(/_/g, '-').split('-')[0] === 'en';
+        })) || exact[0] || regional[0] || matching[0];
+    }
+    return exact[0] || regional[0] || matching[0];
   }
   function speak(parts, btn){
     if (!('speechSynthesis' in window)) { toast('Your browser cannot read aloud', 'bad'); return; }
