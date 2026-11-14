@@ -238,7 +238,7 @@
       <h2 id="quizTitle"></h2>
       <p class="sub" id="quizIntro"></p>
     </div>
-    <div id="readingPassage" class="card hidden" style="margin-bottom:14px"><button type="button" class="speak-btn" id="readingSpeak" title="Läs upp texten / Read the text aloud" aria-label="Read the text aloud">🔊</button><h3 id="readingTitle" style="margin-top:0"></h3><p id="readingText" style="white-space:pre-line;line-height:1.75;margin-bottom:0"></p></div>
+    <div id="readingPassage" class="card hidden" style="margin-bottom:14px"><button type="button" class="speak-btn" id="readingSpeak" title="Läs upp texten / Read the text aloud" aria-label="Read the text aloud">🔊</button><h3 id="readingTitle" style="margin-top:0"></h3><p id="readingText" style="white-space:pre-line;line-height:1.75;margin-bottom:0"></p><p id="listenHint" class="hidden" style="margin:0;line-height:1.6">🎧 Tryck på 🔊 och lyssna noga. Lyssna gärna två gånger, som på provet. Texten visas när du har rättat dina svar.</p></div>
     <div class="card hidden" id="result">
       <div class="hint" id="resultName"></div>
       <div class="score" id="resultScore"></div>
@@ -2123,6 +2123,104 @@
     ]}
   ];
 
+  // ---------- Svenska åk 6, nationella provet (original texts in the same style as delprov B and C) ----------
+  // Delprov B: läsa – berättande texter och sakprosa.
+  var SV_TEST_PASSAGES = [
+    {title:"Stenen i fickan", text:"Alva har haft stenen i fickan sedan flytten. Den är slät och grå, med ett vitt streck rakt över, som om någon ritat en väg. Hon hittade den på stranden hemma i Simrishamn, sista dagen, när mormor och hon gick sin vanliga runda.\n\nNu sitter hon längst bak i klassrummet i en skola där alla verkar känna alla. Korridoren luktade blött ylle och kakao när hon kom, och ljudet av sextio röster slog emot henne som en vägg. Läraren, Jonas, har presenterat henne två gånger, men hon har inte sagt mer än sitt namn.\n\n– Du kan sitta bredvid Elif, sa han.\n\nElif har inte tittat upp en enda gång. Hon ritar. Pennan rör sig snabbt, och på pappret växer ett hav fram, med vågor som nästan ser ut att röra sig.\n\nPå rasten står Alva vid staketet och vänder stenen mellan fingrarna. Hon tänker på mormors händer, som alltid var kalla, och på hur hon brukade säga att havet är detsamma överallt, det är bara stränderna som byter namn.\n\n– Vad har du där?\n\nAlva hoppar till. Elif står bakom henne med skissblocket under armen.\n\n– Bara en sten, säger Alva och känner hur kinderna blir varma. Usch, vad barnsligt det lät.\n\nMen Elif sträcker fram handen, och Alva lägger stenen i den. Elif håller upp den mot ljuset och följer det vita strecket med tummen.\n\n– Det ser ut som en väg, säger hon. Får jag rita den?\n\nAlva nickar. För första gången sedan flytten känns bröstet lite mindre trångt.", questions:[
+      ["Varför betyder stenen så mycket för Alva?", "Den påminner henne om mormor och platsen hon flyttat från", "Den är mycket dyr", "Hon fick den av Elif", "Hon hittade den på skolgården"],
+      ["”Ljudet av sextio röster slog emot henne som en vägg.” Vad gestaltar författaren?", "Att Alva upplever ljudet som överväldigande", "Att någon slog henne", "Att korridoren hade tjocka väggar", "Att eleverna sjöng"],
+      ["Hur känner sig Alva i början av texten?", "Ensam och utanför", "Arg på läraren", "Glad och avslappnad", "Uttråkad"],
+      ["Citatet ”Usch, vad barnsligt det lät.” I det här citatet …", "… tänker Alva för sig själv om det hon just sagt", "… säger Elif vad hon tycker", "… kommenterar läraren Alva", "… skäms Elif över sin teckning"],
+      ["Mormor brukade säga att havet är detsamma överallt, det är bara stränderna som byter namn. Vad menade hon?", "Att man kan känna sig hemma även på en ny plats", "Att alla stränder har samma namn", "Att man aldrig ska flytta", "Att stränder är farliga"],
+      ["Varför frågar Elif om hon får rita stenen?", "Hon är intresserad och vill vara vänlig", "Hon vill ta stenen från Alva", "Läraren har bett henne", "Hon tycker att stenen är ful"],
+      ["Vad visar den sista meningen?", "Att Alva börjar känna sig lite bättre", "Att Alva har ont i bröstet", "Att Alva ska flytta igen", "Att Alva är arg på Elif"],
+      ["Vilken rubrik skulle också passa till berättelsen?", "En väg till en ny vän", "Mormors kalla händer", "Rasten som aldrig tog slut", "Den förlorade stenen"]
+    ]},
+    {title:"Strömavbrottet", text:"Det var Viggo som märkte det först. Kylskåpet slutade brumma, och plötsligt hördes bara stormen.\n\n– Strömmen har gått, sa han.\n\nStorasyster Hanna tittade upp från mobilen, som hade sju procent batteri kvar. Mamma och pappa var på väg hem från Umeå och skulle inte vara framme förrän om två timmar. Ute vräkte snön ner så att grannens hus hade försvunnit bakom ett vitt draperi.\n\n– Det löser sig, sa Hanna, men hon lät inte särskilt säker.\n\nViggo hämtade ficklampan i hallen. Ljuskäglan darrade över väggarna, och skuggorna blev långa och konstiga. Hanna letade fram värmeljus ur köksskåpet och ställde dem på fat på bordet. Hon gjorde det så noggrant att Viggo förstod att hon försökte låta bli att vara rädd.\n\nDet blev kallare. Viggo drog täcket om axlarna och föreslog att de skulle spela Fia med knuff i ljusens sken. Hanna skrattade för första gången på hela kvällen.\n\n– Du låter som farfar, sa hon. När han var liten hade de inte ens el.\n\nDe spelade tre omgångar. Viggo vann två och Hanna påstod att han fuskade. När billyktorna till slut svepte in över gården hade ingen av dem märkt att mobilen dött för länge sedan.", questions:[
+      ["Vad var det första tecknet på att strömmen hade gått?", "Kylskåpet slutade brumma", "Lamporna började blinka", "Mobilen slutade fungera", "Grannens hus blev mörkt"],
+      ["”Grannens hus hade försvunnit bakom ett vitt draperi.” Vad betyder det?", "Det snöade så mycket att man inte såg huset", "Grannen hade hängt upp vita gardiner", "Huset hade rivits", "Det var mörkt ute"],
+      ["Varför ställer Hanna fram ljusen så noggrant?", "Hon försöker dölja att hon är rädd", "Hon vill att det ska se fint ut för föräldrarna", "Hon är arg på Viggo", "Hon letar efter sin mobil"],
+      ["Hur förändras stämningen i berättelsen?", "Från orolig till mysig", "Från glad till sorglig", "Från arg till rädd", "Den är likadan hela tiden"],
+      ["Varför säger Hanna att Viggo låter som farfar?", "Farfar växte upp utan el och var van vid sådana kvällar", "Viggo har farfars röst", "Farfar spelar alltid Fia med knuff", "Farfar bor i Umeå"],
+      ["Vad visar den sista meningen?", "Att syskonen hade så roligt att de glömde mobilen", "Att föräldrarna aldrig kom hem", "Att Hanna var arg", "Att strömmen kom tillbaka"],
+      ["Ur vems perspektiv berättas händelserna mest?", "Viggos", "Hannas", "Mammas", "Grannens"],
+      ["Vilket ord beskriver Viggo bäst i berättelsen?", "Påhittig", "Elak", "Lat", "Rädd för spel"]
+    ]},
+    {title:"Glasögonens historia", text:"I dag bär ungefär hälften av alla vuxna i Sverige glasögon eller linser. Men för några hundra år sedan var glasögon något ovanligt och dyrt. Den som såg dåligt fick helt enkelt leva med det.\n\nFörstoringsglas och läsestenar\nRedan för omkring 2 000 år sedan visste man att föremål kunde se större ut genom glas eller en vattenfylld skål. Under medeltiden använde munkar så kallade läsestenar – halvklot av glas som lades direkt på texten för att förstora bokstäverna.\n\nDe första glasögonen\nDe första riktiga glasögonen tillverkades i Italien i slutet av 1200-talet. De bestod av två linser som sattes ihop med en nit och balanserade på näsan. Skalmar som håller fast glasögonen bakom öronen kom först på 1700-talet. Innan dess fick man hålla glasögonen på plats med handen eller knyta fast dem med band.\n\nFrån lyx till vardag\nLänge var glasögon en lyxvara som bara rika personer hade råd med. När boktryckarkonsten gjorde böcker billigare under 1400- och 1500-talen ville fler människor kunna läsa, och efterfrågan på glasögon ökade. Med tiden började glasögon tillverkas i fabriker och priset sjönk.\n\nI dag finns det glasögon för nästan alla behov: läsglasögon, solglasögon, skyddsglasögon och glasögon som gör att den som är närsynt ser skarpt på långt håll. Glasögonen har gått från att vara en sällsynt uppfinning till något många av oss inte klarar oss utan.", questions:[
+      ["Vad handlar texten främst om?", "Hur glasögon har utvecklats genom historien", "Hur man undersöker ögonen", "Varför munkar läste mycket", "Hur man tillverkar glas"],
+      ["Vad var en läsesten?", "Ett halvklot av glas som förstorade texten", "En sten som man skrev på", "Ett slags glasögon med skalmar", "En bok gjord av sten"],
+      ["Var och när tillverkades de första riktiga glasögonen?", "I Italien i slutet av 1200-talet", "I Kina på 500-talet", "I Sverige på 1700-talet", "I Italien på 1900-talet"],
+      ["Hur höll man de första glasögonen på plats?", "De balanserade på näsan eller hölls med handen", "Med skalmar bakom öronen", "Med lim", "Med en hjälm"],
+      ["Varför ökade efterfrågan på glasögon under 1400- och 1500-talen?", "Böcker blev billigare och fler ville läsa", "Fler människor blev närsynta", "Glasögonen blev gratis", "Munkarna slutade läsa"],
+      ["Vad är syftet med mellanrubrikerna?", "Att visa vad varje del av texten handlar om", "Att göra texten längre", "Att berätta hur texten slutar", "Att visa vem som skrev texten"],
+      ["Vilket påstående stämmer enligt texten?", "Skalmar kom flera hundra år efter de första glasögonen", "Glasögon har alltid varit billiga", "Läsestenar uppfanns på 1700-talet", "Ingen i Sverige bär glasögon i dag"],
+      ["Vilken källa är bäst om du vill kontrollera fakta i texten?", "Ett uppslagsverk eller ett museums webbplats", "En reklam för solglasögon", "En kompis blogg utan källor", "Ett anonymt inlägg i sociala medier"]
+    ]},
+    {title:"Därför behöver vi sova", text:"Vi sover ungefär en tredjedel av livet. Det kan låta som slöseri med tid, men sömnen är en av kroppens viktigaste uppgifter.\n\nHjärnan städar\nNär vi sover arbetar hjärnan för fullt. Den sorterar det vi har varit med om under dagen och sparar det viktigaste i minnet. Forskare har också sett att hjärnan rensar bort slaggprodukter under sömnen, ungefär som när man städar ett rum.\n\nKroppen växer och läker\nUnder djupsömnen bildas tillväxthormon. Det hjälper barn och ungdomar att växa och gör att sår och muskler läker. Därför behöver personer i din ålder mer sömn än vuxna – ungefär nio till tolv timmar per natt.\n\nVad händer om man sover för lite?\nDen som sover för lite får svårare att koncentrera sig och blir lättare irriterad. Man blir också oftare sjuk, eftersom immunförsvaret försvagas. Många som sover dåligt äter dessutom mer sött, eftersom kroppen letar efter snabb energi.\n\nTips för bättre sömn\nLägg undan mobilen en timme innan du ska sova – det blå ljuset från skärmen kan lura hjärnan att det fortfarande är dag. Försök att gå och lägga dig ungefär samma tid varje kväll, och se till att sovrummet är mörkt och svalt.", questions:[
+      ["Vilket är textens huvudbudskap?", "Sömnen är viktig för både hjärnan och kroppen", "Man sover för mycket", "Mobiler är farliga", "Vuxna behöver mest sömn"],
+      ["Vad gör hjärnan när vi sover, enligt texten?", "Sorterar minnen och rensar bort slaggprodukter", "Stänger av helt", "Växer dubbelt så snabbt", "Tillverkar blått ljus"],
+      ["Varför jämför författaren med att städa ett rum?", "För att förklara hur hjärnan rensar bort det den inte behöver", "För att uppmana läsaren att städa", "För att sovrummet ska vara rent", "För att visa att sömn är tråkigt"],
+      ["Hur mycket sömn behöver personer i din ålder enligt texten?", "Ungefär 9–12 timmar per natt", "Ungefär 5 timmar", "Exakt 8 timmar", "Lika mycket som vuxna"],
+      ["Vad kan hända om man sover för lite?", "Man blir oftare sjuk", "Man växer snabbare", "Man äter mindre sött", "Man blir piggare"],
+      ["Vilken typ av text är det här?", "En faktatext med råd", "En berättelse", "En dikt", "En insändare"],
+      ["Varför ska man lägga undan mobilen innan man sover?", "Det blå ljuset kan lura hjärnan att det är dag", "Mobilen kan gå sönder", "Den låter för mycket", "Man glömmer att ladda den"],
+      ["Under vilken mellanrubrik står det om tillväxthormon?", "Kroppen växer och läker", "Hjärnan städar", "Tips för bättre sömn", "Vad händer om man sover för lite?"]
+    ]}
+  ];
+
+  // Hörförståelse: the text is hidden and read aloud with 🔊 – the student listens, then answers.
+  var SV_LISTEN_PASSAGES = [
+    {title:"Meddelande från skolan", text:"Hej alla elever och föräldrar! Här kommer viktig information om höstens friluftsdag.\n\nFriluftsdagen blir på torsdag den 12 september. Vi samlas på skolgården klockan halv nio och går tillsammans till Hagaskogen. Promenaden tar ungefär fyrtio minuter.\n\nI skogen finns fem stationer: orientering, bågskytte, pinnbröd över eld, fågelskådning och en tipspromenad. Alla klasser får prova minst tre stationer.\n\nTa med matsäck, vattenflaska och sittunderlag. Klä dig efter väder – det kan bli blött! Lunchen äter vi vid grillplatsen, och skolan bjuder på varm saft.\n\nOm det regnar mycket flyttar vi friluftsdagen till tisdagen veckan efter. Besked kommer i appen senast klockan sju på morgonen.\n\nVi ses i skogen!", questions:[
+      ["Vilken dag är friluftsdagen?", "Torsdag den 12 september", "Tisdag den 12 september", "Torsdag den 21 september", "Fredag den 12 september"],
+      ["När ska eleverna samlas på skolgården?", "Klockan halv nio", "Klockan nio", "Klockan halv åtta", "Klockan sju"],
+      ["Hur tar man sig till skogen?", "Man går dit tillsammans", "Man åker buss", "Man cyklar", "Föräldrarna kör"],
+      ["Hur många stationer finns det i skogen?", "Fem", "Tre", "Fyra", "Sex"],
+      ["Vad bjuder skolan på?", "Varm saft", "Pinnbröd och korv", "Lunch", "Glass"],
+      ["Vad händer om det regnar mycket?", "Friluftsdagen flyttas till tisdagen veckan efter", "Den ställs in helt", "Man är inne i gympasalen", "Man går ändå"],
+      ["Hur får man veta om friluftsdagen blir av?", "I appen senast klockan sju på morgonen", "Via ett brev", "Läraren ringer hem", "På skolans anslagstavla"]
+    ]},
+    {title:"Samtalet om kalaset", text:"Sara: Hej Malik! Har du tid en stund? Jag behöver hjälp med Idas överraskningskalas.\nMalik: Klart! När blir det?\nSara: På lördag, klockan tre. Hon fyller tolv. Hennes mamma har lovat att ta med henne på bio först, så att vi hinner göra i ordning.\nMalik: Smart. Var ska vi vara?\nSara: I föreningslokalen bredvid ishallen. Jag har redan fått nyckeln.\nMalik: Vad behöver du hjälp med?\nSara: Ballonger och musik. Och så tänkte jag baka en chokladtårta, men Ida tål inte nötter, så jag måste vara noga med vad jag köper.\nMalik: Jag kan fixa musiken. Min storebror har en högtalare som vi kan låna.\nSara: Perfekt! Kan du vara där halv två? Då hinner vi blåsa upp alla ballonger.\nMalik: Halv två funkar. Ska jag ta med något mer?\nSara: Gärna några sällskapsspel. Men säg ingenting till Ida!\nMalik: Jag lovar. Mina läppar är förseglade.", questions:[
+      ["Vad planerar Sara?", "Ett överraskningskalas för Ida", "En bioresa", "En hockeymatch", "En skolfest"],
+      ["Hur gammal fyller Ida?", "Tolv år", "Elva år", "Tretton år", "Tio år"],
+      ["Var ska kalaset vara?", "I föreningslokalen bredvid ishallen", "Hemma hos Ida", "På bion", "I skolans matsal"],
+      ["Varför ska Idas mamma ta med henne på bio?", "Så att de andra hinner förbereda kalaset", "För att Ida inte gillar kalas", "För att det regnar", "För att bion är hennes present"],
+      ["Vad måste Sara tänka på när hon bakar?", "Att tårtan inte får innehålla nötter", "Att tårtan ska vara stor", "Att tårtan inte får ha choklad", "Att tårtan ska bakas på fredag"],
+      ["När ska Malik komma till lokalen?", "Halv två", "Klockan tre", "Halv tre", "Klockan två"],
+      ["Vad menar Malik med ”Mina läppar är förseglade”?", "Att han inte ska berätta något", "Att han har ont i munnen", "Att han inte får äta tårta", "Att han ska sjunga"]
+    ]},
+    {title:"Hunden som hittade hem", text:"I somras försvann hunden Bella från en rastplats utanför Sundsvall. Familjen Nilsson var på väg till sin stuga när de stannade för att äta. Bella, en tre år gammal border collie, blev rädd för en lastbil som tutade och sprang in i skogen.\n\nFamiljen letade i flera timmar och satte upp lappar med Bellas bild. Många hörde av sig och ville hjälpa till, men ingen hade sett henne.\n\nEfter elva dagar hände något otroligt. En tidig morgon satt Bella på trappan till familjens hus i Hudiksvall – nästan tio mil från rastplatsen. Hon var smutsig, smal och hade en liten skada på tassen, men annars mådde hon bra.\n\n– Vi kunde inte tro våra ögon, säger tolvåriga Ellen Nilsson. Hon viftade på svansen som om ingenting hade hänt.\n\nVeterinären tror att Bella har följt dofter och kanske vägar som hon känner igen från bilresor. Hundar har ett mycket bättre luktsinne än människor och kan ibland hitta hem över långa avstånd.\n\nNu har Bella fått ett halsband med en GPS-sändare. Säkert är säkert, säger familjen.", questions:[
+      ["Var försvann Bella?", "På en rastplats utanför Sundsvall", "Vid stugan", "Hemma i Hudiksvall", "Hos veterinären"],
+      ["Varför sprang Bella iväg?", "Hon blev rädd för en lastbil som tutade", "Hon jagade en hare", "Hon var hungrig", "Hon ville till stugan"],
+      ["Hur länge var Bella borta?", "Elva dagar", "Elva timmar", "Tre dagar", "Tio veckor"],
+      ["Hur långt hade Bella tagit sig?", "Nästan tio mil", "Ungefär en mil", "Hundra meter", "Tre mil"],
+      ["Hur mådde Bella när hon kom hem?", "Hon var smutsig och smal men mådde annars bra", "Hon var svårt skadad", "Hon var rädd för familjen", "Hon var tjockare än förut"],
+      ["Hur tror veterinären att Bella hittade hem?", "Hon följde dofter och vägar hon kände igen", "Någon körde hem henne", "Hon följde efter en annan hund", "Hon hade en GPS"],
+      ["Vad har familjen gjort efteråt?", "Gett Bella ett halsband med GPS-sändare", "Sålt stugan", "Köpt en ny hund", "Slutat åka bil"]
+    ]}
+  ];
+
+  // Delprov C: skriva – read a task and a sample text, then answer questions about how a good text is built.
+  var SV_WRITING_CARDS = [
+    {title:"Skriva berättelse – Den hemliga dörren", text:"✍️ UPPGIFTEN\nSkriv en berättelse med rubriken Den hemliga dörren. Tänk på att din berättelse ska ha en genomtänkt inledning, handling och avslutning. Planera innan du skriver och läs igenom texten innan du lämnar in den.\n\n📄 EN ELEVTEXT\nDen hemliga dörren\n\nDet var sista dagen på sommarlovet och regnet smattrade mot fönstret hemma hos mormor. Jag hade tråkigt och började utforska vinden.\n\nBakom en gammal garderob hittade jag en liten dörr med ett rostigt lås. Mitt hjärta bultade.\n– Mormor! ropade jag. Vad finns bakom dörren?\nMormor kom upp för trappan och log hemlighetsfullt.\n– Där har jag gömt något åt dig, sa hon.\n\nHon tog fram en nyckel ur förklädesfickan. Dörren gnisslade när den gick upp. Därinne stod en låda full med gamla brev och fotografier från när mormor var lika gammal som jag.\n\nVi satt på vinden i flera timmar och läste breven. När regnet slutade märkte jag det inte ens. Den dagen förstod jag att de bästa skatterna inte alltid är guld.", questions:[
+      ["Vilken del av berättelsen är inledningen?", "Första stycket, där vi får veta tid, plats och att jag har tråkigt", "Stycket där dörren öppnas", "Den sista meningen", "Mormors repliker"],
+      ["Vilken mening gestaltar en känsla i stället för att bara säga den?", "Mitt hjärta bultade.", "Jag hade tråkigt.", "Det var sista dagen på sommarlovet.", "Vi läste breven."],
+      ["Var i texten börjar spänningen i berättelsen?", "När jag hittar den låsta dörren och undrar vad som finns bakom", "När regnet slutar", "I rubriken", "När vi läser breven"],
+      ["Hur skrivs repliker (det någon säger) i berättelsen?", "Med talstreck (–) först på raden", "Med stora bokstäver", "Inom parentes", "Med kursiv stil"],
+      ["Vad visar den sista meningen?", "Vad huvudpersonen har lärt sig – ett genomtänkt slut", "Att berättelsen fortsätter", "Att regnet var viktigast", "Att mormor är rik"],
+      ["Vilket ord i texten visar tid?", "När", "Men", "Eftersom", "Fast"],
+      ["Vad bör du göra innan du lämnar in en text på provet?", "Läsa igenom texten och rätta fel", "Skriva rubriken en gång till", "Ta bort alla stycken", "Byta ämne"]
+    ]},
+    {title:"Skriva argumenterande text – Mer rörelse i skolan!", text:"✍️ UPPGIFTEN\nSkriv en argumenterande text om något du tycker bör förändras. Beskriv vad du vill förändra och motivera varför. Tänk på att din åsikt ska vara tydlig och att du inleder och avslutar texten på ett genomtänkt sätt.\n\n📄 EN ELEVTEXT\nMer rörelse i skolan!\n\nJag tycker att alla elever borde få minst trettio minuters rörelse varje skoldag, inte bara på idrottslektionerna.\n\nMitt första argument är att rörelse gör att man orkar mer. Efter en lång lektion är det svårt att sitta still, men en kort promenad eller lek gör hjärnan piggare. Forskare har visat att elever som rör sig mer ofta får lättare att koncentrera sig.\n\nMitt andra argument är att många barn rör sig för lite på fritiden. Om skolan ger alla chansen att röra sig blir det mer rättvist.\n\nVissa tycker att det tar tid från andra ämnen. Men jag tror att vi lär oss mer på lektionerna om vi har fått röra på oss först.\n\nDärför vill jag att skolan provar en rörelsestund varje dag. Det skulle göra oss både friskare och gladare!", questions:[
+      ["Vad är skribentens tes (huvudåsikt)?", "Alla elever borde få minst 30 minuters rörelse varje skoldag", "Idrott är tråkigt", "Skoldagen borde vara kortare", "Forskare borde bestämma i skolan"],
+      ["Vilket är skribentens första argument?", "Rörelse gör att man orkar mer och blir piggare", "Det blir mer rättvist", "Det tar tid från andra ämnen", "Skolan har en stor gympasal"],
+      ["Vilket stycke innehåller ett motargument?", "Stycket som börjar ”Vissa tycker …”", "Första stycket", "Andra stycket", "Sista stycket"],
+      ["Varför nämner skribenten forskare?", "För att göra argumentet mer trovärdigt", "För att forskare ska läsa texten", "För att texten ska bli längre", "För att visa att hen själv är forskare"],
+      ["Vilket ord inleder avslutningen?", "Därför", "Mitt", "Vissa", "Men"],
+      ["Vilka sambandsord passar bäst i en argumenterande text?", "eftersom, därför, dessutom", "plötsligt, sedan, till slut", "det var en gång", "hej, hej då"],
+      ["Vad bör en bra rubrik till en argumenterande text göra?", "Visa vad texten handlar om och väcka intresse", "Vara så lång som möjligt", "Avslöja motargumentet", "Vara skriven på engelska"]
+    ]}
+  ];
+
   // Mixed quizzes take questions from every bank in the subject (a question text is only used once).
   function mergeBanks(){
     var seen = {}, out = [];
@@ -2724,6 +2822,9 @@
   ];
 
   var SVENSKA_QUIZZES = [
+    { id:'svenska-np-lasa', tag:'SVENSKA · DELPROV B', icon:'📖', title:'Nationella provet – läsa', color:'#2b7bd9', desc:'Berättelser och faktatexter med frågor som på provet: gestaltning, motiv, budskap och rubriker', reading:true, added:'2026-11-14', make:function(){ return readingQuestions(SV_TEST_PASSAGES, 'read_svnp'); } },
+    { id:'svenska-hora', tag:'SVENSKA · HÖRFÖRSTÅELSE', icon:'🎧', title:'Hörförståelse – lyssna och svara', color:'#2b7bd9', desc:'Texten läses upp – du ser den inte. Lyssna med 🔊 och svara på frågorna', reading:true, listening:true, added:'2026-11-14', make:function(){ return readingQuestions(SV_LISTEN_PASSAGES, 'read_svlisten'); } },
+    { id:'svenska-np-skriva', tag:'SVENSKA · DELPROV C', icon:'✍️', title:'Nationella provet – skriva', color:'#2b7bd9', desc:'Berättande och argumenterande text: läs uppgiften och en elevtext och lär dig vad som gör texten bra', reading:true, added:'2026-11-14', make:function(){ return readingQuestions(SV_WRITING_CARDS, 'read_svskriva'); } },
     { id:'svenska-las', tag:'SVENSKA · LÄSFÖRSTÅELSE', icon:'📚', title:'Läsförståelse', color:'#2b7bd9', desc:READING_PASSAGES.length + ' olika texter – en slumpas varje gång, med 7 frågor', reading:true, make:function(){ return readingQuestions(READING_PASSAGES); } },
     { id:'svenska-grammatik', tag:'SVENSKA · GRAMMATIK', icon:'🔤', title:'Grammatik', color:'#2b7bd9', desc:'Ordklasser, satsdelar, verbformer och ordföljd', make:function(){ return fromBank('sv_grammatik'); } },
     { id:'svenska-stavning', tag:'SVENSKA · STAVNING', icon:'✏️', title:'Stavning och skiljetecken', color:'#2b7bd9', desc:'Sj-, tj-, j- och ng-ljud, särskrivning, stor bokstav och kommatecken', make:function(){ return fromBank('sv_stavning'); } },
@@ -3402,7 +3503,10 @@
       $('readingTitle').textContent = currentReadingPassage.title;
       $('readingText').textContent = currentReadingPassage.text;
       passageBox.classList.remove('hidden');
-    } else { passageBox.classList.add('hidden'); } 
+    } else { passageBox.classList.add('hidden'); }
+    // Listening quizzes hide the text until the answers have been checked.
+    $('readingText').classList.toggle('hidden', !!current.listening);
+    $('listenHint').classList.toggle('hidden', !current.listening);
     checked = false;
     $('menu').classList.add('hidden');
     $('dashboardPanel').classList.add('hidden');
@@ -3437,6 +3541,7 @@
   function checkAnswers(){
     if (checked || answeredCount() < TOTAL) return;
     checked = true;
+    if (current.listening) { $('readingText').classList.remove('hidden'); $('listenHint').classList.add('hidden'); }
     var score = 0, mistakes = [], fixable = current.tag === 'MATTE';
     questions.forEach(function(q, i){
       var box = $('q' + i), fb = $('fb' + i);
